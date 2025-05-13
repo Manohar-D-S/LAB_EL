@@ -1,54 +1,76 @@
-# from core.routing.graph_builder import fetch_osm_graph
-# import logging
-
-# # Configure logging
-# logging.basicConfig(level=logging.INFO)
-
-# # Test coordinates (MG Road to Victoria Hospital)
-# source = (12.9716, 77.5946)  # lat, lon
-# destination = (12.9629, 77.5868)  # lat, lon
-
-# try:
-#     G = fetch_osm_graph(source, destination)
-#     print(f"✅ Success! Graph contains {len(G.nodes)} nodes")
-# except Exception as e:
-#     print(f"❌ Error: {str(e)}")
-
-
-
 from core.routing.graph_builder import fetch_osm_graph
 from core.routing.a_star import EmergencyRouter
+from core.traffic import TrafficSimulator
 import osmnx as ox
-# Test coordinates (MG Road to Vidhana Soudha)
-SOURCE = (12.9716, 77.5946)  # MG Road
-DEST = (12.9794, 77.5907)     # Vidhana Soudha
+import matplotlib.pyplot as plt
+
+SOURCE = (12.9717, 77.6091)  # MG Road
+DEST = (12.9796, 77.590)     # Vidhana Soudha
+
+def calculate_route_metrics(G, path):
+    """Calculate total distance and time for route"""
+    total_length = sum(G.edges[u, v, 0]['length'] for u, v in zip(path[:-1], path[1:]))
+    total_time = sum(G.edges[u, v, 0]['travel_time'] for u, v in zip(path[:-1], path[1:]))
+    return {
+        'distance_km': round(total_length/1000, 2),
+        'time_mins': round(total_time/60, 1)
+    }
 
 def test_astar():
-    print("🛠️ Testing A* Implementation...")
+    print("🛠️ Testing Routes with Constant Traffic...")
     
-    # 1. Get graph
+    # 1. Get base graph
     G = fetch_osm_graph(SOURCE, DEST)
     
-    # 2. Find nodes nearest to coordinates
+    # 2. Apply constant traffic model
+    G_traffic = TrafficSimulator.apply_constant_congestion(G.copy())
+    
+    # 3. Find nodes
     start_node = ox.distance.nearest_nodes(G, X=SOURCE[1], Y=SOURCE[0])
     end_node = ox.distance.nearest_nodes(G, X=DEST[1], Y=DEST[0])
     
-    print(f"Start Node: {start_node} | End Node: {end_node}")
-    
-    # 3. Calculate route
+    # 4. Calculate both routes
     router = EmergencyRouter(G)
-    path = router.astar(start_node, end_node)
+    path_fastest = router.astar(start_node, end_node)
     
-    # 4. Validate
-    if not path:
-        print("❌ Error: No path found!")
-        return
+    router_traffic = EmergencyRouter(G_traffic)
+    path_smart = router_traffic.astar(start_node, end_node)
     
-    print(f"✅ Route found with {len(path)} nodes:")
-    print(f"Path: {path[:3]}...{path[-3:]}")  # Show first/last 3 nodes
+    # 5. Metrics comparison
+    metrics_fast = calculate_route_metrics(G, path_fastest)
+    metrics_smart = calculate_route_metrics(G_traffic, path_smart)
     
-    # 5. Visualize
-    ox.plot_graph_route(G, path, route_linewidth=6, node_size=0)
+    print(f"\n📊 Fastest Route: {metrics_fast['distance_km']} km, {metrics_fast['time_mins']} mins")
+    print(f"🚦 Traffic-Aware: {metrics_smart['distance_km']} km, {metrics_smart['time_mins']} mins")
+    
+    # 6. Visualization
+    fig, ax = plt.subplots(figsize=(12, 8))
+    
+    # Plot base map
+    ox.plot_graph(
+        G,
+        ax=ax,
+        bgcolor='white',
+        edge_color='#dddddd',
+        edge_linewidth=0.8,
+        node_size=0,
+        show=False,
+        close=False
+    )
+    
+    # Plot both routes
+    ox.plot_graph_route(G, path_fastest, ax=ax, route_linewidth=6, route_color='blue')
+    ox.plot_graph_route(G_traffic, path_smart, ax=ax, route_linewidth=6, route_color='red')
+    
+    # Add legend
+    ax.text(0.05, 0.95, 
+           "Blue: Fastest Route (No Traffic)\nRed: Traffic-Aware Route\nConstant Traffic Model Applied",
+           transform=ax.transAxes,
+           bbox=dict(facecolor='white', alpha=0.8),
+           fontsize=10)
+    
+    plt.tight_layout()
+    plt.show()
 
 if __name__ == "__main__":
     test_astar()
