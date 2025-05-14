@@ -1,7 +1,8 @@
 import heapq
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 import osmnx as ox
 import networkx as nx
+from core.metrics import calculate_route_metrics
 
 class AmbulanceRouter:
     def __init__(self, graph):
