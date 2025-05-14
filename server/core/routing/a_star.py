@@ -14,6 +14,20 @@ class AmbulanceRouter:
         v_lat, v_lon = self.node_coords[v]
         return ox.distance.great_circle_vec(u_lat, u_lon, v_lat, v_lon)
 
+    def find_route(self, start: int, goal: int) -> Dict[str, Any]:
+        """Find route with metrics"""
+        path = self.astar(start, goal)
+        if not path:
+            return None
+            
+        metrics = calculate_route_metrics(self.graph, path)
+        return {
+            'path': path,
+            'distance_km': metrics['distance_km'],
+            'time_mins': metrics['time_mins'],
+            'nodes': [self.node_coords[n] for n in path]
+        }
+
     def astar(self, start: int, goal: int) -> Optional[List[int]]:
         open_set = []
         heapq.heappush(open_set, (0, start))
@@ -65,7 +79,7 @@ class AmbulanceRouter:
             
         return cost
 
-    def _reconstruct_path(self, came_from, current) -> List[int]:
+    def _reconstruct_path(self, came_from: Dict[int, int], current: int) -> List[int]:
         path = []
         while current in came_from:
             path.append(current)
