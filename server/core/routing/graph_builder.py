@@ -10,8 +10,8 @@ VEHICLE_FILTER = (
     '["highway"!~"cycleway|footway|path|pedestrian|steps|track|corridor|bus_guideway|escape"]'
 )
 
-def fetch_vehicle_graph(source: tuple, dest: tuple) -> ox.graph:
-    """Fetch ambulance-accessible roads only"""
+def build_simplified_graph(source: tuple, dest: tuple) -> ox.graph:
+    """Fetch ambulance-accessible roads only (previously fetch_vehicle_graph)"""
     try:
         north = max(source[0], dest[0]) + 0.02
         south = min(source[0], dest[0]) - 0.02
