@@ -1,28 +1,81 @@
-from fastapi import APIRouter, HTTPException
-from core.routing.graph_builder import fetch_osm_graph
-from core.routing.a_star import EmergencyRouter
-from utils.geo_helpers import snap_to_nearest_node
+from fastapi import APIRouter, HTTPException, Depends
+from fastapi.responses import JSONResponse
+from typing import Dict, Any
 import logging
 
-router = APIRouter()
+from core.routing.graph_builder import build_simplified_graph
+from core.routing.a_star import AmbulanceRouter
+from core.metrics import calculate_route_metrics
+from api.schemas import RouteRequest, RouteResponse
+from utils.geo_helpers import snap_to_nearest_node
+
+router = APIRouter(prefix="/api/v1", tags=["Routing"])
 logger = logging.getLogger(__name__)
 
-@router.post("/route")
-async def calculate_route(start_lat: float, start_lng: float, 
-                         end_lat: float, end_lng: float):
+@router.post("/routes", response_model=RouteResponse)
+async def calculate_route(route_request: RouteRequest) -> Dict[str, Any]:
+    """
+    Calculate optimal ambulance route between two points.
+    
+    Args:
+        start_lat: Starting latitude
+        start_lng: Starting longitude
+        end_lat: Destination latitude
+        end_lng: Destination longitude
+    
+    Returns:
+        Dictionary containing:
+        - path: List of node IDs in the route
+        - distance_km: Total route distance in kilometers
+        - time_mins: Estimated travel time in minutes
+        - visualization_url: URL to route visualization (if generated)
+    """
     try:
-        G = fetch_osm_graph((start_lat, start_lng), (end_lat, end_lng))
-        start_node = snap_to_nearest_node(G, (start_lat, start_lng))
-        end_node = snap_to_nearest_node(G, (end_lat, end_lng))
+        # Extract coordinates
+        source = (route_request.source_lat, route_request.source_lng)
+        dest = (route_request.dest_lat, route_request.dest_lng)
         
-        router = EmergencyRouter(G)
-        path = router.bidirectional_astar(start_node, end_node)
+        # Build optimized graph
+        G = build_simplified_graph(source, dest)
         
-        return {
-            "path": path,
-            "nodes": len(G.nodes),
-            "edges": len(G.edges)
-        }
+        # Find nearest nodes
+        start_node = snap_to_nearest_node(G, source)
+        end_node = snap_to_nearest_node(G, dest)
+        
+        # Calculate route
+        router = AmbulanceRouter(G)
+        route_result = router.find_route(start_node, end_node)
+        
+        if not route_result:
+            raise HTTPException(
+                status_code=404,
+                detail="No valid route found between the specified points"
+            )
+        
+        # Calculate additional metrics
+        metrics = calculate_route_metrics(G, route_result['path'])
+        
+        # Prepare response
+        response = RouteResponse(
+            path=route_result['nodes'],  # List of (lat, lng) tuples
+            distance=metrics['distance_km'],
+            duration=metrics['time_mins'],
+            road_types=metrics.get('road_types', {}),
+            visualization_url=f"/api/v1/visualizations/{source}_{dest}.png"
+        )
+        
+        return response
+        
+    except HTTPException:
+        raise
     except Exception as e:
-        logger.error(f"Routing failed: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Route calculation failed: {str(e)}", exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to calculate route. Please try again later."
+        )
+
+@router.get("/routes/health")
+async def health_check() -> Dict[str, str]:
+    """Endpoint for service health check"""
+    return {"status": "healthy", "service": "ambulance-routing"}
