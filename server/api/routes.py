@@ -9,10 +9,43 @@ from core.metrics import calculate_route_metrics
 from api.schemas import RouteRequest, RouteResponse
 from utils.geo_helpers import snap_to_nearest_node
 
-router = APIRouter(prefix="/api/v1", tags=["Routing"])
+# router = APIRouter(prefix="/api/v1", tags=["Routing"])
+router = APIRouter()
 logger = logging.getLogger(__name__)
 
-@router.post("/routes", response_model=RouteResponse)
+@router.get("/router-test")
+def router_test():
+    return {"message": "Router test route works!"}
+
+@router.get("/routes")
+async def get_routes():
+    """Get a list of predefined routes"""
+    # Return a list of sample routes for demonstration
+    return [
+        {
+            "id": "1",
+            "name": "Emergency Route 1",
+            "description": "Koramangala to Indiranagar",
+            "createdAt": "2025-05-15T08:00:00Z",
+            "startPoint": {"lat": 12.9716, "lng": 77.5946},
+            "endPoint": {"lat": 12.9352, "lng": 77.6101},
+            "distance": 5.2,
+            "duration": 12
+        },
+        {
+            "id": "2",
+            "name": "Emergency Route 2",
+            "description": "Whitefield to Electronic City",
+            "createdAt": "2025-05-15T09:00:00Z",
+            "startPoint": {"lat": 12.9698, "lng": 77.7499},
+            "endPoint": {"lat": 12.8399, "lng": 77.6770},
+            "distance": 15.7,
+            "duration": 35
+        }
+    ]
+
+# @router.post("/routes", response_model=RouteResponse)
+@router.post("/routes")
 async def calculate_route(route_request: RouteRequest) -> Dict[str, Any]:
     """
     Calculate optimal ambulance route between two points.

@@ -61,7 +61,8 @@ const Map: React.FC<MapProps> = ({ selectedRoute }) => {
             selectedRoute.endPoint.lat,
             selectedRoute.endPoint.lng
           );
-          setCalculatedRoute(routeData.geometry.coordinates.map(([lng, lat]) => [lat, lng]));
+          // The RouteResponse now has a 'path' property, not 'geometry'
+          setCalculatedRoute(routeData.path);
         } catch (error) {
           setRouteError(error instanceof Error ? error.message : 'Failed to calculate route');
           setCalculatedRoute([]);
@@ -75,11 +76,16 @@ const Map: React.FC<MapProps> = ({ selectedRoute }) => {
   const getRoutePath = (): [number, number][] => {
     if (!selectedRoute) return [];
     
-    return calculatedRoute.length > 0 ? calculatedRoute : [
-      [selectedRoute.startPoint.lat, selectedRoute.startPoint.lng],
-      ...selectedRoute.waypoints.map(point => [point.lat, point.lng]),
-      [selectedRoute.endPoint.lat, selectedRoute.endPoint.lng]
-    ];
+    // Ensure we're returning the correct type
+    if (calculatedRoute.length > 0) {
+      return calculatedRoute as [number, number][];
+    } else {
+      return [
+        [selectedRoute.startPoint.lat, selectedRoute.startPoint.lng] as [number, number],
+        ...selectedRoute.waypoints.map(point => [point.lat, point.lng] as [number, number]),
+        [selectedRoute.endPoint.lat, selectedRoute.endPoint.lng] as [number, number]
+      ];
+    }
   };
 
   return (

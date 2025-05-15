@@ -1,7 +1,7 @@
 import osmnx as ox
 from geopy.distance import great_circle
 import logging
-from core.traffic import TrafficSimulator
+# from core.traffic import TrafficSimulator
 import networkx as nx
 # from functools import lru_cache
 

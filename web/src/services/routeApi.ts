@@ -27,7 +27,8 @@ export async function getRoute(
 ): Promise<RouteResponse> {
   try {
     const response = await axios.post<RouteResponse>( // Changed to POST
-      `${API_BASE_URL}/api/v1/routes`, // Changed URL
+      // `${API_BASE_URL}/api/v1/routes`, // Changed URL
+      `${API_BASE_URL}/routes`,
       { // Added request body
         source_lat: startLat,
         source_lng: startLng,

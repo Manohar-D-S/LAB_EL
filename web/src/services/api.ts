@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Route } from '../types/route';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'http://localhost:8000';
 
 const api = axios.create({
   baseURL: API_URL,

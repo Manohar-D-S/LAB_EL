@@ -14,25 +14,33 @@ async def lifespan(app: FastAPI):
     DEFAULT_DEST = (12.9352, 77.6101)    # Nearby point
     
     try:
-        logger.info("Initializing routing graph...")
-        # Remove 'await' since build_simplified_graph is synchronous
-        build_simplified_graph(DEFAULT_SOURCE, DEFAULT_DEST)
-        logger.info("Routing graph initialized")
-        yield
+        # Skip graph preloading for now
+        logger.info("Skipping graph preloading for faster startup...")
+        yield {}
     except Exception as e:
-        logger.error(f"Startup failed: {str(e)}")
-        raise
+        logger.error(f"Error during startup: {e}")
+        yield {}
 
 app = FastAPI(lifespan=lifespan)
 
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Frontend URL
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],  # Frontend URLs
     allow_credentials=True,
     allow_methods=["*"],  # Allow all methods
     allow_headers=["*"],  # Allow all headers
 )
+
+# Add a test route directly to the app
+@app.get("/test")
+def test_route():
+    return {"message": "Test route works!"}
+
+# Add a test POST route
+@app.post("/test-post")
+def test_post_route(data: dict):
+    return {"received": data, "message": "Post route works!"}
 
 app.include_router(router)
 
