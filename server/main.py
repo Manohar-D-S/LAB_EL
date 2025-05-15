@@ -8,9 +8,9 @@ from api.routes import router
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Use default Bengaluru coordinates for initialization
-    DEFAULT_SOURCE = (12.9716, 77.5946)  # Bangalore coordinates
-    DEFAULT_DEST = (12.9352, 77.6101)    # Nearby point
-    build_simplified_graph(DEFAULT_SOURCE, DEFAULT_DEST)
+    # DEFAULT_SOURCE = (12.9716, 77.5946)  # Bangalore coordinates
+    # DEFAULT_DEST = (12.9352, 77.6101)    # Nearby point
+    build_simplified_graph()
     yield
     # Shutdown logic (optional)
     # pass
