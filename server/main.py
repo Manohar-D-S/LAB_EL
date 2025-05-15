@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 import logging
+from fastapi.middleware.cors import CORSMiddleware
 from core.routing.graph_builder import build_simplified_graph
 from api.routes import router  # Make sure this import exists
 
@@ -23,6 +24,16 @@ async def lifespan(app: FastAPI):
         raise
 
 app = FastAPI(lifespan=lifespan)
+
+# Configure CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # Frontend URL
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods
+    allow_headers=["*"],  # Allow all headers
+)
+
 app.include_router(router)
 
 if __name__ == "__main__":

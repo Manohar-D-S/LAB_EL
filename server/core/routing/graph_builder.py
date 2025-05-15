@@ -15,8 +15,9 @@ VEHICLE_FILTER = (
 
 # @lru_cache(maxsize=1)
 def build_simplified_graph(source: tuple, dest: tuple) -> nx.Graph:
-    """Async version of graph builder"""
+    """Graph builder function"""
     try:
+        logger.info(f"Building graph for source={source}, dest={dest}")
         north = max(source[0], dest[0]) + 0.02
         south = min(source[0], dest[0]) - 0.02
         east = max(source[1], dest[1]) + 0.02

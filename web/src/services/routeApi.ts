@@ -1,15 +1,11 @@
 import axios from 'axios';
 
 interface RouteResponse {
-  type: 'Feature';
-  geometry: {
-    type: 'LineString';
-    coordinates: [number, number][];
-  };
-  properties: {
-    distance: number;
-    duration: number;
-  };
+  path: [number, number][];
+  distance: number;  // in kilometers
+  duration: number;  // in minutes
+  road_types: Record<string, number>;  // road type distribution in meters
+  visualization_url?: string;  // optional URL to visualization
 }
 
 const API_BASE_URL = 'http://localhost:8000';
@@ -40,7 +36,7 @@ export async function getRoute(
       }
     );
 
-    if (!response.data || !response.data.geometry) {
+    if (!response.data || !response.data.path) {
       throw new Error('Invalid route data received');
     }
 
