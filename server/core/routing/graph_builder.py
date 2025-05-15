@@ -3,6 +3,7 @@ from geopy.distance import great_circle
 import logging
 from core.traffic import TrafficSimulator
 import networkx as nx
+from functools import lru_cache
 
 logger = logging.getLogger(__name__)
 
@@ -12,6 +13,7 @@ VEHICLE_FILTER = (
     '["highway"!~"cycleway|footway|path|pedestrian|steps|track|corridor|bus_guideway|escape"]'
 )
 
+@lru_cache(maxsize=1)
 def build_simplified_graph(source: tuple, dest: tuple, apply_traffic: bool = True) -> nx.Graph:
     """Build a simplified, ambulance-optimized road graph"""
     try:
