@@ -12,7 +12,7 @@ interface RouteResponse {
   };
 }
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'http://localhost:8000';
 
 /**
  * Fetches a route between two points
@@ -30,8 +30,14 @@ export async function getRoute(
   endLng: number
 ): Promise<RouteResponse> {
   try {
-    const response = await axios.get<RouteResponse>(
-      `${API_BASE_URL}/route/${startLat},${startLng}/${endLat},${endLng}`
+    const response = await axios.post<RouteResponse>( // Changed to POST
+      `${API_BASE_URL}/api/v1/routes`, // Changed URL
+      { // Added request body
+        source_lat: startLat,
+        source_lng: startLng,
+        dest_lat: endLat,
+        dest_lng: endLng
+      }
     );
 
     if (!response.data || !response.data.geometry) {

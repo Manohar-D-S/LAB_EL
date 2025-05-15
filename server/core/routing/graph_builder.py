@@ -14,7 +14,7 @@ VEHICLE_FILTER = (
 )
 
 # @lru_cache(maxsize=1)
-async def build_simplified_graph(source: tuple, dest: tuple) -> nx.Graph:
+def build_simplified_graph(source: tuple, dest: tuple) -> nx.Graph:
     """Async version of graph builder"""
     try:
         north = max(source[0], dest[0]) + 0.02
@@ -22,7 +22,7 @@ async def build_simplified_graph(source: tuple, dest: tuple) -> nx.Graph:
         east = max(source[1], dest[1]) + 0.02
         west = min(source[1], dest[1]) - 0.02
         
-        G = await ox.graph_from_bbox(
+        G = ox.graph_from_bbox(
             north, south, east, west,
             custom_filter=VEHICLE_FILTER,
             network_type='drive',
