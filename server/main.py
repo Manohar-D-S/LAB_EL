@@ -1,19 +1,26 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+import logging
 from core.routing.graph_builder import build_simplified_graph
-from api.routes import router
+from api.routes import router  # Make sure this import exists
+
+logger = logging.getLogger(__name__)
 
 @asynccontextmanager
-# In main.py, update the lifespan function:
-@asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Use default Bengaluru coordinates for initialization
-    # DEFAULT_SOURCE = (12.9716, 77.5946)  # Bangalore coordinates
-    # DEFAULT_DEST = (12.9352, 77.6101)    # Nearby point
-    build_simplified_graph()
-    yield
-    # Shutdown logic (optional)
-    # pass
+    # Initialize with default Bengaluru coordinates
+    DEFAULT_SOURCE = (12.9716, 77.5946)  # Bangalore coordinates
+    DEFAULT_DEST = (12.9352, 77.6101)    # Nearby point
+    
+    try:
+        logger.info("Initializing routing graph...")
+        # Remove 'await' since build_simplified_graph is synchronous
+        build_simplified_graph(DEFAULT_SOURCE, DEFAULT_DEST)
+        logger.info("Routing graph initialized")
+        yield
+    except Exception as e:
+        logger.error(f"Startup failed: {str(e)}")
+        raise
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(router)
