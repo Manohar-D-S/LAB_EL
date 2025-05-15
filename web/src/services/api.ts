@@ -11,8 +11,15 @@ const api = axios.create({
 });
 
 export const getRoutes = async (): Promise<Route[]> => {
-  const response = await api.get('/routes');
-  return response.data;
+  try {
+    console.log('Fetching routes from:', `${API_URL}/routes`);
+    const response = await api.get('/routes');
+    console.log('Routes response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching routes:', error);
+    throw error;
+  }
 };
 
 export const getRouteById = async (id: string): Promise<Route> => {

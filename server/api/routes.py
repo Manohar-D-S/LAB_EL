@@ -29,8 +29,10 @@ async def get_routes():
             "createdAt": "2025-05-15T08:00:00Z",
             "startPoint": {"lat": 12.9716, "lng": 77.5946},
             "endPoint": {"lat": 12.9352, "lng": 77.6101},
+            "waypoints": [],  # Empty waypoints array
+            "status": "pending",  # Add status field
             "distance": 5.2,
-            "duration": 12
+            "duration": 12 * 60  # Convert to seconds as expected by frontend
         },
         {
             "id": "2",
@@ -39,8 +41,10 @@ async def get_routes():
             "createdAt": "2025-05-15T09:00:00Z",
             "startPoint": {"lat": 12.9698, "lng": 77.7499},
             "endPoint": {"lat": 12.8399, "lng": 77.6770},
+            "waypoints": [],  # Empty waypoints array
+            "status": "pending",  # Add status field
             "distance": 15.7,
-            "duration": 35
+            "duration": 35 * 60  # Convert to seconds as expected by frontend
         }
     ]
 

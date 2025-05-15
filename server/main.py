@@ -42,6 +42,11 @@ def test_route():
 def test_post_route(data: dict):
     return {"received": data, "message": "Post route works!"}
 
+# Add a root route
+@app.get("/")
+def root():
+    return {"message": "Welcome to the Ambulance Routing API"}
+
 app.include_router(router)
 
 if __name__ == "__main__":
