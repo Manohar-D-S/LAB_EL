@@ -28,17 +28,26 @@ function App() {
   const handleSearch = async (source: string, destination: string) => {
     setIsSearching(true); // Start the loading animation
     try {
+      const payload = {
+        source_lat: locations.find((loc) => loc.id === source)?.lat,
+        source_lng: locations.find((loc) => loc.id === source)?.lng,
+        dest_lat: locations.find((loc) => loc.id === destination)?.lat,
+        dest_lng: locations.find((loc) => loc.id === destination)?.lng,
+      };
+      console.log('Payload:', payload);
+
+      if (!payload.source_lat || !payload.source_lng || !payload.dest_lat || !payload.dest_lng) {
+        console.error('Invalid source or destination');
+        setIsSearching(false);
+        return;
+      }
+
       const response = await fetch(`http://localhost:8000/routes`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          source_lat: locations.find((loc) => loc.id === source)?.lat,
-          source_lng: locations.find((loc) => loc.id === source)?.lng,
-          dest_lat: locations.find((loc) => loc.id === destination)?.lat,
-          dest_lng: locations.find((loc) => loc.id === destination)?.lng,
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {

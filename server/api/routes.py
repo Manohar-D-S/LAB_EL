@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import osmnx as ox
 from datetime import datetime
 
-from core.routing.graph_builder import build_simplified_graph
+from core.routing.graph_builder import build_simplified_graph, load_graph_from_file, extract_subgraph
 from core.routing.a_star import AmbulanceRouter
 from utils.geo_helpers import snap_to_nearest_node
 from api.schemas import RouteRequest
@@ -109,31 +109,38 @@ async def calculate_route(route_request: RouteRequest):
         return route_cache[cache_key]
 
     try:
-        logger.info(f"Cache miss. Fetching vehicle graph for source: {source}, destination: {destination}")
-        G = build_simplified_graph(source, destination)
-        start_node = snap_to_nearest_node(G, source)
-        end_node = snap_to_nearest_node(G, destination)
+        # Load the full graph from the local file
+        graph_file = "./data/simplified_bengaluru.graphml"
+        G = load_graph_from_file(graph_file)
+
+        # Extract the subgraph for the bounding box
+        subgraph = extract_subgraph(G, source, destination)
+
+        # Snap source and destination to the nearest nodes in the subgraph
+        start_node = snap_to_nearest_node(subgraph, source)
+        end_node = snap_to_nearest_node(subgraph, destination)
         logger.info(f"Start node: {start_node}, End node: {end_node}")
 
-        router = AmbulanceRouter(G)
+        # Use the A* algorithm to calculate the shortest path
+        router = AmbulanceRouter(subgraph)
         path = router.astar(start_node, end_node)
         logger.info(f"Calculated path: {path}")
 
         # Calculate the distance of the route
         distance = sum(
             ox.distance.euclidean_dist_vec(
-                G.nodes[path[i]]["y"], G.nodes[path[i]]["x"],
-                G.nodes[path[i + 1]]["y"], G.nodes[path[i + 1]]["x"]
+                subgraph.nodes[path[i]]["y"], subgraph.nodes[path[i]]["x"],
+                subgraph.nodes[path[i + 1]]["y"], subgraph.nodes[path[i + 1]]["x"]
             )
             for i in range(len(path) - 1)
         )
 
         # Save the route image
         image_filename = f"route_{cache_key}.png"
-        save_route_image(G, path, image_filename)
+        save_route_image(subgraph, path, image_filename)
 
         response = {
-            "path": [{"lat": G.nodes[node]["y"], "lng": G.nodes[node]["x"]} for node in path],
+            "path": [{"lat": subgraph.nodes[node]["y"], "lng": subgraph.nodes[node]["x"]} for node in path],
             "startPoint": {"lat": source[0], "lng": source[1]},
             "endPoint": {"lat": destination[0], "lng": destination[1]},
             "distance": distance,  # Include the distance in the response

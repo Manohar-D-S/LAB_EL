@@ -74,15 +74,20 @@ const RouteDetails: React.FC<RouteDetailsProps> = ({ route }) => {
             <button 
               onClick={() => setPlayback(!playback)}
               className="p-1 rounded-full hover:bg-slate-100 text-slate-600"
+              title={playback ? "Pause playback" : "Start playback"}
             >
               {playback ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
             </button>
-            <button className="p-1 rounded-full hover:bg-slate-100 text-slate-600">
+            <button 
+              title="Reset route" 
+              className="p-1 rounded-full hover:bg-slate-100 text-slate-600"
+            >
               <RotateCcw className="h-5 w-5" />
             </button>
             <button 
               onClick={() => setExpanded(!expanded)}
               className="p-1 rounded-full hover:bg-slate-100 text-slate-600"
+              title={expanded ? "Collapse details" : "Expand details"}
             >
               <MoreHorizontal className="h-5 w-5" />
             </button>
