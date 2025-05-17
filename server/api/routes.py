@@ -1,6 +1,7 @@
 import os
 import logging
-from fastapi import APIRouter, HTTPException, Depends, Request
+import requests
+from fastapi import APIRouter, HTTPException, Depends, Request, FastAPI
 from fastapi.responses import JSONResponse
 from typing import Dict, Any, Tuple
 from hashlib import sha256
@@ -17,7 +18,7 @@ from api.schemas import RouteRequest
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
-# Configure logging
+#logging
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
@@ -57,6 +58,44 @@ def generate_cache_key(source: Tuple[float, float], destination: Tuple[float, fl
 #     except Exception as e:
 #         logger.error(f"Failed to save route image: {e}")
 
+app = FastAPI()  # Create the FastAPI app instance
+
+@app.on_event("startup")
+async def download_bangalore_map():
+    """Ensure the bangalore_map.graphml file exists on server startup."""
+    data_folder = os.path.join(os.getcwd(), "data")
+    os.makedirs(data_folder, exist_ok=True)
+    graph_file_path = os.path.join(data_folder, "bangalore_map.graphml")
+
+    if not os.path.exists(graph_file_path):
+        try:
+            # Use OSM Overpass API to fetch the map data
+            logger.info("Downloading bangalore_map.graphml from OSM Overpass API...")
+            overpass_url = "https://overpass-api.de/api/interpreter"
+            overpass_query = """
+                [out:xml];
+                (
+                  node(12.834,77.461,13.139,77.739);
+                  way(12.834,77.461,13.139,77.739);
+                  relation(12.834,77.461,13.139,77.739);
+                );
+                out meta;
+                >;
+                out meta qt;
+            """
+            response = requests.post(overpass_url, data=overpass_query, headers={"Content-Type": "text/plain"})
+            response.raise_for_status()
+
+            # Save the response as a .graphml file
+            with open(graph_file_path, "wb") as graph_file:
+                graph_file.write(response.content)
+            logger.info("Downloaded bangalore_map.graphml successfully.")
+        except requests.RequestException as e:
+            logger.error(f"Failed to download bangalore_map.graphml: {e}")
+            raise RuntimeError("Failed to download required map file.")
+    else:
+        logger.info("bangalore_map.graphml already exists. Skipping download.")
+
 @router.get("/router-test")
 def router_test():
     logger.info("Router test endpoint was called.")
@@ -69,6 +108,38 @@ async def get_routes():
 
 @router.post("/routes")
 async def calculate_route(route_request: RouteRequest):
+    # Ensure the bangalore_map.graphml file exists
+    data_folder = os.path.join(os.getcwd(), "data")
+    os.makedirs(data_folder, exist_ok=True)
+    graph_file_path = os.path.join(data_folder, "bangalore_map.graphml")
+
+    if not os.path.exists(graph_file_path):
+        try:
+            # Use OSM Overpass API to fetch the map data
+            logger.info("Downloading bangalore_map.graphml from OSM Overpass API...")
+            overpass_url = "https://overpass-api.de/api/interpreter"
+            overpass_query = """
+                [out:xml];
+                (
+                  node(12.834,77.461,13.139,77.739);
+                  way(12.834,77.461,13.139,77.739);
+                  relation(12.834,77.461,13.139,77.739);
+                );
+                out meta;
+                >;
+                out meta qt;
+            """
+            response = requests.post(overpass_url, data=overpass_query, headers={"Content-Type": "text/plain"})
+            response.raise_for_status()
+
+            # Save the response as a .graphml file
+            with open(graph_file_path, "wb") as graph_file:
+                graph_file.write(response.content)
+            logger.info("Downloaded bangalore_map.graphml successfully.")
+        except requests.RequestException as e:
+            logger.error(f"Failed to download bangalore_map.graphml: {e}")
+            raise HTTPException(status_code=500, detail="Failed to download required map file.")
+
     logger.info(f"Received route calculation request: {route_request}")
     source = (route_request.source_lat, route_request.source_lng)
     destination = (route_request.dest_lat, route_request.dest_lng)
@@ -110,16 +181,12 @@ async def calculate_route(route_request: RouteRequest):
             for i in range(len(path) - 1)
         )
 
-        # # Save the route image
-        # image_filename = f"route_{cache_key}.png"
-        # save_route_image(subgraph, path, image_filename)
 
         response = {
             "path": [{"lat": subgraph.nodes[node]["y"], "lng": subgraph.nodes[node]["x"]} for node in path],
             "startPoint": {"lat": source[0], "lng": source[1]},
             "endPoint": {"lat": destination[0], "lng": destination[1]},
             "distance": distance,  # Include the distance in the response
-            #"image": image_filename  # Include the image filename in the response
         }
 
         # Store the route in the cache

@@ -1,6 +1,8 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 import logging
+import os
+import requests
 from fastapi.middleware.cors import CORSMiddleware
 from core.routing.graph_builder import build_simplified_graph
 from api.routes import router  # Make sure this import exists
@@ -10,17 +12,41 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Initialize with default Bengaluru coordinates
-    DEFAULT_SOURCE = (12.9716, 77.5946)  # Bangalore coordinates
-    DEFAULT_DEST = (12.9352, 77.6101)    # Nearby point
-    
-    try:
-        # Skip graph preloading for now
-        logger.info("Skipping graph preloading for faster startup...")
-        yield {}
-    except Exception as e:
-        logger.error(f"Error during startup: {e}")
-        yield {}
+    # Ensure the bangalore_map.graphml file exists on server startup
+    data_folder = "./data"
+    os.makedirs(data_folder, exist_ok=True)
+    graph_file_path = os.path.join(data_folder, "bangalore_map.graphml")
+
+    if not os.path.exists(graph_file_path):
+        try:
+            # Use OSM Overpass API to fetch the map data
+            print("Downloading bangalore_map.graphml from OSM Overpass API...\n")
+            overpass_url = "https://overpass-api.de/api/interpreter"
+            overpass_query = """
+                [out:xml];
+                (
+                  node(12.834,77.461,13.139,77.739);
+                  way(12.834,77.461,13.139,77.739);
+                  relation(12.834,77.461,13.139,77.739);
+                );
+                out meta;
+                >;
+                out meta qt;
+            """
+            response = requests.post(overpass_url, data=overpass_query, headers={"Content-Type": "text/plain"})
+            response.raise_for_status()
+
+            # Save the response as a .graphml file
+            with open(graph_file_path, "wb") as graph_file:
+                graph_file.write(response.content)
+            print("Downloaded bangalore_map.graphml successfully.")
+        except requests.RequestException as e:
+            print(f"Failed to download bangalore_map.graphml: {e}")
+            raise RuntimeError("Failed to download required map file.")
+    else:
+        print("bangalore_map.graphml already exists. Skipping download.")
+
+    yield {}
 
 app = FastAPI(lifespan=lifespan)
 
