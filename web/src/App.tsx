@@ -7,18 +7,78 @@ import RouteDetails from './components/RouteDetails';
 import { getRoutes } from './services/api';
 import { Route } from './types/route';
 
+type RouteListProps = {
+  routes: Route[]; // Add the missing 'routes' property
+  selectedRouteId: string | undefined;
+  onRouteSelect: (route: Route | null) => void;
+  locations: { id: string; name: string; lat: number; lng: number }[];
+  onSearch: (source: string, destination: string) => Promise<void>;
+  isSearching: boolean;
+};
+
 function App() {
-  const [routes, setRoutes] = useState<Route[]>([]);
   const [selectedRoute, setSelectedRoute] = useState<Route | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isSearching, setIsSearching] = useState<boolean>(false); // New state for search button animation
+
+  const locations = [
+    { id: 'M G ROAD', name: 'M G ROAD', lat: 12.9746530, lng: 77.6064850 },
+    { id: 'NIMHANS', name: 'NIMHANS', lat: 12.941593, lng: 77.59632 },
+    { id: 'VIDHANA SOUDHA', name: 'VIDHANA SOUDHA', lat: 12.9791198, lng: 77.5912997 },
+    { id: 'BTM LAYOUT', name: 'BTM LAYOUT', lat: 12.9165757, lng: 77.6101166 },
+    { id: 'JAYADEVA HOSPITAL', name: 'JAYADEVA HOSPITAL', lat: 12.906071, lng: 77.610116 },
+    { id: 'DEVIHALLI', name: 'DEVIHALLI', lat: 13.012345, lng: 77.678901 },
+    { id: 'KAMAKSHIPALYA', name: 'KAMAKSHIPALYA', lat: 12.987654, lng: 77.543210 },
+    { id: 'LAKSHMI HOSPITAL', name: 'LAKSHMI HOSPITAL', lat: 12.934567, lng: 77.654321 },
+  ];
+
+  const handleSearch = async (source: string, destination: string) => {
+    setIsSearching(true); // Start the loading animation
+    try {
+      const payload = {
+        source_lat: locations.find((loc) => loc.id === source)?.lat,
+        source_lng: locations.find((loc) => loc.id === source)?.lng,
+        dest_lat: locations.find((loc) => loc.id === destination)?.lat,
+        dest_lng: locations.find((loc) => loc.id === destination)?.lng,
+      };
+      console.log('Payload:', payload);
+
+      if (!payload.source_lat || !payload.source_lng || !payload.dest_lat || !payload.dest_lng) {
+        console.error('Invalid source or destination');
+        setIsSearching(false);
+        return;
+      }
+
+      const response = await fetch(`http://localhost:8000/routes`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch route');
+      }
+
+      const routeData = await response.json();
+      console.log('Route Data:', routeData);
+
+      // Pass the route data to the Map component to highlight the route
+      setSelectedRoute(routeData);
+    } catch (error) {
+      console.error('Error fetching route:', error);
+    } finally {
+      setIsSearching(false); // Stop the loading animation
+    }
+  };
 
   useEffect(() => {
     const fetchRoutes = async () => {
       try {
         setLoading(true);
         const data = await getRoutes();
-        setRoutes(data);
         setLoading(false);
       } catch (err) {
         console.error('Error fetching routes:', err);
@@ -29,10 +89,6 @@ function App() {
 
     fetchRoutes();
   }, []);
-
-  const handleRouteSelect = (route: Route) => {
-    setSelectedRoute(route);
-  };
 
   return (
     <div className="flex flex-col h-screen bg-slate-50">
@@ -52,9 +108,9 @@ function App() {
               <div className="py-4 text-center text-rose-500">{error}</div>
             ) : (
               <RouteList 
-                routes={routes} 
-                selectedRouteId={selectedRoute?.id} 
-                onRouteSelect={handleRouteSelect} 
+                locations={locations} 
+                onSearch={handleSearch} 
+                isSearching={isSearching} 
               />
             )}
           </div>

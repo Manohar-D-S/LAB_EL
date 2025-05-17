@@ -1,18 +1,14 @@
 import axios from 'axios';
 
 interface RouteResponse {
-  type: 'Feature';
-  geometry: {
-    type: 'LineString';
-    coordinates: [number, number][];
-  };
-  properties: {
-    distance: number;
-    duration: number;
-  };
+  path: [number, number][];
+  distance: number;  // in kilometers
+  duration: number;  // in minutes
+  road_types: Record<string, number>;  // road type distribution in meters
+  visualization_url?: string;  // optional URL to visualization
 }
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'http://localhost:8000';
 
 /**
  * Fetches a route between two points
@@ -30,11 +26,18 @@ export async function getRoute(
   endLng: number
 ): Promise<RouteResponse> {
   try {
-    const response = await axios.get<RouteResponse>(
-      `${API_BASE_URL}/route/${startLat},${startLng}/${endLat},${endLng}`
+    const response = await axios.post<RouteResponse>( // Changed to POST
+      // `${API_BASE_URL}/api/v1/routes`, // Changed URL
+      `${API_BASE_URL}/routes`,
+      { // Added request body
+        source_lat: startLat,
+        source_lng: startLng,
+        dest_lat: endLat,
+        dest_lng: endLng
+      }
     );
 
-    if (!response.data || !response.data.geometry) {
+    if (!response.data || !response.data.path) {
       throw new Error('Invalid route data received');
     }
 

@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Route } from '../types/route';
-import { getRoute } from '../services/routeApi';
 
 // Fix Leaflet marker icon issues
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -33,7 +31,13 @@ const EndIcon = new L.Icon({
 L.Marker.prototype.options.icon = DefaultIcon;
 
 interface MapProps {
-  selectedRoute: Route | null;
+  selectedRoute: {
+    startPoint?: { lat: number; lng: number };
+    endPoint?: { lat: number; lng: number };
+    path?: { lat: number; lng: number }[];
+    waypoints?: { lat: number; lng: number; timestamp?: string }[];
+    name?: string;
+  } | null;
 }
 
 const Map: React.FC<MapProps> = ({ selectedRoute }) => {
@@ -43,10 +47,10 @@ const Map: React.FC<MapProps> = ({ selectedRoute }) => {
   const [routeError, setRouteError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (selectedRoute) {
+    if (selectedRoute?.startPoint && selectedRoute?.endPoint) {
       const newCenter: [number, number] = [
         (selectedRoute.startPoint.lat + selectedRoute.endPoint.lat) / 2,
-        (selectedRoute.startPoint.lng + selectedRoute.endPoint.lng) / 2
+        (selectedRoute.startPoint.lng + selectedRoute.endPoint.lng) / 2,
       ];
       setCenter(newCenter);
       setZoom(12);
@@ -55,13 +59,10 @@ const Map: React.FC<MapProps> = ({ selectedRoute }) => {
       const fetchRoute = async () => {
         try {
           setRouteError(null);
-          const routeData = await getRoute(
-            selectedRoute.startPoint.lat,
-            selectedRoute.startPoint.lng,
-            selectedRoute.endPoint.lat,
-            selectedRoute.endPoint.lng
-          );
-          setCalculatedRoute(routeData.geometry.coordinates.map(([lng, lat]) => [lat, lng]));
+          // Simulate fetching route data (replace with actual API call if needed)
+          if (selectedRoute.path) {
+            setCalculatedRoute(selectedRoute.path.map((point) => [point.lat, point.lng]));
+          }
         } catch (error) {
           setRouteError(error instanceof Error ? error.message : 'Failed to calculate route');
           setCalculatedRoute([]);
@@ -74,12 +75,17 @@ const Map: React.FC<MapProps> = ({ selectedRoute }) => {
 
   const getRoutePath = (): [number, number][] => {
     if (!selectedRoute) return [];
-    
-    return calculatedRoute.length > 0 ? calculatedRoute : [
-      [selectedRoute.startPoint.lat, selectedRoute.startPoint.lng],
-      ...selectedRoute.waypoints.map(point => [point.lat, point.lng]),
-      [selectedRoute.endPoint.lat, selectedRoute.endPoint.lng]
-    ];
+    if (calculatedRoute.length > 0) {
+      return calculatedRoute;
+    }
+    if (selectedRoute.startPoint && selectedRoute.endPoint) {
+      return [
+        [selectedRoute.startPoint.lat, selectedRoute.startPoint.lng],
+        ...(selectedRoute.waypoints?.map((point) => [point.lat, point.lng] as [number, number]) || []),
+        [selectedRoute.endPoint.lat, selectedRoute.endPoint.lng],
+      ];
+    }
+    return [];
   };
 
   return (
@@ -89,10 +95,10 @@ const Map: React.FC<MapProps> = ({ selectedRoute }) => {
           {routeError}
         </div>
       )}
-      
-      <MapContainer 
-        center={center} 
-        zoom={zoom} 
+
+      <MapContainer
+        center={selectedRoute?.startPoint ? [selectedRoute.startPoint.lat, selectedRoute.startPoint.lng] : center}
+        zoom={zoom}
         style={{ height: '100%', width: '100%' }}
         zoomControl={false}
       >
@@ -100,59 +106,43 @@ const Map: React.FC<MapProps> = ({ selectedRoute }) => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        
-        {selectedRoute && (
-          <>
-            <Marker 
-              position={[selectedRoute.startPoint.lat, selectedRoute.startPoint.lng]}
-              icon={StartIcon}
-            >
-              <Popup>
-                <div>
-                  <h3 className="font-semibold text-slate-800">{selectedRoute.name}</h3>
-                  <p className="text-slate-600">Starting Point</p>
-                </div>
-              </Popup>
-            </Marker>
-            
-            <Marker 
-              position={[selectedRoute.endPoint.lat, selectedRoute.endPoint.lng]}
-              icon={EndIcon}
-            >
-              <Popup>
-                <div>
-                  <h3 className="font-semibold text-slate-800">{selectedRoute.name}</h3>
-                  <p className="text-slate-600">Destination</p>
-                </div>
-              </Popup>
-            </Marker>
-            
-            {selectedRoute.waypoints.map((point, index) => (
-              <Marker 
-                key={index}
-                position={[point.lat, point.lng]}
-                icon={DefaultIcon}
-              >
-                <Popup>
-                  <div>
-                    <h3 className="font-semibold text-slate-800">Waypoint {index + 1}</h3>
-                    <p className="text-slate-600">
-                      {point.timestamp && new Date(point.timestamp).toLocaleTimeString()}
-                    </p>
-                  </div>
-                </Popup>
-              </Marker>
-            ))}
-            
-            <Polyline 
-              positions={getRoutePath()}
-              color={selectedRoute.status === 'completed' ? '#10B981' : '#6366F1'}
-              weight={4}
-              opacity={0.7}
-              dashArray={selectedRoute.status === 'in-progress' ? '10, 10' : undefined}
-            />
-          </>
+
+        {selectedRoute?.startPoint && (
+          <Marker position={[selectedRoute.startPoint.lat, selectedRoute.startPoint.lng]} icon={StartIcon}>
+            <Popup>
+              <div>
+                <h3 className="font-semibold text-slate-800">{selectedRoute.name || 'Start Point'}</h3>
+                <p className="text-slate-600">Starting Point</p>
+              </div>
+            </Popup>
+          </Marker>
         )}
+
+        {selectedRoute?.endPoint && (
+          <Marker position={[selectedRoute.endPoint.lat, selectedRoute.endPoint.lng]} icon={EndIcon}>
+            <Popup>
+              <div>
+                <h3 className="font-semibold text-slate-800">{selectedRoute.name || 'End Point'}</h3>
+                <p className="text-slate-600">Destination</p>
+              </div>
+            </Popup>
+          </Marker>
+        )}
+
+        {selectedRoute?.waypoints?.map((point, index) => (
+          <Marker key={index} position={[point.lat, point.lng]} icon={DefaultIcon}>
+            <Popup>
+              <div>
+                <h3 className="font-semibold text-slate-800">Waypoint {index + 1}</h3>
+                <p className="text-slate-600">
+                  {point.timestamp && new Date(point.timestamp).toLocaleTimeString()}
+                </p>
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+
+        <Polyline positions={getRoutePath()} color="blue" weight={5} />
       </MapContainer>
     </div>
   );
