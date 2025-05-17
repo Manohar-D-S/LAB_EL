@@ -14,4 +14,5 @@ export interface Route {
   duration: number; // in seconds
   distance: number; // in kilometers
   createdAt: string;
+  path: { lat: number; lng: number }[]; // Array of coordinates representing the route
 }

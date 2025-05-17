@@ -7,6 +7,7 @@ from hashlib import sha256
 import matplotlib.pyplot as plt
 import osmnx as ox
 from datetime import datetime
+from time import sleep
 
 from core.routing.graph_builder import build_simplified_graph, load_graph_from_file, extract_subgraph
 from core.routing.a_star import AmbulanceRouter
@@ -34,27 +35,27 @@ def generate_cache_key(source: Tuple[float, float], destination: Tuple[float, fl
     key = f"{source[0]}-{source[1]}-{destination[0]}-{destination[1]}"
     return sha256(key.encode()).hexdigest()
 
-def save_route_image(G, path, filename: str):
-    """Generate and save an image of the route."""
-    try:
-        # Plot the route on the graph
-        fig, ax = ox.plot_graph_route(
-            G,
-            path,
-            route_linewidth=6,
-            route_color="blue",
-            node_size=0,
-            bgcolor="white",
-            show=False,
-            close=False
-        )
-        # Save the image to the specified filename
-        filepath = os.path.join("./server", filename)
-        plt.savefig(filepath, dpi=300, bbox_inches="tight")
-        plt.close(fig)
-        logger.info(f"Route image saved at {filepath}")
-    except Exception as e:
-        logger.error(f"Failed to save route image: {e}")
+# def save_route_image(G, path, filename: str):
+#     """Generate and save an image of the route."""
+#     try:
+#         # Plot the route on the graph
+#         fig, ax = ox.plot_graph_route(
+#             G,
+#             path,
+#             route_linewidth=6,
+#             route_color="blue",
+#             node_size=0,
+#             bgcolor="white",
+#             show=False,
+#             close=False
+#         )
+#         # Save the image to the specified filename
+#         filepath = os.path.join("./server", filename)
+#         plt.savefig(filepath, dpi=300, bbox_inches="tight")
+#         plt.close(fig)
+#         logger.info(f"Route image saved at {filepath}")
+#     except Exception as e:
+#         logger.error(f"Failed to save route image: {e}")
 
 @router.get("/router-test")
 def router_test():
@@ -77,6 +78,8 @@ async def calculate_route(route_request: RouteRequest):
 
     # Check if the route is already cached
     if cache_key in route_cache:
+        logger.info(f"Checking for cached route with key: {cache_key}")
+        sleep(1)  # Simulate a delay for cache hit
         logger.info(f"Cache hit for route: {source} -> {destination}")
         return route_cache[cache_key]
 
@@ -107,16 +110,16 @@ async def calculate_route(route_request: RouteRequest):
             for i in range(len(path) - 1)
         )
 
-        # Save the route image
-        image_filename = f"route_{cache_key}.png"
-        save_route_image(subgraph, path, image_filename)
+        # # Save the route image
+        # image_filename = f"route_{cache_key}.png"
+        # save_route_image(subgraph, path, image_filename)
 
         response = {
             "path": [{"lat": subgraph.nodes[node]["y"], "lng": subgraph.nodes[node]["x"]} for node in path],
             "startPoint": {"lat": source[0], "lng": source[1]},
             "endPoint": {"lat": destination[0], "lng": destination[1]},
             "distance": distance,  # Include the distance in the response
-            "image": image_filename  # Include the image filename in the response
+            #"image": image_filename  # Include the image filename in the response
         }
 
         # Store the route in the cache
