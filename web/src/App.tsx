@@ -7,8 +7,16 @@ import RouteDetails from './components/RouteDetails';
 import { getRoutes } from './services/api';
 import { Route } from './types/route';
 
+type RouteListProps = {
+  routes: Route[]; // Add the missing 'routes' property
+  selectedRouteId: string | undefined;
+  onRouteSelect: (route: Route | null) => void;
+  locations: { id: string; name: string; lat: number; lng: number }[];
+  onSearch: (source: string, destination: string) => Promise<void>;
+  isSearching: boolean;
+};
+
 function App() {
-  const [routes, setRoutes] = useState<Route[]>([]);
   const [selectedRoute, setSelectedRoute] = useState<Route | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -71,7 +79,6 @@ function App() {
       try {
         setLoading(true);
         const data = await getRoutes();
-        setRoutes(data);
         setLoading(false);
       } catch (err) {
         console.error('Error fetching routes:', err);
@@ -82,10 +89,6 @@ function App() {
 
     fetchRoutes();
   }, []);
-
-  const handleRouteSelect = (route: Route) => {
-    setSelectedRoute(route);
-  };
 
   return (
     <div className="flex flex-col h-screen bg-slate-50">
@@ -105,12 +108,9 @@ function App() {
               <div className="py-4 text-center text-rose-500">{error}</div>
             ) : (
               <RouteList 
-                routes={routes} 
-                selectedRouteId={selectedRoute?.id} 
-                onRouteSelect={handleRouteSelect} 
                 locations={locations} 
                 onSearch={handleSearch} 
-                isSearching={isSearching} // Pass the loading state to RouteList
+                isSearching={isSearching} 
               />
             )}
           </div>

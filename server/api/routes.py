@@ -63,36 +63,8 @@ def router_test():
 
 @router.get("/routes")
 async def get_routes():
-    """Get a list of predefined routes"""
-    logger.info("Fetching predefined routes.")
-    routes = [
-        {
-            "id": "1",
-            "name": "Emergency Route 1",
-            "description": "Koramangala to Indiranagar",
-            "createdAt": "2025-05-15T08:00:00Z",
-            "startPoint": {"lat": 12.9716, "lng": 77.5946},
-            "endPoint": {"lat": 12.9352, "lng": 77.6101},
-            "waypoints": [],
-            "status": "pending",
-            "distance": 5.2,
-            "duration": 12 * 60
-        },
-        {
-            "id": "2",
-            "name": "Emergency Route 2",
-            "description": "Whitefield to Electronic City",
-            "createdAt": "2025-05-15T09:00:00Z",
-            "startPoint": {"lat": 12.9698, "lng": 77.7499},
-            "endPoint": {"lat": 12.8399, "lng": 77.6770},
-            "waypoints": [],
-            "status": "pending",
-            "distance": 15.7,
-            "duration": 35 * 60
-        }
-    ]
-    logger.info(f"Returning predefined routes: {routes}")
-    return routes
+    logger.info("Fetching routes. No predefined routes will be returned.")
+    return {"routes": []}  # Return an empty list or remove this endpoint entirely
 
 @router.post("/routes")
 async def calculate_route(route_request: RouteRequest):
