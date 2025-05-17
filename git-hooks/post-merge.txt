@@ -1,0 +1,5 @@
+@echo off
+echo [Git Hook] Running npm install after pull/merge...
+if exist package.json (
+    npm install
+)
