@@ -1,27 +1,71 @@
-from fastapi import APIRouter, HTTPException, Depends
-from fastapi.responses import JSONResponse
-from typing import Dict, Any
+import os
 import logging
+from fastapi import APIRouter, HTTPException, Depends, Request
+from fastapi.responses import JSONResponse
+from typing import Dict, Any, Tuple
+from hashlib import sha256
+import matplotlib.pyplot as plt
+import osmnx as ox
+from datetime import datetime
 
 from core.routing.graph_builder import build_simplified_graph
 from core.routing.a_star import AmbulanceRouter
-from core.metrics import calculate_route_metrics
-from api.schemas import RouteRequest, RouteResponse
 from utils.geo_helpers import snap_to_nearest_node
+from api.schemas import RouteRequest
 
-# router = APIRouter(prefix="/api/v1", tags=["Routing"])
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.FileHandler("server_logs.log"),  # Save logs to a file
+        logging.StreamHandler()  # Print logs to the console
+    ]
+)
+
+# In-memory cache for routes
+route_cache: Dict[str, Any] = {}
+
+def generate_cache_key(source: Tuple[float, float], destination: Tuple[float, float]) -> str:
+    """Generate a unique cache key based on source and destination coordinates."""
+    key = f"{source[0]}-{source[1]}-{destination[0]}-{destination[1]}"
+    return sha256(key.encode()).hexdigest()
+
+def save_route_image(G, path, filename: str):
+    """Generate and save an image of the route."""
+    try:
+        # Plot the route on the graph
+        fig, ax = ox.plot_graph_route(
+            G,
+            path,
+            route_linewidth=6,
+            route_color="blue",
+            node_size=0,
+            bgcolor="white",
+            show=False,
+            close=False
+        )
+        # Save the image to the specified filename
+        filepath = os.path.join("./server", filename)
+        plt.savefig(filepath, dpi=300, bbox_inches="tight")
+        plt.close(fig)
+        logger.info(f"Route image saved at {filepath}")
+    except Exception as e:
+        logger.error(f"Failed to save route image: {e}")
+
 @router.get("/router-test")
 def router_test():
+    logger.info("Router test endpoint was called.")
     return {"message": "Router test route works!"}
 
 @router.get("/routes")
 async def get_routes():
     """Get a list of predefined routes"""
-    # Return a list of sample routes for demonstration
-    return [
+    logger.info("Fetching predefined routes.")
+    routes = [
         {
             "id": "1",
             "name": "Emergency Route 1",
@@ -29,10 +73,10 @@ async def get_routes():
             "createdAt": "2025-05-15T08:00:00Z",
             "startPoint": {"lat": 12.9716, "lng": 77.5946},
             "endPoint": {"lat": 12.9352, "lng": 77.6101},
-            "waypoints": [],  # Empty waypoints array
-            "status": "pending",  # Add status field
+            "waypoints": [],
+            "status": "pending",
             "distance": 5.2,
-            "duration": 12 * 60  # Convert to seconds as expected by frontend
+            "duration": 12 * 60
         },
         {
             "id": "2",
@@ -41,78 +85,83 @@ async def get_routes():
             "createdAt": "2025-05-15T09:00:00Z",
             "startPoint": {"lat": 12.9698, "lng": 77.7499},
             "endPoint": {"lat": 12.8399, "lng": 77.6770},
-            "waypoints": [],  # Empty waypoints array
-            "status": "pending",  # Add status field
+            "waypoints": [],
+            "status": "pending",
             "distance": 15.7,
-            "duration": 35 * 60  # Convert to seconds as expected by frontend
+            "duration": 35 * 60
         }
     ]
+    logger.info(f"Returning predefined routes: {routes}")
+    return routes
 
-# @router.post("/routes", response_model=RouteResponse)
 @router.post("/routes")
-async def calculate_route(route_request: RouteRequest) -> Dict[str, Any]:
-    """
-    Calculate optimal ambulance route between two points.
-    
-    Args:
-        start_lat: Starting latitude
-        start_lng: Starting longitude
-        end_lat: Destination latitude
-        end_lng: Destination longitude
-    
-    Returns:
-        Dictionary containing:
-        - path: List of node IDs in the route
-        - distance_km: Total route distance in kilometers
-        - time_mins: Estimated travel time in minutes
-        - visualization_url: URL to route visualization (if generated)
-    """
+async def calculate_route(route_request: RouteRequest):
+    logger.info(f"Received route calculation request: {route_request}")
+    source = (route_request.source_lat, route_request.source_lng)
+    destination = (route_request.dest_lat, route_request.dest_lng)
+
+    # Generate a cache key for the route
+    cache_key = generate_cache_key(source, destination)
+
+    # Check if the route is already cached
+    if cache_key in route_cache:
+        logger.info(f"Cache hit for route: {source} -> {destination}")
+        return route_cache[cache_key]
+
     try:
-        # Extract coordinates
-        source = (route_request.source_lat, route_request.source_lng)
-        dest = (route_request.dest_lat, route_request.dest_lng)
-        
-        # Build optimized graph
-        G = build_simplified_graph(source, dest)
-        
-        # Find nearest nodes
+        logger.info(f"Cache miss. Fetching vehicle graph for source: {source}, destination: {destination}")
+        G = build_simplified_graph(source, destination)
         start_node = snap_to_nearest_node(G, source)
-        end_node = snap_to_nearest_node(G, dest)
-        
-        # Calculate route
+        end_node = snap_to_nearest_node(G, destination)
+        logger.info(f"Start node: {start_node}, End node: {end_node}")
+
         router = AmbulanceRouter(G)
-        route_result = router.find_route(start_node, end_node)
-        
-        if not route_result:
-            raise HTTPException(
-                status_code=404,
-                detail="No valid route found between the specified points"
+        path = router.astar(start_node, end_node)
+        logger.info(f"Calculated path: {path}")
+
+        # Calculate the distance of the route
+        distance = sum(
+            ox.distance.euclidean_dist_vec(
+                G.nodes[path[i]]["y"], G.nodes[path[i]]["x"],
+                G.nodes[path[i + 1]]["y"], G.nodes[path[i + 1]]["x"]
             )
-        
-        # Calculate additional metrics
-        metrics = calculate_route_metrics(G, route_result['path'])
-        
-        # Prepare response
-        response = RouteResponse(
-            path=route_result['nodes'],  # List of (lat, lng) tuples
-            distance=metrics['distance_km'],
-            duration=metrics['time_mins'],
-            road_types=metrics.get('road_types', {}),
-            visualization_url=f"/api/v1/visualizations/{source}_{dest}.png"
+            for i in range(len(path) - 1)
         )
-        
+
+        # Save the route image
+        image_filename = f"route_{cache_key}.png"
+        save_route_image(G, path, image_filename)
+
+        response = {
+            "path": [{"lat": G.nodes[node]["y"], "lng": G.nodes[node]["x"]} for node in path],
+            "startPoint": {"lat": source[0], "lng": source[1]},
+            "endPoint": {"lat": destination[0], "lng": destination[1]},
+            "distance": distance,  # Include the distance in the response
+            "image": image_filename  # Include the image filename in the response
+        }
+
+        # Store the route in the cache
+        route_cache[cache_key] = response
+        logger.info(f"Route cached with key: {cache_key}")
+
         return response
-        
-    except HTTPException:
-        raise
     except Exception as e:
-        logger.error(f"Route calculation failed: {str(e)}", exc_info=True)
-        raise HTTPException(
-            status_code=500,
-            detail="Failed to calculate route. Please try again later."
-        )
+        logger.error(f"Error calculating route: {e}")
+        raise HTTPException(status_code=500, detail="Failed to calculate route")
+
+@router.get("/logs")
+async def get_logs():
+    """Endpoint to fetch server logs"""
+    try:
+        with open("server_logs.log", "r") as log_file:
+            logs = log_file.readlines()
+        return {"logs": logs}
+    except Exception as e:
+        logger.error(f"Error reading logs: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch logs")
 
 @router.get("/routes/health")
-async def health_check() -> Dict[str, str]:
+async def health_check():
     """Endpoint for service health check"""
+    logger.info("Health check endpoint was called.")
     return {"status": "healthy", "service": "ambulance-routing"}

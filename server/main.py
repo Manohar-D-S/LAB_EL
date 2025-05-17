@@ -4,6 +4,7 @@ import logging
 from fastapi.middleware.cors import CORSMiddleware
 from core.routing.graph_builder import build_simplified_graph
 from api.routes import router  # Make sure this import exists
+from fastapi.responses import JSONResponse
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +47,27 @@ def test_post_route(data: dict):
 @app.get("/")
 def root():
     return {"message": "Welcome to the Ambulance Routing API"}
+
+# Add a logs route to display server activity logs
+@app.get("/logs")
+def get_logs():
+    """
+    Endpoint to fetch and display server activity logs.
+    """
+    try:
+        # Read the log file
+        with open("server_logs.log", "r") as log_file:
+            logs = log_file.readlines()
+        
+        # Return the logs as a JSON response
+        return JSONResponse(content={"logs": logs})
+    except FileNotFoundError:
+        # Handle case where log file does not exist
+        return JSONResponse(content={"error": "Log file not found."}, status_code=404)
+    except Exception as e:
+        # Handle other errors
+        logger.error(f"Error reading logs: {e}")
+        return JSONResponse(content={"error": "Failed to fetch logs."}, status_code=500)
 
 app.include_router(router)
 

@@ -11,7 +11,15 @@ import {
 } from 'lucide-react';
 
 interface RouteDetailsProps {
-  route: Route;
+  route: {
+    distance?: number; // Ensure distance is optional to handle missing data
+    duration?: number;
+    startPoint?: { lat: number; lng: number };
+    endPoint?: { lat: number; lng: number };
+    waypoints?: { timestamp?: string }[]; // Add waypoints as an optional property
+    status?: string; // Add status as an optional property
+    name?: string; // Add name as an optional property
+  };
 }
 
 const RouteDetails: React.FC<RouteDetailsProps> = ({ route }) => {
@@ -23,7 +31,10 @@ const RouteDetails: React.FC<RouteDetailsProps> = ({ route }) => {
   };
 
   const formatDistance = (distance: number) => {
-    return `${distance.toFixed(1)} km`;
+    if (distance >= 1000) {
+      return `${(distance / 1000).toFixed(2)} km`;
+    }
+    return `${distance.toFixed(2)} m`;
   };
 
   const formatDuration = (seconds: number) => {
@@ -42,6 +53,10 @@ const RouteDetails: React.FC<RouteDetailsProps> = ({ route }) => {
     }
   };
 
+  if (!route) {
+    return <div>No route selected.</div>;
+  }
+
   return (
     <div className={`bg-white shadow-sm transition-all duration-300 border-t border-slate-200 ${
       expanded ? 'h-80' : 'h-24'
@@ -50,7 +65,7 @@ const RouteDetails: React.FC<RouteDetailsProps> = ({ route }) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <h2 className="text-lg font-semibold text-slate-800">{route.name}</h2>
-            <span className={`ml-2 ${getStatusColor(route.status)}`}>
+            <span className={`ml-2 ${getStatusColor(route.status || 'unknown')}`}>
               ({route.status})
             </span>
           </div>
@@ -77,11 +92,11 @@ const RouteDetails: React.FC<RouteDetailsProps> = ({ route }) => {
         <div className="flex justify-between text-sm mt-2">
           <div className="flex items-center text-slate-600">
             <Clock className="h-4 w-4 mr-1" />
-            <span>{formatDuration(route.duration)}</span>
+            <span>{route.duration !== undefined ? formatDuration(route.duration) : 'N/A'}</span>
           </div>
           <div className="flex items-center text-slate-600">
             <Navigation className="h-4 w-4 mr-1" />
-            <span>{formatDistance(route.distance)}</span>
+            <span>{route.distance !== undefined ? formatDistance(route.distance) : 'N/A'}</span>
           </div>
         </div>
         
@@ -100,21 +115,21 @@ const RouteDetails: React.FC<RouteDetailsProps> = ({ route }) => {
                       <span className="text-sm font-medium text-slate-700">Start Point</span>
                     </div>
                     <p className="text-xs text-slate-500 ml-5">
-                      Lat: {route.startPoint.lat.toFixed(4)}, Lng: {route.startPoint.lng.toFixed(4)}
+                      Lat: {route.startPoint?.lat?.toFixed(4) ?? 'N/A'}, Lng: {route.startPoint?.lng?.toFixed(4) ?? 'N/A'}
                     </p>
                   </div>
                   
-                  {route.waypoints.map((point, index) => (
+                    {route.waypoints && route.waypoints.map((point: { timestamp?: string }, index: number) => (
                     <div className="mb-3" key={index}>
                       <div className="flex items-center">
-                        <div className="w-2 h-2 rounded-full bg-indigo-400 mr-2"></div>
-                        <span className="text-sm text-slate-600">Waypoint {index + 1}</span>
+                      <div className="w-2 h-2 rounded-full bg-indigo-400 mr-2"></div>
+                      <span className="text-sm text-slate-600">Waypoint {index + 1}</span>
                       </div>
                       <p className="text-xs text-slate-500 ml-4">
-                        {point.timestamp && formatTime(point.timestamp)}
+                      {point.timestamp ? formatTime(point.timestamp) : 'No timestamp available'}
                       </p>
                     </div>
-                  ))}
+                    ))}
                   
                   <div>
                     <div className="flex items-center">
@@ -122,7 +137,13 @@ const RouteDetails: React.FC<RouteDetailsProps> = ({ route }) => {
                       <span className="text-sm font-medium text-slate-700">End Point</span>
                     </div>
                     <p className="text-xs text-slate-500 ml-5">
-                      Lat: {route.endPoint.lat.toFixed(4)}, Lng: {route.endPoint.lng.toFixed(4)}
+                      {route.endPoint ? (
+                        <>
+                          Lat: {route.endPoint.lat.toFixed(4)}, Lng: {route.endPoint.lng.toFixed(4)}
+                        </>
+                      ) : (
+                        'End Point not available'
+                      )}
                     </p>
                   </div>
                 </div>
