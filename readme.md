@@ -18,6 +18,7 @@ DEBUGGING:
 
 
 
+Instructions to run React Native app (frontend folder)
 
 📦 Core Dependencies (Run These First)
 npm install react react-native react-native-web expo expo-router @react-navigation/native @react-navigation/bottom-tabs
