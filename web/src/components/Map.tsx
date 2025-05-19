@@ -1,3 +1,6 @@
+//Map.tsx
+// This component displays a map with a route, traffic signals, and an ambulance marker.
+
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
@@ -32,7 +35,7 @@ const EndIcon = new L.Icon({
 
 // Custom ambulance icon
 const ambulanceIcon = new L.Icon({
-  iconUrl: '/ambulance-icon.png', // Ensure this image is placed in the public folder
+  iconUrl: '/ambulance.png', // Updated path to reflect public folder
   iconSize: [32, 32],
   iconAnchor: [16, 16],
 });
@@ -40,8 +43,8 @@ const ambulanceIcon = new L.Icon({
 // Custom traffic signal icon
 const TrafficSignalIcon = new L.Icon({
   iconUrl: '/traffic.png', // Ensure this image is placed in the public folder
-  iconSize: [30, 30], // Adjusted size for better visibility
-  iconAnchor: [15, 15], // Center the icon
+  iconSize: [35, 35], // Adjusted size for better visibility
+  iconAnchor: [18, 18], // Center the icon
 });
 
 L.Marker.prototype.options.icon = DefaultIcon;
@@ -75,11 +78,11 @@ const Map: React.FC<MapProps> = ({ selectedRoute, ambulancePosition }) => {
       setZoom(12);
 
       // Calculate route and fetch traffic signals when a new route is selected
-      const fetchRouteAndTrafficSignals = async () => {
+      const fetchRouteAndTrafficSignals = async (retryCount = 0) => {
         try {
           setRouteError(null);
           if (selectedRoute.path) {
-            const routePoints: [number, number][] = selectedRoute.path.map((point) => [point.lat, point.lng]); // Explicitly type as [number, number][]
+            const routePoints: [number, number][] = selectedRoute.path.map((point) => [point.lat, point.lng]);
             setCalculatedRoute(routePoints);
 
             // Fetch traffic signals using Overpass API
@@ -94,7 +97,7 @@ const Map: React.FC<MapProps> = ({ selectedRoute, ambulancePosition }) => {
             const response = await axios.post(
               'https://overpass-api.de/api/interpreter',
               overpassQuery,
-              { headers: { 'Content-Type': 'text/plain' } }
+              { headers: { 'Content-Type': 'text/plain' }, timeout: 10000 }
             );
 
             const trafficSignalPoints = response.data.elements.map((element: any) => ({
@@ -104,15 +107,35 @@ const Map: React.FC<MapProps> = ({ selectedRoute, ambulancePosition }) => {
             setTrafficSignals(trafficSignalPoints);
           }
         } catch (error) {
-          setRouteError(error instanceof Error ? error.message : 'Failed to fetch traffic signals');
-          setCalculatedRoute([]);
-          setTrafficSignals([]);
+          if (retryCount < 2) {
+            // Retry up to 2 times with a delay
+            setTimeout(() => fetchRouteAndTrafficSignals(retryCount + 1), 2000);
+          } else {
+            setRouteError('Failed to fetch traffic signals from Overpass API. Please try again later.');
+            setCalculatedRoute([]);
+            setTrafficSignals([]);
+          }
         }
       };
 
       fetchRouteAndTrafficSignals();
     }
   }, [selectedRoute]);
+
+  // Helper function to send proximity log to Python server
+  function sendProximityLog(signal: any, distance: number) {
+    fetch('http://localhost:8000/iot/proximity', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        signalId: signal.id || signal.name || '', // Prefer OSM node id, fallback to name
+        name: signal.name || '',
+        lat: signal.position[0],
+        lng: signal.position[1],
+        distance: distance // Send distance as a separate field
+      })
+    });
+  }
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -121,23 +144,17 @@ const Map: React.FC<MapProps> = ({ selectedRoute, ambulancePosition }) => {
           const distance = L.latLng(ambulancePosition.lat, ambulancePosition.lng).distanceTo(
             L.latLng(signal.position[0], signal.position[1])
           );
-          if (distance <= 200) { // 200 meters
-            const logMessage = `Ambulance near ${signal.name} signal.\n`;
-            console.log(logMessage);
-
-            // Correct the path to the log file
-            const logFilePath = './src/signals.log'; // Adjusted relative path
-            fs.appendFile(logFilePath, logMessage, (err) => {
-              if (err) {
-                console.error('Failed to write to signals.log:', err);
-              }
-            });
+          if (distance <= 150) {
+            console.log(
+              `Ambulance within 150m of ${signal.name} signal. Distance: ${distance.toFixed(1)}m`
+            );
+            sendProximityLog(signal, distance);
           }
         });
       }
-    }, 4000); // Check every 4 seconds
+    }, 4500);
 
-    return () => clearInterval(interval); // Cleanup interval on component unmount
+    return () => clearInterval(interval);
   }, [ambulancePosition, trafficSignals]);
 
   useEffect(() => {

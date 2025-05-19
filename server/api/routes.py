@@ -14,6 +14,7 @@ from core.routing.graph_builder import build_simplified_graph, load_graph_from_f
 from core.routing.a_star import AmbulanceRouter
 from utils.geo_helpers import snap_to_nearest_node
 from api.schemas import RouteRequest
+from iot.iot_manager import IOTManager
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -58,44 +59,6 @@ def generate_cache_key(source: Tuple[float, float], destination: Tuple[float, fl
 #     except Exception as e:
 #         logger.error(f"Failed to save route image: {e}")
 
-app = FastAPI()  # Create the FastAPI app instance
-
-@app.on_event("startup")
-async def download_bangalore_map():
-    """Ensure the bangalore_map.graphml file exists on server startup."""
-    data_folder = os.path.join(os.getcwd(), "data")
-    os.makedirs(data_folder, exist_ok=True)
-    graph_file_path = os.path.join(data_folder, "bangalore_map.graphml")
-
-    if not os.path.exists(graph_file_path):
-        try:
-            # Use OSM Overpass API to fetch the map data
-            logger.info("Downloading bangalore_map.graphml from OSM Overpass API...")
-            overpass_url = "https://overpass-api.de/api/interpreter"
-            overpass_query = """
-                [out:xml];
-                (
-                  node(12.834,77.461,13.139,77.739);
-                  way(12.834,77.461,13.139,77.739);
-                  relation(12.834,77.461,13.139,77.739);
-                );
-                out meta;
-                >;
-                out meta qt;
-            """
-            response = requests.post(overpass_url, data=overpass_query, headers={"Content-Type": "text/plain"})
-            response.raise_for_status()
-
-            # Save the response as a .graphml file
-            with open(graph_file_path, "wb") as graph_file:
-                graph_file.write(response.content)
-            logger.info("Downloaded bangalore_map.graphml successfully.")
-        except requests.RequestException as e:
-            logger.error(f"Failed to download bangalore_map.graphml: {e}")
-            raise RuntimeError("Failed to download required map file.")
-    else:
-        logger.info("bangalore_map.graphml already exists. Skipping download.")
-
 @router.get("/router-test")
 def router_test():
     logger.info("Router test endpoint was called.")
@@ -111,34 +74,12 @@ async def calculate_route(route_request: RouteRequest):
     # Ensure the bangalore_map.graphml file exists
     data_folder = os.path.join(os.getcwd(), "data")
     os.makedirs(data_folder, exist_ok=True)
-    graph_file_path = os.path.join(data_folder, "bangalore_map.graphml")
+    graph_file_path = os.path.join(data_folder, "simplified_bengaluru.graphml")
 
+    # Remove the download logic here, assume the file is managed at server startup
     if not os.path.exists(graph_file_path):
-        try:
-            # Use OSM Overpass API to fetch the map data
-            logger.info("Downloading bangalore_map.graphml from OSM Overpass API...")
-            overpass_url = "https://overpass-api.de/api/interpreter"
-            overpass_query = """
-                [out:xml];
-                (
-                  node(12.834,77.461,13.139,77.739);
-                  way(12.834,77.461,13.139,77.739);
-                  relation(12.834,77.461,13.139,77.739);
-                );
-                out meta;
-                >;
-                out meta qt;
-            """
-            response = requests.post(overpass_url, data=overpass_query, headers={"Content-Type": "text/plain"})
-            response.raise_for_status()
-
-            # Save the response as a .graphml file
-            with open(graph_file_path, "wb") as graph_file:
-                graph_file.write(response.content)
-            logger.info("Downloaded bangalore_map.graphml successfully.")
-        except requests.RequestException as e:
-            logger.error(f"Failed to download bangalore_map.graphml: {e}")
-            raise HTTPException(status_code=500, detail="Failed to download required map file.")
+        logger.error("bangalore_map.graphml is missing. Please ensure it is downloaded at server startup.")
+        raise HTTPException(status_code=500, detail="Required map file is missing.")
 
     logger.info(f"Received route calculation request: {route_request}")
     source = (route_request.source_lat, route_request.source_lng)
@@ -214,3 +155,11 @@ async def health_check():
     """Endpoint for service health check"""
     logger.info("Health check endpoint was called.")
     return {"status": "healthy", "service": "ambulance-routing"}
+
+@router.post("/proximity")
+async def handle_proximity(request: Request):
+    data = await request.json()
+    # Access iot_manager from app state
+    iot_manager = request.app.state.iot_manager
+    iot_manager.handle_proximity(data)
+    return {"status": "received", "data": data}
