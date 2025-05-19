@@ -15,3 +15,5 @@ TERMINAL 2:
 
 DEBUGGING:
     Check the server_logs.log file for server side debugging
+    When running the web app in a browser, check inspect for api call logs
+    Some browser might not work well in the first run, so preferably use firefox
