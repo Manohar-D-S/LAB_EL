@@ -39,3 +39,20 @@ TypeError: build_simplified_graph() missing 2 required positional arguments: 'so
 2025-05-20 00:53:54,531 - INFO - Route cached with key: a3d30a57bb5b5cafc2150d30b0f64202558aa0111319dbfcbca361155fbe31ec
 2025-05-20 01:29:51,929 - INFO - Graph file already exists. Skipping download.
 2025-05-20 01:29:51,929 - INFO - Startup complete
+2025-05-20 01:54:00,215 - INFO - Graph file already exists. Skipping download.
+2025-05-20 01:54:00,215 - INFO - Startup complete
+2025-05-20 01:54:24,414 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-20 01:54:24,420 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-20 01:54:24,426 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-20 01:54:24,436 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-20 01:54:31,040 - INFO - Received route calculation request: source_lat=12.982157 source_lng=77.598217 dest_lat=12.972791 dest_lng=77.586308
+2025-05-20 01:54:31,042 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-05-20 01:55:10,950 - INFO - Graph loaded with 152601 nodes and 388165 edges.
+2025-05-20 01:55:10,951 - INFO - Extracting subgraph for source=(12.982157, 77.598217), dest=(12.972791, 77.586308)
+2025-05-20 01:55:32,772 - INFO - Subgraph extracted with 6953 nodes and 17557 edges.
+2025-05-20 01:55:32,859 - INFO - Start node: 429303174, End node: 663311696
+2025-05-20 01:55:32,873 - INFO - AmbulanceRouter initialized with graph containing 6953 nodes and 17557 edges.
+2025-05-20 01:55:32,873 - INFO - Starting A* search from node 429303174 to node 663311696.
+2025-05-20 01:55:32,912 - INFO - A* search completed. Path found: [429303174, 294081383, 5466316467, 2016244606, 663596568, 3641907748, 3641907747, 2014690200, 263155937, 11854384388, 661987313, 11854384389, 3665554480, 10121296056, 12462395646, 663311721, 663311718, 12141911042, 12141911043, 12141911045, 663311696]
+2025-05-20 01:55:32,915 - INFO - Calculated path: [429303174, 294081383, 5466316467, 2016244606, 663596568, 3641907748, 3641907747, 2014690200, 263155937, 11854384388, 661987313, 11854384389, 3665554480, 10121296056, 12462395646, 663311721, 663311718, 12141911042, 12141911043, 12141911045, 663311696]
+2025-05-20 01:55:32,919 - INFO - Route cached with key: fb1142f01aaaa50cbca74ccaca9747ae43c8714346f76b26ac6a9e0b5c28de98
