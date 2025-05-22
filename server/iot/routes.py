@@ -30,22 +30,13 @@ router = APIRouter()
 @router.post("/iot/proximity")
 async def handle_proximity(request: Request):
     data = await request.json()
-    # The expected JSON format from Map.tsx:
-    # {
-    #   "signalId": ...,
-    #   "name": ...,
-    #   "lat": ...,
-    #   "lng": ...,
-    #   "distance": ...
-    # }
-    print("Received proximity log:", data)
-    # You can access fields like:
-    # signal_id = data.get("signalId")
-    # name = data.get("name")
-    # lat = data.get("lat")
-    # lng = data.get("lng")
-    # distance = data.get("distance")
-    return JSONResponse(content={"status": "received", "data": data})
+    iot_manager = request.app.state.iot_manager
+    selected_signal = iot_manager.signal_processor.process_proximity(data)
+
+    if selected_signal:
+        return JSONResponse(content={"status": "selected", "signal": selected_signal.__dict__})
+    else:
+        return JSONResponse(content={"status": "no_signal_selected"}, status_code=200)
 
 # If you want to use the Pydantic model:
 @router.post("/iot/proximity/model")

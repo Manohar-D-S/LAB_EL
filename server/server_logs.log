@@ -56,3 +56,158 @@ TypeError: build_simplified_graph() missing 2 required positional arguments: 'so
 2025-05-20 01:55:32,912 - INFO - A* search completed. Path found: [429303174, 294081383, 5466316467, 2016244606, 663596568, 3641907748, 3641907747, 2014690200, 263155937, 11854384388, 661987313, 11854384389, 3665554480, 10121296056, 12462395646, 663311721, 663311718, 12141911042, 12141911043, 12141911045, 663311696]
 2025-05-20 01:55:32,915 - INFO - Calculated path: [429303174, 294081383, 5466316467, 2016244606, 663596568, 3641907748, 3641907747, 2014690200, 263155937, 11854384388, 661987313, 11854384389, 3665554480, 10121296056, 12462395646, 663311721, 663311718, 12141911042, 12141911043, 12141911045, 663311696]
 2025-05-20 01:55:32,919 - INFO - Route cached with key: fb1142f01aaaa50cbca74ccaca9747ae43c8714346f76b26ac6a9e0b5c28de98
+2025-05-20 09:51:38,044 - INFO - Graph file already exists. Skipping download.
+2025-05-20 09:51:38,044 - INFO - Startup complete
+2025-05-20 09:57:45,358 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-20 09:57:45,371 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-20 09:57:45,406 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-20 09:57:45,439 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-20 09:57:56,346 - INFO - Received route calculation request: source_lat=12.907877 source_lng=77.592391 dest_lat=12.917924 dest_lng=77.599245
+2025-05-20 09:57:56,358 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-05-20 09:58:38,267 - INFO - Graph loaded with 152601 nodes and 388165 edges.
+2025-05-20 09:58:38,268 - INFO - Extracting subgraph for source=(12.907877, 77.592391), dest=(12.917924, 77.599245)
+2025-05-20 09:58:55,641 - INFO - Subgraph extracted with 7853 nodes and 19920 edges.
+2025-05-20 09:58:55,770 - INFO - Start node: 309595529, End node: 309601327
+2025-05-20 09:58:55,779 - INFO - AmbulanceRouter initialized with graph containing 7853 nodes and 19920 edges.
+2025-05-20 09:58:55,779 - INFO - Starting A* search from node 309595529 to node 309601327.
+2025-05-20 09:58:55,837 - INFO - A* search completed. Path found: [309595529, 309594757, 309594790, 309594787, 309594780, 309594605, 5354313551, 5354313552, 308473341, 362550614, 362557185, 309595499, 12229802213, 308468454, 3221380827, 308468333, 308466202, 305154750, 2550219088, 308465071, 308465041, 308464917, 308464715, 12165241795, 10123822794, 10123822792, 10123822793, 2544569077, 3902482901, 309600799, 309600804, 4397429402, 12459218188, 308464484, 309600930, 309601046, 309601079, 247974980, 309601396, 309601344, 309601327]
+2025-05-20 09:58:55,837 - INFO - Calculated path: [309595529, 309594757, 309594790, 309594787, 309594780, 309594605, 5354313551, 5354313552, 308473341, 362550614, 362557185, 309595499, 12229802213, 308468454, 3221380827, 308468333, 308466202, 305154750, 2550219088, 308465071, 308465041, 308464917, 308464715, 12165241795, 10123822794, 10123822792, 10123822793, 2544569077, 3902482901, 309600799, 309600804, 4397429402, 12459218188, 308464484, 309600930, 309601046, 309601079, 247974980, 309601396, 309601344, 309601327]
+2025-05-20 09:58:55,837 - INFO - Route cached with key: 984fb790c608a1a690a6db091f813928625ef242b188a8fdb885369c0a9c68dc
+2025-05-20 10:38:28,734 - INFO - Shutting down application
+2025-05-20 10:38:50,569 - INFO - Graph file already exists. Skipping download.
+2025-05-20 10:38:50,569 - INFO - Startup complete
+2025-05-20 10:39:05,116 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-20 10:39:05,122 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-20 10:39:05,130 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-20 10:39:05,138 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-20 10:39:11,313 - INFO - Received route calculation request: source_lat=12.982516 source_lng=77.529095 dest_lat=12.988345 dest_lng=77.508878
+2025-05-20 10:39:11,320 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-05-20 10:39:43,261 - INFO - Graph loaded with 152601 nodes and 388165 edges.
+2025-05-20 10:39:43,261 - INFO - Extracting subgraph for source=(12.982516, 77.529095), dest=(12.988345, 77.508878)
+2025-05-20 10:40:02,817 - INFO - Subgraph extracted with 11298 nodes and 30865 edges.
+2025-05-20 10:40:02,915 - INFO - Start node: 1546936999, End node: 1719192044
+2025-05-20 10:40:02,934 - INFO - AmbulanceRouter initialized with graph containing 11298 nodes and 30865 edges.
+2025-05-20 10:40:02,934 - INFO - Starting A* search from node 1546936999 to node 1719192044.
+2025-05-20 10:40:03,212 - INFO - A* search completed. Path found: [1546936999, 10039092485, 2227153680, 4696742592, 10038744981, 11868291763, 4696742590, 10038653644, 4696742486, 10038760749, 4696742484, 11868532437, 4696742481, 10039378356, 4696742474, 10077641806, 3530520847, 9192285822, 4696742468, 10039092448, 10039131920, 11868292089, 4700187780, 1719191865, 4697257910, 12607355193, 4692323187, 4692323186, 4692323185, 6142999388, 9771052411, 1557381555, 2224822171, 1719192044]
+2025-05-20 10:40:03,212 - INFO - Calculated path: [1546936999, 10039092485, 2227153680, 4696742592, 10038744981, 11868291763, 4696742590, 10038653644, 4696742486, 10038760749, 4696742484, 11868532437, 4696742481, 10039378356, 4696742474, 10077641806, 3530520847, 9192285822, 4696742468, 10039092448, 10039131920, 11868292089, 4700187780, 1719191865, 4697257910, 12607355193, 4692323187, 4692323186, 4692323185, 6142999388, 9771052411, 1557381555, 2224822171, 1719192044]
+2025-05-20 10:40:03,214 - INFO - Route cached with key: a3d30a57bb5b5cafc2150d30b0f64202558aa0111319dbfcbca361155fbe31ec
+2025-05-20 13:17:12,422 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-20 13:17:19,131 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-20 13:17:19,139 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-20 13:17:19,139 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-20 13:17:19,139 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-20 13:17:28,388 - INFO - Received route calculation request: source_lat=12.907877 source_lng=77.592391 dest_lat=12.917924 dest_lng=77.599245
+2025-05-20 13:17:28,388 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-05-20 13:17:48,650 - INFO - Graph loaded with 152601 nodes and 388165 edges.
+2025-05-20 13:17:48,650 - INFO - Extracting subgraph for source=(12.907877, 77.592391), dest=(12.917924, 77.599245)
+2025-05-20 13:17:54,018 - INFO - Subgraph extracted with 7853 nodes and 19920 edges.
+2025-05-20 13:17:54,050 - INFO - Start node: 309595529, End node: 309601327
+2025-05-20 13:17:54,056 - INFO - AmbulanceRouter initialized with graph containing 7853 nodes and 19920 edges.
+2025-05-20 13:17:54,056 - INFO - Starting A* search from node 309595529 to node 309601327.
+2025-05-20 13:17:54,076 - INFO - A* search completed. Path found: [309595529, 309594757, 309594790, 309594787, 309594780, 309594605, 5354313551, 5354313552, 308473341, 362550614, 362557185, 309595499, 12229802213, 308468454, 3221380827, 308468333, 308466202, 305154750, 2550219088, 308465071, 308465041, 308464917, 308464715, 12165241795, 10123822794, 10123822792, 10123822793, 2544569077, 3902482901, 309600799, 309600804, 4397429402, 12459218188, 308464484, 309600930, 309601046, 309601079, 247974980, 309601396, 309601344, 309601327]
+2025-05-20 13:17:54,076 - INFO - Calculated path: [309595529, 309594757, 309594790, 309594787, 309594780, 309594605, 5354313551, 5354313552, 308473341, 362550614, 362557185, 309595499, 12229802213, 308468454, 3221380827, 308468333, 308466202, 305154750, 2550219088, 308465071, 308465041, 308464917, 308464715, 12165241795, 10123822794, 10123822792, 10123822793, 2544569077, 3902482901, 309600799, 309600804, 4397429402, 12459218188, 308464484, 309600930, 309601046, 309601079, 247974980, 309601396, 309601344, 309601327]
+2025-05-20 13:17:54,076 - INFO - Route cached with key: 984fb790c608a1a690a6db091f813928625ef242b188a8fdb885369c0a9c68dc
+2025-05-20 13:18:27,779 - INFO - Received route calculation request: source_lat=12.907877 source_lng=77.592391 dest_lat=12.917924 dest_lng=77.599245
+2025-05-20 13:18:27,790 - INFO - Checking for cached route with key: 984fb790c608a1a690a6db091f813928625ef242b188a8fdb885369c0a9c68dc
+2025-05-20 13:18:28,792 - INFO - Cache hit for route: (12.907877, 77.592391) -> (12.917924, 77.599245)
+2025-05-20 13:20:18,894 - INFO - Received route calculation request: source_lat=12.982516 source_lng=77.529095 dest_lat=12.988345 dest_lng=77.508878
+2025-05-20 13:20:18,901 - INFO - Checking for cached route with key: a3d30a57bb5b5cafc2150d30b0f64202558aa0111319dbfcbca361155fbe31ec
+2025-05-20 13:20:19,904 - INFO - Cache hit for route: (12.982516, 77.529095) -> (12.988345, 77.508878)
+2025-05-20 13:24:15,707 - INFO - Received route calculation request: source_lat=12.982157 source_lng=77.598217 dest_lat=12.972791 dest_lng=77.586308
+2025-05-20 13:24:15,707 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-05-20 13:24:52,967 - INFO - Graph loaded with 152601 nodes and 388165 edges.
+2025-05-20 13:24:52,968 - INFO - Extracting subgraph for source=(12.982157, 77.598217), dest=(12.972791, 77.586308)
+2025-05-20 13:25:10,209 - INFO - Subgraph extracted with 6953 nodes and 17557 edges.
+2025-05-20 13:25:10,249 - INFO - Start node: 429303174, End node: 663311696
+2025-05-20 13:25:10,258 - INFO - AmbulanceRouter initialized with graph containing 6953 nodes and 17557 edges.
+2025-05-20 13:25:10,258 - INFO - Starting A* search from node 429303174 to node 663311696.
+2025-05-20 13:25:10,273 - INFO - A* search completed. Path found: [429303174, 294081383, 5466316467, 2016244606, 663596568, 3641907748, 3641907747, 2014690200, 263155937, 11854384388, 661987313, 11854384389, 3665554480, 10121296056, 12462395646, 663311721, 663311718, 12141911042, 12141911043, 12141911045, 663311696]
+2025-05-20 13:25:10,274 - INFO - Calculated path: [429303174, 294081383, 5466316467, 2016244606, 663596568, 3641907748, 3641907747, 2014690200, 263155937, 11854384388, 661987313, 11854384389, 3665554480, 10121296056, 12462395646, 663311721, 663311718, 12141911042, 12141911043, 12141911045, 663311696]
+2025-05-20 13:25:10,275 - INFO - Route cached with key: fb1142f01aaaa50cbca74ccaca9747ae43c8714346f76b26ac6a9e0b5c28de98
+2025-05-20 13:34:21,775 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-20 13:34:21,791 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-20 13:34:21,826 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-20 13:34:21,826 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-20 13:43:08,461 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-20 13:43:08,461 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-20 13:43:08,470 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-20 13:43:08,474 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-20 13:48:52,658 - INFO - Shutting down application
+2025-05-22 10:33:56,610 - INFO - Graph file already exists. Skipping download.
+2025-05-22 10:33:56,612 - INFO - Startup complete
+2025-05-22 10:34:12,501 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-22 10:34:12,717 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-22 10:34:12,720 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-22 10:34:12,727 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-22 10:34:19,170 - INFO - Received route calculation request: source_lat=12.982157 source_lng=77.598217 dest_lat=12.972791 dest_lng=77.586308
+2025-05-22 10:34:19,173 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-05-22 10:34:44,828 - INFO - Graph loaded with 152601 nodes and 388165 edges.
+2025-05-22 10:34:44,828 - INFO - Extracting subgraph for source=(12.982157, 77.598217), dest=(12.972791, 77.586308)
+2025-05-22 10:34:59,256 - INFO - Subgraph extracted with 6953 nodes and 17557 edges.
+2025-05-22 10:34:59,337 - INFO - Start node: 429303174, End node: 663311696
+2025-05-22 10:34:59,345 - INFO - AmbulanceRouter initialized with graph containing 6953 nodes and 17557 edges.
+2025-05-22 10:34:59,345 - INFO - Starting A* search from node 429303174 to node 663311696.
+2025-05-22 10:34:59,362 - INFO - A* search completed. Path found: [429303174, 294081383, 5466316467, 2016244606, 663596568, 3641907748, 3641907747, 2014690200, 263155937, 11854384388, 661987313, 11854384389, 3665554480, 10121296056, 12462395646, 663311721, 663311718, 12141911042, 12141911043, 12141911045, 663311696]
+2025-05-22 10:34:59,362 - INFO - Calculated path: [429303174, 294081383, 5466316467, 2016244606, 663596568, 3641907748, 3641907747, 2014690200, 263155937, 11854384388, 661987313, 11854384389, 3665554480, 10121296056, 12462395646, 663311721, 663311718, 12141911042, 12141911043, 12141911045, 663311696]
+2025-05-22 10:34:59,362 - INFO - Route cached with key: fb1142f01aaaa50cbca74ccaca9747ae43c8714346f76b26ac6a9e0b5c28de98
+2025-05-22 12:08:57,750 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-22 12:09:02,699 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-22 12:09:02,702 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-22 12:09:02,705 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-22 12:09:02,708 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-22 12:09:17,307 - INFO - Received route calculation request: source_lat=12.982516 source_lng=77.529095 dest_lat=12.988345 dest_lng=77.508878
+2025-05-22 12:09:17,314 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-05-22 12:09:50,945 - INFO - Graph loaded with 152601 nodes and 388165 edges.
+2025-05-22 12:09:50,945 - INFO - Extracting subgraph for source=(12.982516, 77.529095), dest=(12.988345, 77.508878)
+2025-05-22 12:10:01,342 - INFO - Subgraph extracted with 11298 nodes and 30865 edges.
+2025-05-22 12:10:01,398 - INFO - Start node: 1546936999, End node: 1719192044
+2025-05-22 12:10:01,405 - INFO - AmbulanceRouter initialized with graph containing 11298 nodes and 30865 edges.
+2025-05-22 12:10:01,405 - INFO - Starting A* search from node 1546936999 to node 1719192044.
+2025-05-22 12:10:01,441 - INFO - A* search completed. Path found: [1546936999, 10039092485, 2227153680, 4696742592, 10038744981, 11868291763, 4696742590, 10038653644, 4696742486, 10038760749, 4696742484, 11868532437, 4696742481, 10039378356, 4696742474, 10077641806, 3530520847, 9192285822, 4696742468, 10039092448, 10039131920, 11868292089, 4700187780, 1719191865, 4697257910, 12607355193, 4692323187, 4692323186, 4692323185, 6142999388, 9771052411, 1557381555, 2224822171, 1719192044]
+2025-05-22 12:10:01,441 - INFO - Calculated path: [1546936999, 10039092485, 2227153680, 4696742592, 10038744981, 11868291763, 4696742590, 10038653644, 4696742486, 10038760749, 4696742484, 11868532437, 4696742481, 10039378356, 4696742474, 10077641806, 3530520847, 9192285822, 4696742468, 10039092448, 10039131920, 11868292089, 4700187780, 1719191865, 4697257910, 12607355193, 4692323187, 4692323186, 4692323185, 6142999388, 9771052411, 1557381555, 2224822171, 1719192044]
+2025-05-22 12:10:01,441 - INFO - Route cached with key: a3d30a57bb5b5cafc2150d30b0f64202558aa0111319dbfcbca361155fbe31ec
+2025-05-22 12:45:55,349 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-22 12:45:55,380 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-22 12:45:55,383 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-22 12:45:55,387 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-22 12:46:02,369 - INFO - Received route calculation request: source_lat=12.982516 source_lng=77.529095 dest_lat=12.988345 dest_lng=77.508878
+2025-05-22 12:46:02,382 - INFO - Checking for cached route with key: a3d30a57bb5b5cafc2150d30b0f64202558aa0111319dbfcbca361155fbe31ec
+2025-05-22 12:46:03,383 - INFO - Cache hit for route: (12.982516, 77.529095) -> (12.988345, 77.508878)
+2025-05-22 12:50:20,580 - INFO - Shutting down application
+2025-05-22 12:50:39,926 - INFO - Graph file already exists. Skipping download.
+2025-05-22 12:50:39,926 - INFO - Startup complete
+2025-05-22 12:51:06,474 - INFO - Shutting down application
+2025-05-22 12:52:41,664 - INFO - Graph file already exists. Skipping download.
+2025-05-22 12:52:41,665 - INFO - Startup complete
+2025-05-22 12:52:42,843 - INFO - Processing proximity: Sumanahalli Junction - 114.85626294828471m
+2025-05-22 12:52:42,844 - INFO - Selected signal 1285913198 to set green.
+2025-05-22 12:52:42,846 - INFO - Processing proximity: Unnamed - 74.69556808785859m
+2025-05-22 12:52:42,846 - INFO - Selected signal 1719191867 to set green.
+2025-05-22 12:52:42,848 - INFO - Processing proximity: Sumanahalli Junction - 98.00042179175553m
+2025-05-22 12:52:42,848 - INFO - Selected signal 4692331556 to set green.
+2025-05-22 12:52:42,848 - INFO - Processing proximity: Sumanahalli Junction - 21.472961024133166m
+2025-05-22 12:52:42,848 - INFO - Selected signal 12607355194 to set green.
+2025-05-22 13:06:41,888 - INFO - Processing proximity: Unnamed - 19.239266349943748m
+2025-05-22 13:06:41,889 - INFO - Selected signal 308184600 to set green.
+2025-05-22 13:06:41,891 - INFO - Processing proximity: Unnamed - 11.112954148102782m
+2025-05-22 13:06:41,891 - INFO - Selected signal 3982070777 to set green.
+2025-05-22 13:06:41,900 - INFO - Processing proximity: Unnamed - 15.703379499362285m
+2025-05-22 13:06:41,915 - INFO - Selected signal 4692323186 to set green.
+2025-05-22 13:06:41,921 - INFO - Processing proximity: Unnamed - 0m
+2025-05-22 13:06:41,923 - INFO - Selected signal 4692323187 to set green.
+2025-05-22 13:07:39,999 - INFO - Processing proximity: Unnamed - 11.1129540218088m
+2025-05-22 13:07:40,064 - INFO - Selected signal 308184600 to set green.
+2025-05-22 13:07:40,067 - INFO - Processing proximity: Unnamed - 19.236377148718596m
+2025-05-22 13:07:40,069 - INFO - Selected signal 3982070777 to set green.
+2025-05-22 13:07:40,094 - INFO - Processing proximity: Unnamed - 0m
+2025-05-22 13:07:40,096 - INFO - Selected signal 4692323186 to set green.
+2025-05-22 13:07:40,100 - INFO - Processing proximity: Unnamed - 15.703379499362285m
+2025-05-22 13:07:40,100 - INFO - Selected signal 4692323187 to set green.
+2025-05-22 13:07:52,580 - INFO - Processing proximity: Unnamed - 94.39811409155249m
+2025-05-22 13:07:52,595 - INFO - Selected signal 308184600 to set green.
+2025-05-22 13:07:52,606 - INFO - Processing proximity: Unnamed - 110.05364937171852m
+2025-05-22 13:07:52,611 - INFO - Selected signal 3982070777 to set green.
+2025-05-22 13:07:52,622 - INFO - Processing proximity: Unnamed - 94.11771344341064m
+2025-05-22 13:07:52,647 - INFO - Selected signal 4692323186 to set green.
+2025-05-22 13:07:52,654 - INFO - Processing proximity: Unnamed - 109.81348965051758m
+2025-05-22 13:07:52,655 - INFO - Selected signal 4692323187 to set green.

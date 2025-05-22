@@ -73,21 +73,17 @@ async def lifespan(app: FastAPI):
         else:
             logger.info("Graph file already exists. Skipping download.")
 
-        # Initialize ESP32 communicator with signal-to-ESP32 mapping
-        # esp32_ip_map = {
-        #     "SIG-001": os.getenv("ESP32_SIG001_IP", "192.168.1.100"),
-        #     "SIG-002": os.getenv("ESP32_SIG002_IP", "192.168.1.101")
-        # }
-        
-        # # Initialize IoT components
-        # signal_processor = SignalProcessor(graph)
-        # esp32_communicator = ESP32Communicator(esp32_ip_map)
-        # iot_manager = IOTManager(signal_processor, esp32_communicator)
-        
-        # # Store in app state
-        # app.state.graph = graph
-        # app.state.iot_manager = iot_manager
-        
+        # Initialize IoT components and attach to app.state
+        esp32_ip_map = {
+            "SIG-001": os.getenv("ESP32_SIG001_IP", "192.168.1.100"),
+            "SIG-002": os.getenv("ESP32_SIG002_IP", "192.168.1.101")
+        }
+        # You can pass None or a loaded graph if needed
+        signal_processor = SignalProcessor(None)
+        esp32_communicator = ESP32Communicator(esp32_ip_map)
+        iot_manager = IOTManager(signal_processor, esp32_communicator)
+        app.state.iot_manager = iot_manager
+
         logger.info("Startup complete")
         yield {"status": "ready"}
         
