@@ -6,12 +6,10 @@ import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet'
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import axios from 'axios'; // For making API requests
-import fs from 'fs'; // Ensure this is imported at the top
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCompass } from '@fortawesome/free-solid-svg-icons';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { useMap } from 'react-leaflet';
 library.add(faCompass);
 
 // Fix Leaflet marker icon issues
@@ -44,13 +42,6 @@ const ambulanceIcon = new L.Icon({
   iconUrl: '/ambulance.png', // Updated path to reflect public folder
   iconSize: [32, 32],
   iconAnchor: [16, 16],
-});
-
-// Custom traffic signal icon
-const TrafficSignalIcon = new L.Icon({
-  iconUrl: '/traffic.png', // Ensure this image is placed in the public folder
-  iconSize: [35, 35], // Adjusted size for better visibility
-  iconAnchor: [18, 18], // Center the icon
 });
 
 L.Marker.prototype.options.icon = DefaultIcon;

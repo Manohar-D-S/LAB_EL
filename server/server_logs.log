@@ -211,3 +211,127 @@ TypeError: build_simplified_graph() missing 2 required positional arguments: 'so
 2025-05-22 13:07:52,647 - INFO - Selected signal 4692323186 to set green.
 2025-05-22 13:07:52,654 - INFO - Processing proximity: Unnamed - 109.81348965051758m
 2025-05-22 13:07:52,655 - INFO - Selected signal 4692323187 to set green.
+2025-05-25 23:29:35,881 - INFO - Graph file already exists. Skipping download.
+2025-05-25 23:29:35,881 - INFO - Startup complete
+2025-05-25 23:35:27,605 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-25 23:35:27,654 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-25 23:36:28,345 - INFO - Received route calculation request: source_lat=12.907877 source_lng=77.592391 dest_lat=12.917924 dest_lng=77.599245
+2025-05-25 23:36:28,345 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-05-25 23:36:55,496 - INFO - Graph loaded with 152601 nodes and 388165 edges.
+2025-05-25 23:36:55,496 - INFO - Extracting subgraph for source=(12.907877, 77.592391), dest=(12.917924, 77.599245)
+2025-05-25 23:37:05,408 - INFO - Subgraph extracted with 7853 nodes and 19920 edges.
+2025-05-25 23:37:05,526 - INFO - Start node: 309595529, End node: 309601327
+2025-05-25 23:37:05,535 - INFO - AmbulanceRouter initialized with graph containing 7853 nodes and 19920 edges.
+2025-05-25 23:37:05,542 - INFO - Starting A* search from node 309595529 to node 309601327.
+2025-05-25 23:37:05,597 - INFO - A* search completed. Path found: [309595529, 309594757, 309594790, 309594787, 309594780, 309594605, 5354313551, 5354313552, 308473341, 362550614, 362557185, 309595499, 12229802213, 308468454, 3221380827, 308468333, 308466202, 305154750, 2550219088, 308465071, 308465041, 308464917, 308464715, 12165241795, 10123822794, 10123822792, 10123822793, 2544569077, 3902482901, 309600799, 309600804, 4397429402, 12459218188, 308464484, 309600930, 309601046, 309601079, 247974980, 309601396, 309601344, 309601327]
+2025-05-25 23:37:05,597 - INFO - Calculated path: [309595529, 309594757, 309594790, 309594787, 309594780, 309594605, 5354313551, 5354313552, 308473341, 362550614, 362557185, 309595499, 12229802213, 308468454, 3221380827, 308468333, 308466202, 305154750, 2550219088, 308465071, 308465041, 308464917, 308464715, 12165241795, 10123822794, 10123822792, 10123822793, 2544569077, 3902482901, 309600799, 309600804, 4397429402, 12459218188, 308464484, 309600930, 309601046, 309601079, 247974980, 309601396, 309601344, 309601327]
+2025-05-25 23:37:05,597 - INFO - Route cached with key: 984fb790c608a1a690a6db091f813928625ef242b188a8fdb885369c0a9c68dc
+2025-05-25 23:37:27,728 - INFO - Processing proximity: Unnamed - 70.84510452699537m
+2025-05-25 23:37:27,732 - INFO - Selected signal 309595499 to set green.
+2025-05-25 23:37:27,737 - INFO - Processing proximity: Unnamed - 71.27878533496798m
+2025-05-25 23:37:27,738 - INFO - Selected signal 5354313548 to set green.
+2025-05-25 23:37:47,231 - INFO - Processing proximity: Unnamed - 0m
+2025-05-25 23:37:47,233 - INFO - Selected signal 309595499 to set green.
+2025-05-25 23:37:47,238 - INFO - Processing proximity: Unnamed - 5.092912168549428m
+2025-05-25 23:37:47,240 - INFO - Selected signal 5354313548 to set green.
+2025-05-25 23:37:54,862 - INFO - Processing proximity: Unnamed - 15.439186448387161m
+2025-05-25 23:37:54,862 - INFO - Selected signal 305154536 to set green.
+2025-05-25 23:37:54,862 - INFO - Processing proximity: Unnamed - 13.248441755458758m
+2025-05-25 23:37:54,862 - INFO - Selected signal 5354313587 to set green.
+2025-05-25 23:37:54,875 - INFO - Processing proximity: Unnamed - 12.353703114996787m
+2025-05-25 23:37:54,876 - INFO - Selected signal 5354313589 to set green.
+2025-05-25 23:37:54,881 - INFO - Processing proximity: Unnamed - 9.430581927372602m
+2025-05-25 23:37:54,882 - INFO - Selected signal 5354313590 to set green.
+2025-05-25 23:38:33,745 - INFO - Processing proximity: Unnamed - 98.74282932594937m
+2025-05-25 23:38:33,748 - INFO - Selected signal 5354313604 to set green.
+2025-05-25 23:38:33,751 - INFO - Processing proximity: Unnamed - 128.6238392307535m
+2025-05-25 23:38:33,760 - INFO - Selected signal 7287571768 to set green.
+2025-05-25 23:38:33,772 - INFO - Processing proximity: Unnamed - 121.58403377166765m
+2025-05-25 23:38:33,774 - INFO - Selected signal 12492308147 to set green.
+2025-05-25 23:38:33,782 - INFO - Processing proximity: Unnamed - 110.61008969546732m
+2025-05-25 23:38:33,782 - INFO - Selected signal 12492308150 to set green.
+2025-05-25 23:39:46,992 - INFO - Processing proximity: Unnamed - 10.659225867254516m
+2025-05-25 23:39:46,993 - INFO - Selected signal 249075975 to set green.
+2025-05-25 23:39:46,996 - INFO - Processing proximity: Unnamed - 25.600508379082033m
+2025-05-25 23:39:46,996 - INFO - Selected signal 7287571767 to set green.
+2025-05-25 23:39:46,999 - INFO - Processing proximity: Unnamed - 13.11925655337534m
+2025-05-25 23:39:47,001 - INFO - Selected signal 12459218189 to set green.
+2025-05-25 23:39:47,006 - INFO - Processing proximity: Unnamed - 13.775510142336909m
+2025-05-25 23:39:47,008 - INFO - Selected signal 12459218190 to set green.
+2025-05-26 01:34:46,812 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-26 01:34:46,867 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-26 01:35:02,615 - INFO - Received route calculation request: source_lat=12.982516 source_lng=77.529095 dest_lat=12.988345 dest_lng=77.508878
+2025-05-26 01:35:02,618 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-05-26 01:36:12,151 - INFO - Graph loaded with 152601 nodes and 388165 edges.
+2025-05-26 01:36:12,158 - INFO - Extracting subgraph for source=(12.982516, 77.529095), dest=(12.988345, 77.508878)
+2025-05-26 01:36:27,418 - INFO - Subgraph extracted with 11298 nodes and 30865 edges.
+2025-05-26 01:36:27,590 - INFO - Start node: 1546936999, End node: 1719192044
+2025-05-26 01:36:27,607 - INFO - AmbulanceRouter initialized with graph containing 11298 nodes and 30865 edges.
+2025-05-26 01:36:27,608 - INFO - Starting A* search from node 1546936999 to node 1719192044.
+2025-05-26 01:36:27,722 - INFO - A* search completed. Path found: [1546936999, 10039092485, 2227153680, 4696742592, 10038744981, 11868291763, 4696742590, 10038653644, 4696742486, 10038760749, 4696742484, 11868532437, 4696742481, 10039378356, 4696742474, 10077641806, 3530520847, 9192285822, 4696742468, 10039092448, 10039131920, 11868292089, 4700187780, 1719191865, 4697257910, 12607355193, 4692323187, 4692323186, 4692323185, 6142999388, 9771052411, 1557381555, 2224822171, 1719192044]
+2025-05-26 01:36:27,722 - INFO - Calculated path: [1546936999, 10039092485, 2227153680, 4696742592, 10038744981, 11868291763, 4696742590, 10038653644, 4696742486, 10038760749, 4696742484, 11868532437, 4696742481, 10039378356, 4696742474, 10077641806, 3530520847, 9192285822, 4696742468, 10039092448, 10039131920, 11868292089, 4700187780, 1719191865, 4697257910, 12607355193, 4692323187, 4692323186, 4692323185, 6142999388, 9771052411, 1557381555, 2224822171, 1719192044]
+2025-05-26 01:36:27,722 - INFO - Route cached with key: a3d30a57bb5b5cafc2150d30b0f64202558aa0111319dbfcbca361155fbe31ec
+2025-05-26 01:40:40,211 - INFO - Processing proximity: Sumanahalli Junction - 132.69518004294224m
+2025-05-26 01:40:40,226 - INFO - Selected signal 12607355194 to set green.
+2025-05-26 01:44:25,473 - INFO - Processing proximity: Sumanahalli Junction - 114.85626294828471m
+2025-05-26 01:44:25,475 - INFO - Selected signal 1285913198 to set green.
+2025-05-26 01:44:25,475 - INFO - Processing proximity: Unnamed - 74.69556808785859m
+2025-05-26 01:44:25,503 - INFO - Selected signal 1719191867 to set green.
+2025-05-26 01:44:25,510 - INFO - Processing proximity: Sumanahalli Junction - 98.00042179175553m
+2025-05-26 01:44:25,528 - INFO - Selected signal 4692331556 to set green.
+2025-05-26 01:44:25,537 - INFO - Processing proximity: Sumanahalli Junction - 21.472961024133166m
+2025-05-26 01:44:25,537 - INFO - Selected signal 12607355194 to set green.
+2025-05-26 01:46:16,102 - INFO - Processing proximity: Sumanahalli Junction - 114.85626294828471m
+2025-05-26 01:46:16,105 - INFO - Selected signal 1285913198 to set green.
+2025-05-26 01:46:16,109 - INFO - Processing proximity: Unnamed - 74.69556808785859m
+2025-05-26 01:46:16,109 - INFO - Selected signal 1719191867 to set green.
+2025-05-26 01:46:16,123 - INFO - Processing proximity: Sumanahalli Junction - 98.00042179175553m
+2025-05-26 01:46:16,127 - INFO - Selected signal 4692331556 to set green.
+2025-05-26 01:46:16,127 - INFO - Processing proximity: Sumanahalli Junction - 21.472961024133166m
+2025-05-26 01:46:16,130 - INFO - Selected signal 12607355194 to set green.
+2025-05-26 01:57:03,675 - INFO - Processing proximity: Sumanahalli Junction - 114.85626294828471m
+2025-05-26 01:57:03,677 - INFO - Selected signal 1285913198 to set green.
+2025-05-26 01:57:03,695 - INFO - Processing proximity: Unnamed - 74.69556808785859m
+2025-05-26 01:57:03,699 - INFO - Selected signal 1719191867 to set green.
+2025-05-26 01:57:03,712 - INFO - Processing proximity: Sumanahalli Junction - 98.00042179175553m
+2025-05-26 01:57:03,715 - INFO - Selected signal 4692331556 to set green.
+2025-05-26 01:57:03,721 - INFO - Processing proximity: Sumanahalli Junction - 21.472961024133166m
+2025-05-26 01:57:03,724 - INFO - Selected signal 12607355194 to set green.
+2025-05-26 15:16:45,768 - INFO - Graph file already exists. Skipping download.
+2025-05-26 15:16:45,769 - INFO - Startup complete
+2025-05-26 15:16:59,781 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-26 15:16:59,782 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-26 15:17:12,402 - INFO - Received route calculation request: source_lat=12.982516 source_lng=77.529095 dest_lat=12.988345 dest_lng=77.508878
+2025-05-26 15:17:12,403 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-05-26 15:17:55,140 - INFO - Graph loaded with 152601 nodes and 388165 edges.
+2025-05-26 15:17:55,140 - INFO - Extracting subgraph for source=(12.982516, 77.529095), dest=(12.988345, 77.508878)
+2025-05-26 15:18:09,082 - INFO - Subgraph extracted with 11298 nodes and 30865 edges.
+2025-05-26 15:18:09,218 - INFO - Start node: 1546936999, End node: 1719192044
+2025-05-26 15:18:09,241 - INFO - AmbulanceRouter initialized with graph containing 11298 nodes and 30865 edges.
+2025-05-26 15:18:09,249 - INFO - Starting A* search from node 1546936999 to node 1719192044.
+2025-05-26 15:18:09,358 - INFO - A* search completed. Path found: [1546936999, 10039092485, 2227153680, 4696742592, 10038744981, 11868291763, 4696742590, 10038653644, 4696742486, 10038760749, 4696742484, 11868532437, 4696742481, 10039378356, 4696742474, 10077641806, 3530520847, 9192285822, 4696742468, 10039092448, 10039131920, 11868292089, 4700187780, 1719191865, 4697257910, 12607355193, 4692323187, 4692323186, 4692323185, 6142999388, 9771052411, 1557381555, 2224822171, 1719192044]
+2025-05-26 15:18:09,358 - INFO - Calculated path: [1546936999, 10039092485, 2227153680, 4696742592, 10038744981, 11868291763, 4696742590, 10038653644, 4696742486, 10038760749, 4696742484, 11868532437, 4696742481, 10039378356, 4696742474, 10077641806, 3530520847, 9192285822, 4696742468, 10039092448, 10039131920, 11868292089, 4700187780, 1719191865, 4697257910, 12607355193, 4692323187, 4692323186, 4692323185, 6142999388, 9771052411, 1557381555, 2224822171, 1719192044]
+2025-05-26 15:18:09,358 - INFO - Route cached with key: a3d30a57bb5b5cafc2150d30b0f64202558aa0111319dbfcbca361155fbe31ec
+2025-05-26 15:18:17,085 - INFO - Received route calculation request: source_lat=12.982516 source_lng=77.529095 dest_lat=12.988345 dest_lng=77.508878
+2025-05-26 15:18:17,087 - INFO - Checking for cached route with key: a3d30a57bb5b5cafc2150d30b0f64202558aa0111319dbfcbca361155fbe31ec
+2025-05-26 15:18:18,088 - INFO - Cache hit for route: (12.982516, 77.529095) -> (12.988345, 77.508878)
+2025-05-26 15:23:17,183 - INFO - Processing proximity: Sumanahalli Junction - 114.85626294828471m
+2025-05-26 15:23:17,187 - INFO - Selected signal 1285913198 to set green.
+2025-05-26 15:23:19,232 - INFO - Processing proximity: Unnamed - 74.69556808785859m
+2025-05-26 15:23:19,233 - INFO - Selected signal 1719191867 to set green.
+2025-05-26 15:23:21,305 - INFO - Processing proximity: Sumanahalli Junction - 98.00042179175553m
+2025-05-26 15:23:21,305 - INFO - Selected signal 4692331556 to set green.
+2025-05-26 15:23:23,314 - INFO - Processing proximity: Sumanahalli Junction - 21.472961024133166m
+2025-05-26 15:23:23,315 - INFO - Selected signal 12607355194 to set green.
+2025-05-26 15:23:25,337 - INFO - Processing proximity: Sumanahalli Junction - 98.00042179175553m
+2025-05-26 15:23:25,344 - INFO - Selected signal 4692331556 to set green.
+2025-05-26 15:23:27,429 - INFO - Processing proximity: Sumanahalli Junction - 21.472961024133166m
+2025-05-26 15:23:27,429 - INFO - Selected signal 12607355194 to set green.
+2025-05-26 15:23:29,441 - INFO - Processing proximity: Sumanahalli Junction - 114.85626294828471m
+2025-05-26 15:23:29,441 - INFO - Selected signal 1285913198 to set green.
+2025-05-26 15:23:31,467 - INFO - Processing proximity: Unnamed - 74.69556808785859m
+2025-05-26 15:23:31,469 - INFO - Selected signal 1719191867 to set green.
+2025-05-26 15:55:34,367 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-26 15:55:34,379 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-26 15:56:39,227 - INFO - Fetching routes. No predefined routes will be returned.
+2025-05-26 15:56:39,230 - INFO - Fetching routes. No predefined routes will be returned.

@@ -46,3 +46,11 @@ async def handle_proximity_model(log: ProximityLog, request: Request):
     # iot_manager.handle_proximity(log.dict())
     print("Received proximity log (model):", log.dict())
     return {"status": "ok"}
+
+@router.post("/iot/esp-ready")
+async def esp_ready(request: Request):
+    data = await request.json()
+    print("ESP32 says ready:", data)
+    # Respond to ESP32 so it can blink all LEDs
+    # For debugging, print and return a simple JSON
+    return JSONResponse(content={"status": "received"})

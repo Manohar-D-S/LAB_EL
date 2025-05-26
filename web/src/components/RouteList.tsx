@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Clock, Navigation, CheckCircle, AlertCircle, TimerOff } from 'lucide-react';
 
 interface Location {
   id: string;

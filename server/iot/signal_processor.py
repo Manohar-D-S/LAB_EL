@@ -34,8 +34,9 @@ def select_signal_to_set_green(signals: list, ambulance_direction: float) -> Opt
     return best_signal
 
 class SignalProcessor:
-    def __init__(self, graph):
+    def __init__(self, graph, esp32_communicator=None):
         self.graph = graph
+        self.esp32_communicator = esp32_communicator
 
     def process_proximity(self, data: dict) -> Optional[SignalProximityData]:
         """
@@ -58,6 +59,9 @@ class SignalProcessor:
 
         if selected_signal:
             logger.info(f"Selected signal {selected_signal.signalId} to set green.")
+            if self.esp32_communicator:
+                # Example: set green for 10 seconds
+                self.esp32_communicator.send_command(selected_signal.signalId, "set_green", duration=10)
         else:
             logger.warning("No signal selected.")
 

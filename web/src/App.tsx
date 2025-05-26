@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Navigation } from 'lucide-react';
 import Header from './components/Header';
 import Map from './components/Map';
@@ -7,29 +7,19 @@ import RouteDetails from './components/RouteDetails';
 import { getRoutes } from './services/api';
 import { Route } from './types/route';
 
-type RouteListProps = {
-  routes: Route[]; // Add the missing 'routes' property
-  selectedRouteId: string | undefined;
-  onRouteSelect: (route: Route | null) => void;
-  locations: { id: string; name: string; lat: number; lng: number }[];
-  onSearch: (source: string, destination: string) => Promise<void>;
-  isSearching: boolean;
-};
-
 function App() {
   const [selectedRoute, setSelectedRoute] = useState<Route | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isSearching, setIsSearching] = useState<boolean>(false); // New state for search button animation
-  const [routes, setRoutes] = useState<Route[]>([]);
   const [ambulancePosition, setAmbulancePosition] = useState<{ lat: number; lng: number } | null>(null);
 
   useEffect(() => {
     const fetchRoutes = async () => {
       try {
         setLoading(true);
-        const data = await getRoutes();
-        setRoutes(data);
+        // REMOVE unused variable 'data' in any function
+        await getRoutes();
         setLoading(false);
       } catch (err) {
         console.error('Error fetching routes:', err);
@@ -90,22 +80,6 @@ function App() {
       setIsSearching(false); // Stop the loading animation
     }
   };
-
-  useEffect(() => {
-    const fetchRoutes = async () => {
-      try {
-        setLoading(true);
-        const data = await getRoutes();
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching routes:', err);
-        setError('Failed to load routes. Please try again later.');
-        setLoading(false);
-      }
-    };
-
-    fetchRoutes();
-  }, []);
 
   const handleSliderChange = (position: { lat: number; lng: number }) => {
     setAmbulancePosition(position); // Update ambulance position
