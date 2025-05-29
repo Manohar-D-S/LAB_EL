@@ -7,12 +7,15 @@
 const char* ssid = "Hi";
 const char* password = "Baka_Baka";
 const char* ip = "192.168.43.100";
-const char* gateway = "192.168.43.100";
+// The gateway should typically be your router's IP, e.g. "192.168.43.1"
+const char* gateway = "192.168.43.1";
 const char* subnet = "255.255.255.0";
 
 WebServer server(80);  //Start HTTP server on port 80
 
 // GPIO mapping for each direction and color
+#define PyTHON_SERVER_IP 192.168.43.112:8000    //Replace with your Python server's IP and port
+
 #define RED_NORTH    13
 #define YELLOW_NORTH 12
 #define GREEN_NORTH  14
@@ -31,8 +34,13 @@ WebServer server(80);  //Start HTTP server on port 80
 
 unsigned long lastCommandTime = 0;
 String lastGreenDirection = "";
+String forcedGreenDirection = ""; // Add this global variable
 unsigned long autoCycleInterval = 10000; // 10 seconds per direction in auto mode
 unsigned long transitionDelay = 1500;    // 1.5 seconds yellow before green
+
+// Add these global variables
+unsigned long forcedGreenStart = 0;
+int forcedGreenDuration = 0;
 
 const char* directions[] = {"N", "E", "S", "W"};
 const int numDirections = 4;
@@ -83,9 +91,15 @@ void setTransitionYellow(const String& dir) {
   else if (dir == "W") digitalWrite(YELLOW_WEST, HIGH);
 }
 
+void logEspApi(const String& msg) {
+  Serial.print("[ESP_API] ");
+  Serial.println(msg);
+}
+
 void handleTrafficLightCommand() {
   if (server.hasArg("plain")) {
     String jsonData = server.arg("plain");
+    logEspApi("Received /traffic-light-control: " + jsonData);
     DynamicJsonDocument doc(1024);
     DeserializationError error = deserializeJson(doc, jsonData);
 
@@ -106,20 +120,20 @@ void handleTrafficLightCommand() {
       Serial.println(" seconds");
 
       if (strcmp(command, "set_green") == 0 && direction.length() > 0) {
-        // Transition: yellow for this direction
         setTransitionYellow(direction);
         delay(transitionDelay);
-
-        // Set green for this direction, red for others
         setTrafficLights(direction);
+        forcedGreenDirection = direction;
         lastGreenDirection = direction;
         lastCommandTime = millis();
-
-        delay(duration * 1000);
-
-        // After duration, revert to auto mode (let loop handle it)
+        forcedGreenStart = millis();
+        forcedGreenDuration = duration * 1000; // store duration in ms
+      } else if (strcmp(command, "revoke_green") == 0 && direction.length() > 0) {
         setAllRed();
+        forcedGreenDirection = "";
         lastGreenDirection = "";
+        forcedGreenStart = 0;
+        forcedGreenDuration = 0;
       }
       // You can add more commands (set_red, reset, etc.) if needed
     }
@@ -128,6 +142,7 @@ void handleTrafficLightCommand() {
 }
 
 void handleEspReady() {
+  logEspApi("Received /esp-ready");
   Serial.println("ESP32: /esp-ready called, sending ready to server...");
   // All LEDs ON for 2 seconds
   digitalWrite(RED_NORTH, HIGH); digitalWrite(YELLOW_NORTH, HIGH); digitalWrite(GREEN_NORTH, HIGH);
@@ -152,14 +167,26 @@ void setup() {
   WiFi.config(ip, gateway, subnet);
   WiFi.begin(ssid, password);
 
+  Serial.print("Connecting to WiFi");
+  int wifi_attempts = 0;
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
     Serial.print(".");
+    wifi_attempts++;
+    if (wifi_attempts % 10 == 0) {
+      Serial.print(" [Still connecting...]");
+    }
   }
 
   Serial.println("\nConnected to WiFi");
   Serial.print("IP Address: ");
-  Serial.println(WiFi.localIP());
+  Serial.println(WiFi.localIP()); // <--- This prints the ESP32's IP
+
+  // To find your Python server's IP:
+  // 1. On your server PC, open a terminal or command prompt.
+  // 2. Run: ipconfig (Windows) or ifconfig (Linux/Mac)
+  // 3. Look for your WiFi adapter's IPv4 Address (e.g., 192.168.43.10)
+  // 4. Use that IP in the ESP32 code in place of <PYTHON_SERVER_IP>
 
   server.on("/esp-ready", HTTP_POST, handleEspReady);
   server.on("/traffic-light-control", HTTP_POST, handleTrafficLightCommand);
@@ -170,7 +197,11 @@ void setup() {
   if (WiFi.status() == WL_CONNECTED) {
     WiFiClient client;
     HTTPClient http;
-    http.begin(client, "http://<PYTHON_SERVER_IP>:8000/iot/esp-ready"); // <-- Replace with your server IP
+    // The server IP and port are configured here:
+    // For example, if your PC's IP is 192.168.43.10 and FastAPI runs on port 8000:
+    // http.begin(client, "http://192.168.43.10:8000/iot/esp-ready");
+    // If your server uses a different port, change 8000 to your actual port.
+    http.begin(client, "http://PYTHON_SERVER_IP/iot/esp-ready"); // <-- Set your server's LAN IP and port here
     http.addHeader("Content-Type", "application/json");
     int httpResponseCode = http.POST("{\"status\":\"ready\"}");
     Serial.print("ESP32 sent ready to server, response: ");
@@ -182,6 +213,19 @@ void setup() {
 void loop() {
   server.handleClient();
 
+  // If forced green is active, keep it ON, but revert after duration
+  if (forcedGreenDirection != "") {
+    setTrafficLights(forcedGreenDirection);
+    if (forcedGreenDuration > 0 && millis() - forcedGreenStart >= (unsigned long)forcedGreenDuration) {
+      setAllRed();
+      forcedGreenDirection = "";
+      lastGreenDirection = "";
+      forcedGreenStart = 0;
+      forcedGreenDuration = 0;
+    }
+    return;
+  }
+
   // If no command is active, run auto traffic light cycle
   static int currentDirIdx = 0;
   static unsigned long lastAutoSwitch = 0;
@@ -189,13 +233,9 @@ void loop() {
     unsigned long now = millis();
     if (now - lastAutoSwitch > autoCycleInterval) {
       String dir = directions[currentDirIdx];
-      // Transition: yellow for this direction
       setTransitionYellow(dir);
       delay(transitionDelay);
-
-      // Set green for this direction, red for others
       setTrafficLights(dir);
-
       lastAutoSwitch = now;
       currentDirIdx = (currentDirIdx + 1) % numDirections;
     }
