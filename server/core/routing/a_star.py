@@ -4,6 +4,7 @@ import osmnx as ox
 import networkx as nx
 from core.metrics import calculate_route_metrics
 import logging
+from fastapi import HTTPException
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +18,7 @@ class AmbulanceRouter:
         """Calculate great-circle distance between nodes (in meters)"""
         u_lat, u_lon = self.node_coords[u]
         v_lat, v_lon = self.node_coords[v]
-        distance = ox.distance.great_circle_vec(u_lat, u_lon, v_lat, v_lon)
+        distance = ox.distance.great_circle(u_lat, u_lon, v_lat, v_lon)
         logger.debug(f"Heuristic calculated between nodes {u} and {v}: {distance:.2f} meters.")
         return distance
 
@@ -27,7 +28,7 @@ class AmbulanceRouter:
         path = self.astar(start, goal)
         if not path:
             logger.warning(f"No path found from node {start} to node {goal}.")
-            return None
+            raise HTTPException(status_code=404, detail="No path found between the source and destination")
             
         metrics = calculate_route_metrics(self.graph, path)
         logger.info(f"Route found with distance {metrics['distance_km']:.2f} km and time {metrics['time_mins']:.2f} minutes.")
@@ -48,7 +49,7 @@ class AmbulanceRouter:
                 self.graph,
                 start_node,
                 end_node,
-                heuristic=lambda u, v: ox.distance.euclidean_dist_vec(
+                heuristic=lambda u, v: ox.distance.euclidean(
                     self.graph.nodes[u]["y"], self.graph.nodes[u]["x"],
                     self.graph.nodes[v]["y"], self.graph.nodes[v]["x"]
                 ),

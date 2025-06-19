@@ -64,26 +64,6 @@ def apply_numpy_patches():
 
             # Apply the patched method
             nx.readwrite.graphml.GraphMLReader.construct_types = patched_construct_types
-            # PATCH: Also patch python_type at class level for find_graphml_keys
-            nx.readwrite.graphml.GraphMLReader.python_type = {
-                str: "string",
-                bool: "boolean",
-                int: "int",
-                float: "float",
-                "string": str,  # PATCH: ensure 'string' is mapped to str
-            }
-            # PATCH: Also patch xml_type at class level for find_graphml_keys
-            nx.readwrite.graphml.GraphMLReader.xml_type = {
-                "string": str,
-                "boolean": bool,
-                "bool": bool,
-                "int": int,
-                "integer": int,
-                "long": int,
-                "float": float,
-                "double": float,
-                "real": float,
-            }
             logger.info("Applied NumPy 2.0 and GraphMLReader 'string' compatibility patch to NetworkX GraphMLReader")
 
     except ImportError as e:

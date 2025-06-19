@@ -127,3 +127,77 @@ TypeError: build_simplified_graph() missing 2 required positional arguments: 'so
 2025-06-19 13:24:12,317 - INFO - Extracting subgraph for source=(12.988345, 77.508878), dest=(12.982516, 77.529095)
 2025-06-19 13:24:12,318 - ERROR - Failed to extract subgraph: truncate_graph_bbox() takes 2 positional arguments but 5 were given
 2025-06-19 13:24:12,318 - ERROR - Error calculating route: truncate_graph_bbox() takes 2 positional arguments but 5 were given
+2025-06-19 13:35:02,254 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-19 13:35:02,257 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-06-19 13:35:29,573 - INFO - Graph loaded with 152601 nodes and 388165 edges.
+2025-06-19 13:35:29,574 - INFO - Extracting subgraph for source=(12.988345, 77.508878), dest=(12.982516, 77.529095)
+2025-06-19 13:35:29,574 - ERROR - Failed to extract subgraph: truncate_graph_bbox() takes 2 positional arguments but 5 were given
+2025-06-19 13:35:29,575 - ERROR - Error calculating route: truncate_graph_bbox() takes 2 positional arguments but 5 were given
+2025-06-19 13:43:10,123 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-19 13:43:10,129 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-19 13:43:10,136 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-19 13:43:10,142 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-19 13:43:11,247 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-19 13:43:11,250 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-19 13:43:11,253 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-19 13:43:11,256 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-19 13:43:16,751 - INFO - Received route calculation request: source_lat=12.982516 source_lng=77.529095 dest_lat=12.988345 dest_lng=77.508878
+2025-06-19 13:43:16,752 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-06-19 13:43:43,370 - INFO - Graph loaded with 152601 nodes and 388165 edges.
+2025-06-19 13:43:43,371 - INFO - Extracting subgraph for source=(12.982516, 77.529095), dest=(12.988345, 77.508878)
+2025-06-19 13:43:43,371 - ERROR - Failed to extract subgraph: truncate_graph_bbox() takes 2 positional arguments but 5 were given
+2025-06-19 13:43:43,371 - ERROR - Error calculating route: truncate_graph_bbox() takes 2 positional arguments but 5 were given
+2025-06-19 13:47:35,658 - INFO - Shutting down application
+2025-06-19 13:47:45,075 - INFO - Graph file already exists. Skipping download.
+2025-06-19 13:47:45,076 - INFO - Startup complete
+2025-06-19 13:47:50,018 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-19 13:47:50,019 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-06-19 13:48:18,868 - INFO - Graph loaded with 152601 nodes and 388165 edges.
+2025-06-19 13:48:18,869 - INFO - Extracting subgraph for source=(12.988345, 77.508878), dest=(12.982516, 77.529095)
+2025-06-19 13:48:19,668 - INFO - Subgraph extracted with 11414 nodes and 31069 edges.
+2025-06-19 13:48:19,856 - INFO - Start node: 1719192044, End node: 1546936999
+2025-06-19 13:48:19,875 - INFO - AmbulanceRouter initialized with graph containing 11414 nodes and 31069 edges.
+2025-06-19 13:48:19,876 - INFO - Starting A* search from node 1719192044 to node 1546936999.
+2025-06-19 13:48:19,880 - ERROR - Error calculating route: module 'osmnx.distance' has no attribute 'euclidean_dist_vec'
+2025-06-19 13:49:39,567 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-19 13:49:39,568 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-06-19 13:50:27,573 - INFO - Graph loaded with 152601 nodes and 388165 edges.
+2025-06-19 13:50:27,575 - INFO - Extracting subgraph for source=(12.988345, 77.508878), dest=(12.982516, 77.529095)
+2025-06-19 13:50:31,546 - INFO - Subgraph extracted with 11414 nodes and 31069 edges.
+2025-06-19 13:50:31,702 - INFO - Start node: 1719192044, End node: 1546936999
+2025-06-19 13:50:31,762 - INFO - AmbulanceRouter initialized with graph containing 11414 nodes and 31069 edges.
+2025-06-19 13:50:31,764 - INFO - Starting A* search from node 1719192044 to node 1546936999.
+2025-06-19 13:50:31,765 - ERROR - Error calculating route: module 'osmnx.distance' has no attribute 'euclidean_dist_vec'
+2025-06-19 13:52:05,242 - INFO - Graph file already exists. Skipping download.
+2025-06-19 13:52:05,243 - INFO - Startup complete
+2025-06-19 13:52:09,406 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-19 13:52:09,406 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-06-19 13:52:35,408 - INFO - Graph loaded with 152601 nodes and 388165 edges.
+2025-06-19 13:52:35,409 - INFO - Extracting subgraph for source=(12.988345, 77.508878), dest=(12.982516, 77.529095)
+2025-06-19 13:52:35,840 - INFO - Subgraph extracted with 11414 nodes and 31069 edges.
+2025-06-19 13:52:35,910 - INFO - Start node: 1719192044, End node: 1546936999
+2025-06-19 13:52:35,925 - INFO - AmbulanceRouter initialized with graph containing 11414 nodes and 31069 edges.
+2025-06-19 13:52:35,925 - INFO - Starting A* search from node 1719192044 to node 1546936999.
+2025-06-19 13:52:35,926 - ERROR - Error calculating route: module 'osmnx.distance' has no attribute 'euclidean_dist_vec'
+2025-06-19 13:58:20,721 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-19 13:58:20,722 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-06-19 13:58:43,822 - INFO - Graph loaded with 152601 nodes and 388165 edges.
+2025-06-19 13:58:43,822 - INFO - Extracting subgraph for source=(12.988345, 77.508878), dest=(12.982516, 77.529095)
+2025-06-19 13:58:44,289 - INFO - Subgraph extracted with 11414 nodes and 31069 edges.
+2025-06-19 13:58:44,364 - INFO - Start node: 1719192044, End node: 1546936999
+2025-06-19 13:58:44,374 - INFO - AmbulanceRouter initialized with graph containing 11414 nodes and 31069 edges.
+2025-06-19 13:58:44,375 - INFO - Starting A* search from node 1719192044 to node 1546936999.
+2025-06-19 13:58:44,376 - ERROR - Error calculating route: module 'osmnx.distance' has no attribute 'euclidean_dist_vec'
+2025-06-19 13:59:10,266 - INFO - Graph file already exists. Skipping download.
+2025-06-19 13:59:10,267 - INFO - Startup complete
+2025-06-19 13:59:13,789 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-19 13:59:13,790 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-06-19 13:59:37,791 - INFO - Graph loaded with 152601 nodes and 388165 edges.
+2025-06-19 13:59:37,792 - INFO - Extracting subgraph for source=(12.988345, 77.508878), dest=(12.982516, 77.529095)
+2025-06-19 13:59:38,342 - INFO - Subgraph extracted with 11414 nodes and 31069 edges.
+2025-06-19 13:59:38,433 - INFO - Start node: 1719192044, End node: 1546936999
+2025-06-19 13:59:38,446 - INFO - AmbulanceRouter initialized with graph containing 11414 nodes and 31069 edges.
+2025-06-19 13:59:38,447 - INFO - Starting A* search from node 1719192044 to node 1546936999.
+2025-06-19 13:59:38,471 - INFO - A* search completed. Path found: [1719192044, 1557182477, 1557182479, 1557189680, 308069164, 308184600, 3982070777, 10841380663, 1719192254, 1719192276, 12607355192, 12607355191, 4696742455, 1719192306, 1548580883, 2227153687, 1548580613, 1548580709, 1548580909, 11017184988, 308069185, 4073227818, 1546937289, 1548580744, 1548580822, 308069192, 11868532436, 1546937459, 4073227819, 1546937402, 10039378354, 2227256963, 10038653713, 308069200, 1542668607, 4696742592, 2227153680, 10039092485, 1546936999]
+2025-06-19 13:59:38,472 - INFO - Calculated path: [1719192044, 1557182477, 1557182479, 1557189680, 308069164, 308184600, 3982070777, 10841380663, 1719192254, 1719192276, 12607355192, 12607355191, 4696742455, 1719192306, 1548580883, 2227153687, 1548580613, 1548580709, 1548580909, 11017184988, 308069185, 4073227818, 1546937289, 1548580744, 1548580822, 308069192, 11868532436, 1546937459, 4073227819, 1546937402, 10039378354, 2227256963, 10038653713, 308069200, 1542668607, 4696742592, 2227153680, 10039092485, 1546936999]
+2025-06-19 13:59:38,481 - INFO - Route cached with key: 5b7d78275d69a235c79bd3e61894f293e5360fbd3cbf84b1bcf38f8ed5240c6b

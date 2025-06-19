@@ -38,7 +38,11 @@ def extract_subgraph(G: nx.MultiDiGraph, source: tuple, dest: tuple) -> nx.Multi
         east = max(source[1], dest[1]) + 0.02
         west = min(source[1], dest[1]) - 0.02
 
-        subgraph = ox.truncate.truncate_graph_bbox(G, north=north, south=south, east=east, west=west)
+        nodes_within_bbox = [
+            node for node, data in G.nodes(data=True)
+            if (south <= data.get('y', data.get('lat', 0)) <= north) and (west <= data.get('x', data.get('lon', 0)) <= east)
+        ]
+        subgraph = G.subgraph(nodes_within_bbox).copy()
         logger.info(f"Subgraph extracted with {len(subgraph.nodes)} nodes and {len(subgraph.edges)} edges.")
         return subgraph
     except Exception as e:
@@ -56,7 +60,7 @@ def build_simplified_graph(source: tuple, dest: tuple) -> nx.Graph:
         west = min(source[1], dest[1]) - 0.02
         
         G = ox.graph_from_bbox(
-            north, south, east, west,
+            (north, south, east, west),
             custom_filter=VEHICLE_FILTER,
             network_type='drive',
             retain_all=False

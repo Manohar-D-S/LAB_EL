@@ -35,7 +35,7 @@ async def handle_proximity(request: Request):
     #   "signalId": ...,
     #   "name": ...,
     #   "lat": ...,
-    #   "lng": ...,
+    #   "lng": ...,W
     #   "distance": ...
     # }
     print("Received proximity log:", data)

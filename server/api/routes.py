@@ -101,6 +101,8 @@ async def calculate_route(route_request: RouteRequest):
         G = load_graph_from_file(graph_file)
 
         # Extract the subgraph for the bounding box
+        # FIX: extract_subgraph should only be called with (G, source, destination)
+        # Make sure extract_subgraph internally calls truncate_graph_bbox with correct arguments
         subgraph = extract_subgraph(G, source, destination)
 
         # Snap source and destination to the nearest nodes in the subgraph
@@ -113,21 +115,21 @@ async def calculate_route(route_request: RouteRequest):
         path = router.astar(start_node, end_node)
         logger.info(f"Calculated path: {path}")
 
-        # Calculate the distance of the route
+        # Calculate the distance of the route using geopy (fixes osmnx.distance error)
+        from geopy.distance import geodesic
         distance = sum(
-            ox.distance.euclidean_dist_vec(
-                subgraph.nodes[path[i]]["y"], subgraph.nodes[path[i]]["x"],
-                subgraph.nodes[path[i + 1]]["y"], subgraph.nodes[path[i + 1]]["x"]
-            )
+            geodesic(
+                (subgraph.nodes[path[i]]["y"], subgraph.nodes[path[i]]["x"]),
+                (subgraph.nodes[path[i + 1]]["y"], subgraph.nodes[path[i + 1]]["x"])
+            ).meters
             for i in range(len(path) - 1)
         )
-
 
         response = {
             "path": [{"lat": subgraph.nodes[node]["y"], "lng": subgraph.nodes[node]["x"]} for node in path],
             "startPoint": {"lat": source[0], "lng": source[1]},
             "endPoint": {"lat": destination[0], "lng": destination[1]},
-            "distance": distance,  # Include the distance in the response
+            "distance": distance,
         }
 
         # Store the route in the cache
