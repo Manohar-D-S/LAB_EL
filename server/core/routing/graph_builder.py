@@ -4,6 +4,7 @@ import logging
 # from core.traffic import TrafficSimulator
 import networkx as nx
 # from functools import lru_cache
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +38,7 @@ def extract_subgraph(G: nx.MultiDiGraph, source: tuple, dest: tuple) -> nx.Multi
         east = max(source[1], dest[1]) + 0.02
         west = min(source[1], dest[1]) - 0.02
 
-        subgraph = ox.truncate.truncate_graph_bbox(G, north, south, east, west)
+        subgraph = ox.truncate.truncate_graph_bbox(G, north=north, south=south, east=east, west=west)
         logger.info(f"Subgraph extracted with {len(subgraph.nodes)} nodes and {len(subgraph.edges)} edges.")
         return subgraph
     except Exception as e:

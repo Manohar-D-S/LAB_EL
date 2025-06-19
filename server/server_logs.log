@@ -56,3 +56,74 @@ TypeError: build_simplified_graph() missing 2 required positional arguments: 'so
 2025-05-20 01:55:32,912 - INFO - A* search completed. Path found: [429303174, 294081383, 5466316467, 2016244606, 663596568, 3641907748, 3641907747, 2014690200, 263155937, 11854384388, 661987313, 11854384389, 3665554480, 10121296056, 12462395646, 663311721, 663311718, 12141911042, 12141911043, 12141911045, 663311696]
 2025-05-20 01:55:32,915 - INFO - Calculated path: [429303174, 294081383, 5466316467, 2016244606, 663596568, 3641907748, 3641907747, 2014690200, 263155937, 11854384388, 661987313, 11854384389, 3665554480, 10121296056, 12462395646, 663311721, 663311718, 12141911042, 12141911043, 12141911045, 663311696]
 2025-05-20 01:55:32,919 - INFO - Route cached with key: fb1142f01aaaa50cbca74ccaca9747ae43c8714346f76b26ac6a9e0b5c28de98
+2025-06-19 11:27:57,479 - INFO - Graph file already exists. Skipping download.
+2025-06-19 11:27:57,480 - INFO - Startup complete
+2025-06-19 11:28:11,210 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-19 11:28:11,214 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-19 11:28:11,219 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-19 11:28:11,226 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-19 11:28:20,075 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982157 dest_lng=77.598217
+2025-06-19 11:28:20,076 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-06-19 11:28:20,077 - ERROR - Failed to load graph from file: `np.float_` was removed in the NumPy 2.0 release. Use `np.float64` instead.
+2025-06-19 11:28:20,078 - ERROR - Error calculating route: `np.float_` was removed in the NumPy 2.0 release. Use `np.float64` instead.
+2025-06-19 11:28:23,177 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982157 dest_lng=77.598217
+2025-06-19 11:28:23,178 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-06-19 11:28:23,178 - ERROR - Failed to load graph from file: `np.float_` was removed in the NumPy 2.0 release. Use `np.float64` instead.
+2025-06-19 11:28:23,179 - ERROR - Error calculating route: `np.float_` was removed in the NumPy 2.0 release. Use `np.float64` instead.
+2025-06-19 11:28:24,317 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982157 dest_lng=77.598217
+2025-06-19 11:28:24,317 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-06-19 11:28:24,318 - ERROR - Failed to load graph from file: `np.float_` was removed in the NumPy 2.0 release. Use `np.float64` instead.
+2025-06-19 11:28:24,318 - ERROR - Error calculating route: `np.float_` was removed in the NumPy 2.0 release. Use `np.float64` instead.
+2025-06-19 11:28:25,158 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982157 dest_lng=77.598217
+2025-06-19 11:28:25,159 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-06-19 11:28:25,160 - ERROR - Failed to load graph from file: `np.float_` was removed in the NumPy 2.0 release. Use `np.float64` instead.
+2025-06-19 11:28:25,161 - ERROR - Error calculating route: `np.float_` was removed in the NumPy 2.0 release. Use `np.float64` instead.
+2025-06-19 11:28:25,777 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982157 dest_lng=77.598217
+2025-06-19 11:28:25,778 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-06-19 11:28:25,778 - ERROR - Failed to load graph from file: `np.float_` was removed in the NumPy 2.0 release. Use `np.float64` instead.
+2025-06-19 11:28:25,778 - ERROR - Error calculating route: `np.float_` was removed in the NumPy 2.0 release. Use `np.float64` instead.
+2025-06-19 11:28:25,953 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982157 dest_lng=77.598217
+2025-06-19 11:28:25,953 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-06-19 11:28:25,955 - ERROR - Failed to load graph from file: `np.float_` was removed in the NumPy 2.0 release. Use `np.float64` instead.
+2025-06-19 11:28:25,955 - ERROR - Error calculating route: `np.float_` was removed in the NumPy 2.0 release. Use `np.float64` instead.
+2025-06-19 11:28:26,182 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982157 dest_lng=77.598217
+2025-06-19 11:28:26,182 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-06-19 11:28:26,183 - ERROR - Failed to load graph from file: `np.float_` was removed in the NumPy 2.0 release. Use `np.float64` instead.
+2025-06-19 11:28:26,184 - ERROR - Error calculating route: `np.float_` was removed in the NumPy 2.0 release. Use `np.float64` instead.
+2025-06-19 11:30:01,930 - INFO - Shutting down application
+2025-06-19 11:30:05,603 - INFO - Graph file already exists. Skipping download.
+2025-06-19 11:30:05,604 - INFO - Startup complete
+2025-06-19 11:35:02,612 - INFO - Shutting down application
+2025-06-19 11:35:06,021 - INFO - Graph file already exists. Skipping download.
+2025-06-19 11:35:06,022 - INFO - Startup complete
+2025-06-19 11:59:02,152 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-19 11:59:02,156 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-19 11:59:02,160 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-19 11:59:02,164 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-19 13:09:19,186 - INFO - Graph file already exists. Skipping download.
+2025-06-19 13:09:19,186 - INFO - Startup complete
+2025-06-19 13:09:32,205 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-19 13:09:32,210 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-19 13:09:32,216 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-19 13:09:32,222 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-19 13:09:37,146 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-19 13:09:37,148 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-06-19 13:09:37,153 - ERROR - Failed to load graph from file: `np.float_` was removed in the NumPy 2.0 release. Use `np.float64` instead.
+2025-06-19 13:09:37,154 - ERROR - Error calculating route: `np.float_` was removed in the NumPy 2.0 release. Use `np.float64` instead.
+2025-06-19 13:09:38,483 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-19 13:09:38,486 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-06-19 13:09:38,492 - ERROR - Failed to load graph from file: `np.float_` was removed in the NumPy 2.0 release. Use `np.float64` instead.
+2025-06-19 13:09:38,493 - ERROR - Error calculating route: `np.float_` was removed in the NumPy 2.0 release. Use `np.float64` instead.
+2025-06-19 13:09:39,438 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-19 13:09:39,439 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-06-19 13:09:39,442 - ERROR - Failed to load graph from file: `np.float_` was removed in the NumPy 2.0 release. Use `np.float64` instead.
+2025-06-19 13:09:39,443 - ERROR - Error calculating route: `np.float_` was removed in the NumPy 2.0 release. Use `np.float64` instead.
+2025-06-19 13:22:44,485 - INFO - Shutting down application
+2025-06-19 13:23:27,993 - INFO - Graph file already exists. Skipping download.
+2025-06-19 13:23:27,993 - INFO - Startup complete
+2025-06-19 13:23:43,533 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-19 13:23:43,533 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-06-19 13:24:12,316 - INFO - Graph loaded with 152601 nodes and 388165 edges.
+2025-06-19 13:24:12,317 - INFO - Extracting subgraph for source=(12.988345, 77.508878), dest=(12.982516, 77.529095)
+2025-06-19 13:24:12,318 - ERROR - Failed to extract subgraph: truncate_graph_bbox() takes 2 positional arguments but 5 were given
+2025-06-19 13:24:12,318 - ERROR - Error calculating route: truncate_graph_bbox() takes 2 positional arguments but 5 were given
