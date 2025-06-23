@@ -445,3 +445,46 @@ TypeError: build_simplified_graph() missing 2 required positional arguments: 'so
 2025-06-23 15:25:41,113 - INFO - Path found with 130 nodes
 2025-06-23 15:25:41,115 - INFO - Calculated path: [1719192044, 1557182477, 1557182479, 1557189680, 308069164, 308184600, 3982070777, 10841380663, 1719192254, 1719192276, 12607355192, 12607355191, 4696742455, 1719192306, 1548580883, 2227153687, 1548580613, 1548580709, 1548580909, 11017184988, 308069185, 4073227818, 1546937289, 1548580744, 1548580822, 308069192, 11868532436, 1546937459, 4073227819, 1546937402, 10039378354, 2227256963, 10038653713, 308069200, 1542668607, 1525703845, 1525703889, 1525703962, 1525703868, 1520808638, 1525689318, 1525689291, 308069212, 1525689421, 1525689367, 458156889, 12441856469, 9161008262, 2227310402, 1512330956, 6194313243, 1524649926, 1524589706, 1524589746, 1524591230, 286681113, 2227310396, 1524488989, 1524489126, 1524489080, 1524489156, 1524489065, 286681212, 10041174611, 10042440753, 10041174546, 1524489082, 10042440811, 1523290296, 12068481108, 12068481109, 11868458687, 725235265, 9992188464, 9192226790, 9192226795, 10042406594, 10254845268, 10042406591, 5265634973, 1520838905, 3820268530, 249084518, 1520838648, 12759058196, 1521036398, 1520838944, 10060383871, 1521036625, 10060383858, 10060383856, 1521036349, 10060383854, 1521036766, 1521036750, 9192226797, 1512688575, 1512688558, 1521036494, 10044622843, 10044622840, 4703697696, 2402397430, 1820396675, 1820387956, 11868182756, 1820387918, 1820387917, 1820394700, 1820387919, 6904901489, 9870839694, 3756218751, 11055018327, 3755576616, 3755576612, 3371785042, 1560168993, 12143782947, 428853816, 2190851942, 10129524861, 597084152, 597083726, 12141911057, 10980051591, 12141911042, 12141911043, 12141911045, 663311696]
 2025-06-23 15:25:41,124 - INFO - Route calculated and cached with key: 3111364db9c0be64d6b2fd15c686004896f0a1eda9a8008b9086265a04487d2d
+2025-06-23 18:57:29,758 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 18:57:29,779 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 18:57:29,783 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 18:57:29,786 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 18:57:35,206 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-23 18:57:35,213 - INFO - Checking for cached route with key: 5b7d78275d69a235c79bd3e61894f293e5360fbd3cbf84b1bcf38f8ed5240c6b
+2025-06-23 18:57:36,277 - INFO - Cache hit for route: (12.988345, 77.508878) -> (12.982516, 77.529095)
+2025-06-23 19:03:20,684 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 19:03:20,690 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 19:06:45,590 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 19:06:45,882 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 19:30:43,706 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 19:30:43,711 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 19:30:43,714 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 19:30:43,718 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 19:30:48,679 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-23 19:30:48,682 - INFO - Checking for cached route with key: 5b7d78275d69a235c79bd3e61894f293e5360fbd3cbf84b1bcf38f8ed5240c6b
+2025-06-23 19:30:49,683 - INFO - Cache hit for route: (12.988345, 77.508878) -> (12.982516, 77.529095)
+2025-06-23 19:35:00,195 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-23 19:35:00,199 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-23 19:35:00,202 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-23 19:35:00,205 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-23 19:39:54,385 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 19:39:54,388 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 19:39:54,391 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 19:39:54,394 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 19:39:59,100 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-23 19:39:59,101 - INFO - Checking for cached route with key: 5b7d78275d69a235c79bd3e61894f293e5360fbd3cbf84b1bcf38f8ed5240c6b
+2025-06-23 19:40:00,102 - INFO - Cache hit for route: (12.988345, 77.508878) -> (12.982516, 77.529095)
+2025-06-23 19:41:03,302 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 19:41:03,306 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 19:41:03,310 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 19:41:03,312 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 19:41:19,244 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-23 19:41:19,245 - INFO - Checking for cached route with key: 5b7d78275d69a235c79bd3e61894f293e5360fbd3cbf84b1bcf38f8ed5240c6b
+2025-06-23 19:41:20,245 - INFO - Cache hit for route: (12.988345, 77.508878) -> (12.982516, 77.529095)
+2025-06-23 19:49:33,309 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 19:49:33,314 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 19:49:33,318 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 19:49:33,320 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 19:49:40,610 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-23 19:49:40,610 - INFO - Checking for cached route with key: 5b7d78275d69a235c79bd3e61894f293e5360fbd3cbf84b1bcf38f8ed5240c6b
+2025-06-23 19:49:41,611 - INFO - Cache hit for route: (12.988345, 77.508878) -> (12.982516, 77.529095)
