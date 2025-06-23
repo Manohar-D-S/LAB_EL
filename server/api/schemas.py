@@ -1,15 +1,32 @@
-from pydantic import BaseModel
-from typing import List, Tuple, Dict, Optional
+from pydantic import BaseModel, Field
+from typing import List, Dict, Any
 
 class RouteRequest(BaseModel):
-    source_lat: float
-    source_lng: float
-    dest_lat: float
-    dest_lng: float
+    """Request model for route calculation."""
+    source_lat: float = Field(..., description="Source location latitude")
+    source_lng: float = Field(..., description="Source location longitude")
+    dest_lat: float = Field(..., description="Destination location latitude")
+    dest_lng: float = Field(..., description="Destination location longitude")
+
+
+class RouteCoordinate(BaseModel):
+    """A single coordinate point."""
+    lat: float
+    lng: float
+
+
+class AlgorithmComparison(BaseModel):
+    """Model for algorithm performance comparison."""
+    algorithm: str
+    computation_time: float
+    distance_km: float
+    nodes_count: int
+
 
 class RouteResponse(BaseModel):
-    path: List[Tuple[float, float]]
-    distance: float  # in kilometers
-    duration: float  # in minutes
-    road_types: Dict[str, float]  # road type distribution in meters
-    visualization_url: Optional[str]
+    """Response model for route calculation."""
+    route_coordinates: List[List[float]]
+    distance_km: float
+    time_mins: float
+    computation_time: float
+    algorithm_comparison: List[Dict[str, Any]]

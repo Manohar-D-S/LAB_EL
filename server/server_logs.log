@@ -221,3 +221,125 @@ TypeError: build_simplified_graph() missing 2 required positional arguments: 'so
 2025-06-22 21:30:25,634 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
 2025-06-22 21:30:25,634 - INFO - Checking for cached route with key: 5b7d78275d69a235c79bd3e61894f293e5360fbd3cbf84b1bcf38f8ed5240c6b
 2025-06-22 21:30:26,636 - INFO - Cache hit for route: (12.988345, 77.508878) -> (12.982516, 77.529095)
+2025-06-23 11:38:13,676 - INFO - Graph file already exists. Skipping download.
+2025-06-23 11:38:13,676 - INFO - Startup complete
+2025-06-23 11:39:05,342 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 11:39:05,348 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 11:39:05,356 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 11:39:05,361 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 11:39:13,431 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-23 11:39:16,580 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-06-23 11:39:51,454 - INFO - Graph loaded with 152601 nodes and 388165 edges.
+2025-06-23 11:39:51,454 - INFO - Extracting subgraph for source=(12.988345, 77.508878), dest=(12.982516, 77.529095)
+2025-06-23 11:39:51,889 - INFO - Subgraph extracted with 11414 nodes and 31069 edges.
+2025-06-23 11:39:52,092 - INFO - Start node: 1719192044, End node: 1546936999
+2025-06-23 11:39:52,106 - INFO - AmbulanceRouter initialized with graph containing 11414 nodes and 31069 edges.
+2025-06-23 11:39:52,107 - INFO - Starting A* search from node 1719192044 to node 1546936999.
+2025-06-23 11:39:52,131 - INFO - A* search completed. Path found: [1719192044, 1557182477, 1557182479, 1557189680, 308069164, 308184600, 3982070777, 10841380663, 1719192254, 1719192276, 12607355192, 12607355191, 4696742455, 1719192306, 1548580883, 2227153687, 1548580613, 1548580709, 1548580909, 11017184988, 308069185, 4073227818, 1546937289, 1548580744, 1548580822, 308069192, 11868532436, 1546937459, 4073227819, 1546937402, 10039378354, 2227256963, 10038653713, 308069200, 1542668607, 4696742592, 2227153680, 10039092485, 1546936999]
+2025-06-23 11:39:52,132 - INFO - Calculated path: [1719192044, 1557182477, 1557182479, 1557189680, 308069164, 308184600, 3982070777, 10841380663, 1719192254, 1719192276, 12607355192, 12607355191, 4696742455, 1719192306, 1548580883, 2227153687, 1548580613, 1548580709, 1548580909, 11017184988, 308069185, 4073227818, 1546937289, 1548580744, 1548580822, 308069192, 11868532436, 1546937459, 4073227819, 1546937402, 10039378354, 2227256963, 10038653713, 308069200, 1542668607, 4696742592, 2227153680, 10039092485, 1546936999]
+2025-06-23 11:39:52,140 - INFO - Route cached with key: 5b7d78275d69a235c79bd3e61894f293e5360fbd3cbf84b1bcf38f8ed5240c6b
+2025-06-23 11:50:13,396 - INFO - Shutting down application
+2025-06-23 11:55:13,898 - INFO - Graph file already exists. Skipping download.
+2025-06-23 11:55:13,898 - INFO - Startup complete
+2025-06-23 11:56:03,585 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 11:56:03,611 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 11:56:03,621 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 11:56:03,628 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 11:56:09,307 - INFO - Route request received: 12.988345,77.508878 to 12.982516,77.529095
+2025-06-23 11:56:09,312 - INFO - Mapped to start node 40 and end node 81
+2025-06-23 11:56:09,313 - INFO - AmbulanceRouter initialized with graph containing 100 nodes and 536 edges.
+2025-06-23 11:56:09,322 - INFO - DijkstraRouter initialized with graph containing 100 nodes and 536 edges.
+2025-06-23 11:56:09,327 - INFO - Finding route from node 40 to node 81.
+2025-06-23 11:56:09,327 - INFO - Starting A* search from node 40 to node 81.
+2025-06-23 11:56:09,329 - INFO - A* search completed. Path found: [40, 50, 60, 71, 81]
+2025-06-23 11:56:09,331 - INFO - Route found with distance 4.32 km and time 8.60 minutes.
+2025-06-23 11:56:09,332 - INFO - Finding route from node 40 to node 81 using Dijkstra's algorithm.
+2025-06-23 11:56:09,332 - INFO - Starting Dijkstra search from node 40 to node 81.
+2025-06-23 11:56:09,339 - INFO - GPU-accelerated Dijkstra (CuPy) found path with 5 nodes
+2025-06-23 11:56:09,399 - INFO - Dijkstra route calculated in 0.0125 seconds: 2.44 km with 5 nodes
+2025-06-23 11:56:09,410 - INFO - Route found with distance 4.68 km and time 9.40 minutes.
+2025-06-23 11:56:09,497 - INFO - Route calculated and returned with 5 points
+2025-06-23 11:56:41,662 - INFO - Route request received: 12.988345,77.508878 to 12.982516,77.529095
+2025-06-23 11:56:41,673 - INFO - Mapped to start node 40 and end node 81
+2025-06-23 11:56:41,673 - INFO - AmbulanceRouter initialized with graph containing 100 nodes and 540 edges.
+2025-06-23 11:56:41,674 - INFO - DijkstraRouter initialized with graph containing 100 nodes and 540 edges.
+2025-06-23 11:56:41,685 - INFO - Finding route from node 40 to node 81.
+2025-06-23 11:56:41,685 - INFO - Starting A* search from node 40 to node 81.
+2025-06-23 11:56:41,686 - INFO - A* search completed. Path found: [40, 50, 60, 71, 81]
+2025-06-23 11:56:41,686 - INFO - Route found with distance 4.42 km and time 8.80 minutes.
+2025-06-23 11:56:41,686 - INFO - Finding route from node 40 to node 81 using Dijkstra's algorithm.
+2025-06-23 11:56:41,686 - INFO - Starting Dijkstra search from node 40 to node 81.
+2025-06-23 11:56:41,690 - INFO - GPU-accelerated Dijkstra (CuPy) found path with 5 nodes
+2025-06-23 11:56:41,692 - INFO - Dijkstra route calculated in 0.0043 seconds: 2.44 km with 5 nodes
+2025-06-23 11:56:41,692 - INFO - Route found with distance 4.46 km and time 8.90 minutes.
+2025-06-23 11:56:41,693 - INFO - Route calculated and returned with 5 points
+2025-06-23 11:58:20,748 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 11:58:20,754 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 11:58:56,463 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 11:58:56,467 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 11:58:56,470 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 11:58:56,473 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 12:00:23,692 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 12:00:23,760 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 12:00:23,834 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 12:00:23,877 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 12:01:47,527 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 12:01:47,672 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 12:07:29,646 - INFO - Route request received: 12.988345,77.508878 to 12.982516,77.529095
+2025-06-23 12:07:29,650 - INFO - Mapped to start node 40 and end node 81
+2025-06-23 12:07:29,651 - INFO - AmbulanceRouter initialized with graph containing 100 nodes and 542 edges.
+2025-06-23 12:07:29,651 - INFO - DijkstraRouter initialized with graph containing 100 nodes and 542 edges.
+2025-06-23 12:07:29,652 - INFO - Finding route from node 40 to node 81.
+2025-06-23 12:07:29,652 - INFO - Starting A* search from node 40 to node 81.
+2025-06-23 12:07:29,654 - INFO - A* search completed. Path found: [40, 50, 60, 70, 81]
+2025-06-23 12:07:29,654 - INFO - Route found with distance 4.43 km and time 8.90 minutes.
+2025-06-23 12:07:29,655 - INFO - Finding route from node 40 to node 81 using Dijkstra's algorithm.
+2025-06-23 12:07:29,655 - INFO - Starting Dijkstra search from node 40 to node 81.
+2025-06-23 12:07:29,657 - INFO - GPU-accelerated Dijkstra (CuPy) found path with 5 nodes
+2025-06-23 12:07:29,658 - INFO - Dijkstra route calculated in 0.0026 seconds: 2.44 km with 5 nodes
+2025-06-23 12:07:29,659 - INFO - Route found with distance 4.43 km and time 8.90 minutes.
+2025-06-23 12:07:29,662 - INFO - Route calculated and returned with 5 points
+2025-06-23 12:13:12,645 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 12:13:12,649 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 12:13:12,654 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 12:13:12,658 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 12:35:42,397 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 12:35:42,401 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 12:35:42,404 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 12:35:42,407 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 12:37:52,039 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 12:37:52,043 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 12:37:52,046 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 12:37:52,050 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 12:37:58,147 - INFO - Route request received: 12.988345,77.508878 to 12.982516,77.529095
+2025-06-23 12:37:58,151 - INFO - Mapped to start node 40 and end node 81
+2025-06-23 12:37:58,151 - INFO - AmbulanceRouter initialized with graph containing 100 nodes and 542 edges.
+2025-06-23 12:37:58,152 - INFO - DijkstraRouter initialized with graph containing 100 nodes and 542 edges.
+2025-06-23 12:37:58,153 - INFO - Finding route from node 40 to node 81.
+2025-06-23 12:37:58,153 - INFO - Starting A* search from node 40 to node 81.
+2025-06-23 12:37:58,154 - INFO - A* search completed. Path found: [40, 50, 61, 71, 81]
+2025-06-23 12:37:58,154 - INFO - Route found with distance 3.83 km and time 7.70 minutes.
+2025-06-23 12:37:58,154 - INFO - Finding route from node 40 to node 81 using Dijkstra's algorithm.
+2025-06-23 12:37:58,155 - INFO - Starting Dijkstra search from node 40 to node 81.
+2025-06-23 12:37:58,156 - INFO - GPU-accelerated Dijkstra (CuPy) found path with 5 nodes
+2025-06-23 12:37:58,183 - INFO - Dijkstra route calculated in 0.0019 seconds: 2.44 km with 5 nodes
+2025-06-23 12:37:58,184 - INFO - Route found with distance 4.27 km and time 8.50 minutes.
+2025-06-23 12:37:58,185 - INFO - Route calculated and returned with 5 points
+2025-06-23 12:39:20,355 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-23 12:52:36,833 - INFO - Route request received: 12.988345,77.508878 to 12.982516,77.529095
+2025-06-23 12:52:36,837 - INFO - Mapped to start node 40 and end node 81
+2025-06-23 12:52:36,838 - INFO - AmbulanceRouter initialized with graph containing 100 nodes and 538 edges.
+2025-06-23 12:52:36,838 - INFO - DijkstraRouter initialized with graph containing 100 nodes and 538 edges.
+2025-06-23 12:52:36,839 - INFO - Finding route from node 40 to node 81.
+2025-06-23 12:52:36,839 - INFO - Starting A* search from node 40 to node 81.
+2025-06-23 12:52:36,840 - INFO - A* search completed. Path found: [40, 50, 60, 70, 81]
+2025-06-23 12:52:36,840 - INFO - Route found with distance 3.97 km and time 7.90 minutes.
+2025-06-23 12:52:36,841 - INFO - Finding route from node 40 to node 81 using Dijkstra's algorithm.
+2025-06-23 12:52:36,841 - INFO - Starting Dijkstra search from node 40 to node 81.
+2025-06-23 12:52:36,843 - INFO - GPU-accelerated Dijkstra (CuPy) found path with 5 nodes
+2025-06-23 12:52:36,844 - INFO - Dijkstra route calculated in 0.0024 seconds: 2.44 km with 5 nodes
+2025-06-23 12:52:36,845 - INFO - Route found with distance 3.97 km and time 7.90 minutes.
+2025-06-23 12:52:36,846 - INFO - Route calculated and returned with 5 points
+2025-06-23 12:54:22,941 - INFO - Graph file already exists. Skipping download.
+2025-06-23 12:54:22,942 - INFO - Startup complete
+2025-06-23 12:54:32,506 - INFO - Shutting down application

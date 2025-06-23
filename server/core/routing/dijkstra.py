@@ -1,125 +1,169 @@
+import networkx as nx
 import heapq
 import logging
-import time
-import numpy as np
+from typing import List, Dict, Any, Tuple, Optional
 import osmnx as ox
-import networkx as nx
-from typing import List, Dict, Any, Tuple
-from fastapi import HTTPException
-from core.metrics import calculate_route_metrics
+import time
+from geopy.distance import geodesic
+
+# Check if CuPy is available
+try:
+    import cupy
+    CUPY_AVAILABLE = True
+except ImportError:
+    CUPY_AVAILABLE = False
 
 logger = logging.getLogger(__name__)
 
-# Check for CUDA and CuPy support
-CUDA_AVAILABLE = False
-CUPY_AVAILABLE = False
-try:
-    import numba
-    from numba import cuda
-    
-    # Verify CUDA is available
-    if cuda.is_available():
-        CUDA_AVAILABLE = True
-        logger.info("NVIDIA GPU detected. CUDA acceleration enabled for Dijkstra's algorithm.")
-        
-        # Check for CuPy
-        try:
-            import cupy as cp
-            CUPY_AVAILABLE = True
-            logger.info(f"CuPy found. Using GPU: {cp.cuda.runtime.getDeviceProperties(0)['name'].decode()}")
-        except ImportError:
-            logger.warning("CuPy not found. Using Numba-only GPU acceleration.")
-    else:
-        logger.warning("NVIDIA GPU not detected or CUDA unavailable. Using CPU implementation.")
-except ImportError:
-    logger.warning("Numba package not installed. Using CPU implementation.")
-
-# Add this helper function directly to the file
-def interpolate_point_on_edge(G, edge, point, fraction=None):
-    """
-    Get coordinates of a point along an edge at a specific fraction or
-    nearest to the provided point.
-    """
-    if edge is None:
-        # If no edge is provided, just return the point as is
-        return point
-        
-    try:
-        u, v, key = edge
-        u_coords = (G.nodes[u]['y'], G.nodes[u]['x'])
-        v_coords = (G.nodes[v]['y'], G.nodes[v]['x'])
-        
-        if fraction is None:
-            # Default to midpoint if fraction not specified
-            fraction = 0.5
-        
-        # Interpolate along the edge
-        y = u_coords[0] + fraction * (v_coords[0] - u_coords[0])
-        x = u_coords[1] + fraction * (v_coords[1] - u_coords[1])
-        
-        return (y, x)
-    except Exception as e:
-        logger.error(f"Error interpolating point on edge: {e}")
-        return point
-
 class DijkstraRouter:
+    """
+    Dijkstra's algorithm implementation for comparison with A* performance.
+    """
+    
     def __init__(self, graph: nx.MultiDiGraph, traffic_provider=None):
         self.graph = graph
-        self.traffic_provider = traffic_provider  # Can be shared with AmbulanceRouter
-        self.use_gpu = CUDA_AVAILABLE
-        # Initialize node coordinates dictionary
-        self.node_coords = {node: (data['y'], data['x']) for node, data in graph.nodes(data=True)}
-        logger.info(f"DijkstraRouter initialized with graph containing {len(graph.nodes)} nodes and {len(graph.edges)} edges.")
+        self.traffic_provider = traffic_provider
+        logger.info(f"DijkstraRouter initialized with graph containing {len(self.graph.nodes)} nodes and {len(self.graph.edges)} edges.")
 
-    def find_route(self, start: int, goal: int, use_traffic: bool = True) -> Dict[str, Any]:
-        """Find route with metrics using Dijkstra's algorithm"""
-        logger.info(f"Finding route from node {start} to node {goal} using Dijkstra's algorithm.")
-        path = self.dijkstra(start, goal, use_traffic)
-        if not path:
-            logger.warning(f"No path found from node {start} to node {goal}.")
-            raise HTTPException(status_code=404, detail="No path found between the source and destination")
-            
-        metrics = calculate_route_metrics(self.graph, path)
-        logger.info(f"Route found with distance {metrics['distance_km']:.2f} km and time {metrics['time_mins']:.2f} minutes.")
-        return {
-            'path': path,
-            'distance_km': metrics['distance_km'],
-            'time_mins': metrics['time_mins'],
-            'nodes': [self.node_coords[n] for n in path]
-        }
-
-    def dijkstra(self, start: int, goal: int, use_traffic: bool = True) -> List[int]:
+    def interpolate_point_on_edge(self, graph, edge, point):
         """
-        Dijkstra's algorithm with integrated traffic data consideration.
-        Will use GPU acceleration if available, otherwise falls back to CPU implementation.
+        Interpolate a point on an edge of the graph.
         
-        Parameters:
-        - start: Starting node ID
-        - goal: Target node ID
-        - use_traffic: Whether to consider traffic conditions (default: True)
+        Args:
+            graph: NetworkX graph
+            edge: Tuple of (u, v) representing the edge
+            point: Tuple of (latitude, longitude) to interpolate
         
         Returns:
-        - List of node IDs representing the optimal path
+            Tuple of (latitude, longitude) of the interpolated point
         """
-        start_time = time.time()  # Start timing
-        logger.info(f"Starting Dijkstra search from node {start} to node {goal}.")
+        if not edge or len(edge) < 2:
+            return point
+            
+        u, v = edge[0], edge[1]
+        u_point = (graph.nodes[u]['y'], graph.nodes[u]['x'])
+        v_point = (graph.nodes[v]['y'], graph.nodes[v]['x'])
         
-        # Use GPU-accelerated Dijkstra if CUDA is available
-        if self.use_gpu and CUDA_AVAILABLE:
-            try:
-                path = self._dijkstra_gpu(start, goal, use_traffic)
-                # Record the computation time
-                computation_time = time.time() - start_time
-                self._log_performance_metrics(path, computation_time)
-                return path
-            except Exception as e:
-                logger.error(f"GPU Dijkstra failed: {e}. Falling back to CPU implementation.")
-                self.use_gpu = False  # Disable GPU for future calls
+        # Calculate the interpolation
+        total_dist = geodesic(u_point, v_point).meters
+        if total_dist == 0:
+            return u_point
+            
+        u_dist = geodesic(u_point, point).meters
+        ratio = u_dist / total_dist
         
-        # CPU implementation (fallback or default)
-        path = self._dijkstra_cpu(start, goal, use_traffic)
+        # Interpolate the point
+        lat = u_point[0] + ratio * (v_point[0] - u_point[0])
+        lon = u_point[1] + ratio * (v_point[1] - u_point[1])
         
-        # Record the computation time
+        return (lat, lon)
+
+    def find_route(self, start_node: int, end_node: int) -> Dict[str, Any]:
+        """
+        Find the shortest route from start_node to end_node using Dijkstra's algorithm.
+        Returns route information including path, distance, and time.
+        """
+        logger.info(f"Finding route from node {start_node} to node {end_node} using Dijkstra's algorithm.")
+        logger.info(f"Starting Dijkstra search from node {start_node} to node {end_node}.")
+        
+        # Initialize data structures
+        distances = {node: float('inf') for node in self.graph.nodes()}
+        distances[start_node] = 0
+        
+        previous: Dict[int, Optional[int]] = {node: None for node in self.graph.nodes()}
+        
+        priority_queue = [(0, start_node)]  # (distance, node)
+        visited = set()
+        
+        while priority_queue:
+            current_distance, current_node = heapq.heappop(priority_queue)
+            
+            if current_node in visited:
+                continue
+                
+            visited.add(current_node)
+            
+            if current_node == end_node:
+                break
+            
+            for neighbor in self.graph.neighbors(current_node):
+                if neighbor in visited:
+                    continue
+                
+                # Get the edge with minimum travel_time
+                edge_data = min(self.graph.get_edge_data(current_node, neighbor).values(), 
+                                key=lambda x: x.get('travel_time', float('inf')))
+                
+                weight = edge_data.get('travel_time', 1000)  # Default high value if not found
+                
+                distance = current_distance + weight
+                
+                if distance < distances[neighbor]:
+                    distances[neighbor] = distance
+                    previous[neighbor] = current_node
+                    heapq.heappush(priority_queue, (distance, neighbor))
+        
+        # Reconstruct path
+        path = []
+        current = end_node
+        
+        while current is not None:
+            path.append(current)
+            current = previous[current]
+            
+        path.reverse()
+        
+        if path[0] != start_node:
+            # No path found
+            logger.warning(f"No route found from node {start_node} to node {end_node}.")
+            return {
+                'path': [],
+                'nodes': [],
+                'distance_km': 0,
+                'time_mins': 0
+            }
+        
+        distance, time = self._calculate_route_metrics(path)
+        nodes = self._get_path_coordinates(path)
+        
+        logger.info(f"Route found with distance {distance:.2f} km and time {time:.2f} minutes.")
+        return {
+            'path': path,
+            'nodes': nodes,
+            'distance_km': distance,
+            'time_mins': time
+        }
+    
+    def _calculate_route_metrics(self, path: List[int]) -> Tuple[float, float]:
+        """Calculate total distance (km) and time (minutes) for the route."""
+        if not path or len(path) < 2:
+            return 0.0, 0.0
+        
+        total_distance = 0.0  # in meters
+        total_time = 0.0  # in seconds
+        
+        for i in range(len(path) - 1):
+            node1, node2 = path[i], path[i + 1]
+            
+            # Get the edge with minimum travel_time
+            edge_data = min(self.graph.get_edge_data(node1, node2).values(), 
+                            key=lambda x: x.get('travel_time', float('inf')))
+            
+            distance = edge_data.get('length', 0.0)  # in meters
+            time = edge_data.get('travel_time', 0.0)  # in seconds
+            
+            total_distance += distance
+            total_time += time
+        
+        # Convert to km and minutes
+        total_distance_km = total_distance / 1000.0
+        total_time_mins = total_time / 60.0
+        
+        return total_distance_km, total_time_mins
+    
+    def _get_path_coordinates(self, path: List[int]) -> List[Tuple[float, float]]:
+        """Get the coordinates for each node in the path."""
+        return [(self.graph.nodes[node]['y'], self.graph.nodes[node]['x']) for node in path]
         computation_time = time.time() - start_time
         self._log_performance_metrics(path, computation_time)
         
@@ -386,7 +430,7 @@ class DijkstraRouter:
         logger.info(f"Finding route from {start} to {goal} with exact destination using Dijkstra.")
         
         # Get the basic path from node to node
-        path = self.dijkstra(start, goal, use_traffic)
+        path = self._dijkstra_cpu(start, goal, use_traffic)
         
         if not path:
             logger.warning(f"No path found from node {start} to node {goal}.")
@@ -401,14 +445,14 @@ class DijkstraRouter:
         # Add the exact source at the beginning if different from the start node
         if exact_source and source_edge:
             # Use local function instead of importing
-            source_point = interpolate_point_on_edge(self.graph, source_edge, exact_source)
+            source_point = self.interpolate_point_on_edge(self.graph, source_edge, exact_source)
             if source_point != complete_path[0]:
                 complete_path.insert(0, exact_source)  # Add the exact source coordinates
         
         # Add the exact destination at the end if different from the end node
         if exact_dest and dest_edge:
             # Use local function instead of importing
-            dest_point = interpolate_point_on_edge(self.graph, dest_edge, exact_dest)
+            dest_point = self.interpolate_point_on_edge(self.graph, dest_edge, exact_dest)
             if dest_point != complete_path[-1]:
                 complete_path.append(exact_dest)  # Add the exact destination coordinates
         
