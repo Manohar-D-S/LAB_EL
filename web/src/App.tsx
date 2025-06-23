@@ -61,7 +61,12 @@ function App() {
       };
       console.log('Payload:', payload);
 
-      if (!payload.source_lat || !payload.source_lng || !payload.dest_lat || !payload.dest_lng) {
+      if (
+        payload.source_lat === undefined ||
+        payload.source_lng === undefined ||
+        payload.dest_lat === undefined ||
+        payload.dest_lng === undefined
+      ) {
         console.error('Invalid source or destination');
         setIsSearching(false);
         return;
@@ -82,10 +87,33 @@ function App() {
       const routeData = await response.json();
       console.log('Route Data:', routeData);
 
-      // Pass the route data to the Map component to highlight the route
-      setSelectedRoute(routeData);
+      // Transform backend response to Route object expected by Map/RouteDetails
+      if (routeData.route_coordinates && routeData.route_coordinates.length > 0) {
+        const path = routeData.route_coordinates.map(
+          ([lat, lng]: [number, number]) => ({ lat, lng })
+        );
+        const startPoint = path[0];
+        const endPoint = path[path.length - 1];
+        const route: Route = {
+          id: 'dynamic',
+          name: `${source} to ${destination}`,
+          startPoint,
+          endPoint,
+          path,
+          distance: routeData.distance_km,
+          time_mins: routeData.time_mins,
+          waypoints: [],
+          status: 'in-progress',
+          duration: Math.round((routeData.time_mins || 0) * 60),
+          createdAt: new Date().toISOString(),
+        };
+        setSelectedRoute(route);
+      } else {
+        setSelectedRoute(null);
+      }
     } catch (error) {
       console.error('Error fetching route:', error);
+      setSelectedRoute(null);
     } finally {
       setIsSearching(false); // Stop the loading animation
     }

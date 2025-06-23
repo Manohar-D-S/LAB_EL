@@ -103,23 +103,4 @@ const Sidebar: React.FC<SidebarProps> = ({ onRouteSelect }) => {
 };
 
 export default Sidebar;
-        <button
-          onClick={() => setShowComparisonModal(true)}
-          className="w-full flex justify-center items-center bg-slate-100 hover:bg-slate-200 text-slate-800 py-2 px-4 rounded-md transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500"
-        >
-          <BarChart3 className="mr-2 h-4 w-4" />
-          Algorithm Comparison
-        </button>
-      </div>
-      
-      {showComparisonModal && (
-        <AlgorithmComparisonModal 
-          onClose={() => setShowComparisonModal(false)}
-          comparisonData={comparisonData}
-        />
-      )}
-    </div>
-  );
-};
-
-// export default Sidebar;
+        

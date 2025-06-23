@@ -5,14 +5,15 @@ export interface RoutePoint {
 }
 
 export interface Route {
-  id: string;
-  name: string;
+  id?: string;
+  name?: string;
   startPoint: RoutePoint;
   endPoint: RoutePoint;
-  waypoints: RoutePoint[];
-  status: 'pending' | 'in-progress' | 'completed' | 'cancelled';
-  duration: number; // in seconds
-  distance: number; // in kilometers
-  createdAt: string;
+  waypoints?: RoutePoint[];
+  status?: 'pending' | 'in-progress' | 'completed' | 'cancelled';
+  duration?: number; // in seconds
+  distance?: number; // in kilometers
+  time_mins?: number;
+  createdAt?: string;
   path: { lat: number; lng: number }[]; // Array of coordinates representing the route
 }
