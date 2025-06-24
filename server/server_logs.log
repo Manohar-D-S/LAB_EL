@@ -34177,3 +34177,168 @@ ConnectionResetError: [WinError 10054] An existing connection was forcibly close
 2025-06-24 12:02:25,934 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
 2025-06-24 12:02:33,745 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
 2025-06-24 12:02:33,745 - INFO - Checking for cached route with key: 5b7d78275d69a235c79bd3e61894f293e5360fbd3cbf84b1bcf38f8ed5240c6b
+2025-06-24 12:02:34,746 - INFO - Cache hit for route: (12.988345, 77.508878) -> (12.982516, 77.529095)
+2025-06-24 12:02:44,118 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:02:44,120 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:02:44,123 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:02:44,125 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:03:26,588 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:03:30,612 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:03:30,615 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:03:30,619 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:03:30,622 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:03:41,259 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:03:41,263 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:03:41,267 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:03:41,271 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:03:47,963 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.917924 dest_lng=77.599245
+2025-06-24 12:03:47,967 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-06-24 12:04:14,537 - INFO - Graph loaded with 152601 nodes and 388165 edges.
+2025-06-24 12:04:14,537 - INFO - Extracting subgraph for source=(12.988345, 77.508878), dest=(12.917924, 77.599245)
+2025-06-24 12:04:15,981 - INFO - Subgraph extracted with 49843 nodes and 132476 edges.
+2025-06-24 12:04:15,982 - INFO - extract_subgraph completed in 1.4449s using CPU
+2025-06-24 12:04:16,105 - INFO - Start node: 1719192044, End node: 309601327
+2025-06-24 12:04:16,128 - INFO - AmbulanceRouter initialized with graph containing 49843 nodes and 132476 edges.
+2025-06-24 12:04:16,129 - INFO - Finding path from 1719192044 to 309601327 using A* algorithm
+2025-06-24 12:04:16,647 - INFO - Path found with 169 nodes
+2025-06-24 12:04:16,651 - INFO - Calculated path: [1719192044, 1557182477, 1557182479, 1557189680, 308069164, 308184600, 3982070777, 4692323187, 308184611, 308184448, 308184450, 11608103355, 10057932709, 3982062819, 10057951103, 10003592445, 308184457, 1533670512, 9769566155, 2026111739, 308184460, 1532827714, 10057951045, 10058177405, 2026111761, 3220646131, 2026111787, 10058193632, 1532827685, 1532827691, 1532827598, 1532827617, 1532827562, 2224503515, 2026111802, 1538045797, 2558445516, 2227022771, 1285911542, 1537837671, 446892459, 1537837772, 1537837567, 11873401773, 11873401772, 11837026152, 11865112050, 429863941, 11278822046, 2411279226, 2411279230, 699684220, 2246716658, 10039148483, 12059785441, 12059785442, 733498684, 733498647, 1836983211, 12509139063, 6484995914, 6484995913, 6484995911, 6484995908, 6484995907, 12508589654, 12648799090, 6449168616, 6484995887, 6484995894, 4219267228, 6904207721, 6904207713, 699684282, 12060569555, 7424568630, 12060592380, 699684243, 2421937541, 249072291, 1466497856, 7424568649, 1466575031, 1466575052, 1466575044, 1466575032, 1466575029, 1466575058, 10089395705, 4730100137, 248678577, 503260673, 3036815724, 12060646299, 2400002711, 2400002686, 2400002713, 3417790477, 3248074684, 2400003728, 3036815679, 3036815678, 248839230, 3036815680, 3036815681, 10091712167, 3036815683, 3036815684, 7425207614, 1835344809, 4872132537, 3149270172, 7478051301, 1070314230, 11383079374, 249844065, 248839221, 10091712159, 1070314225, 699576794, 4701357989, 493556448, 493556446, 493556442, 493556444, 493556432, 493556439, 308729092, 4829124435, 248766831, 364625778, 303925264, 303924622, 7287518220, 249075524, 308806272, 249075500, 10076345214, 10076345215, 362566000, 9791806809, 10168631091, 8239947030, 10168631096, 12041127749, 364640747, 305151448, 364641246, 305151998, 309599999, 309600214, 309600315, 309600340, 10123822792, 10123822793, 2544569077, 3902482901, 309600799, 309600804, 4397429402, 12459218188, 308464484, 309600930, 309601046, 309601079, 247974980, 309601396, 309601344, 309601327]
+2025-06-24 12:04:16,677 - INFO - Route calculated and cached with key: 39e966fe70949b51d1cfbcc006a31accc5cee1632e78705459f3d2afcc1496e6
+2025-06-24 12:04:31,072 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:04:31,075 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:04:31,077 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:04:31,080 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:04:42,866 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:04:42,870 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:04:42,875 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:04:44,933 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:04:44,937 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:04:44,938 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:04:44,941 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:04:47,962 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:04:47,964 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:04:47,967 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:04:48,793 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:04:48,796 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:04:48,798 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:04:49,838 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:04:49,841 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:04:49,844 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:04:49,846 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:04:50,669 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:04:50,672 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:04:52,323 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:04:52,326 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:04:52,328 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:04:52,331 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:14:45,393 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:15:01,023 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:16:07,308 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:17:06,689 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:17:57,670 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:18:50,064 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:19:17,997 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:20:46,359 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:26:51,698 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:26:51,703 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:26:51,705 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:26:51,706 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:26:51,713 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:26:51,719 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:26:59,251 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-24 12:26:59,252 - INFO - Checking for cached route with key: 5b7d78275d69a235c79bd3e61894f293e5360fbd3cbf84b1bcf38f8ed5240c6b
+2025-06-24 12:27:00,256 - INFO - Cache hit for route: (12.988345, 77.508878) -> (12.982516, 77.529095)
+2025-06-24 12:31:15,011 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:31:18,134 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:31:18,136 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:31:18,138 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:31:18,140 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:31:18,143 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:31:18,145 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:31:24,306 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-24 12:31:24,308 - INFO - Checking for cached route with key: 5b7d78275d69a235c79bd3e61894f293e5360fbd3cbf84b1bcf38f8ed5240c6b
+2025-06-24 12:31:25,309 - INFO - Cache hit for route: (12.988345, 77.508878) -> (12.982516, 77.529095)
+2025-06-24 12:31:31,436 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:32:17,112 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:36:46,209 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:36:46,212 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:36:46,216 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:36:46,221 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:36:46,227 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:36:46,230 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:36:51,435 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:36:51,440 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:36:51,445 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:36:51,453 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:36:51,457 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:36:51,463 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:36:55,902 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:36:55,906 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:36:55,910 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:36:55,916 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:36:55,922 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:36:55,931 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:37:20,098 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-24 12:37:20,099 - INFO - Checking for cached route with key: 5b7d78275d69a235c79bd3e61894f293e5360fbd3cbf84b1bcf38f8ed5240c6b
+2025-06-24 12:37:21,100 - INFO - Cache hit for route: (12.988345, 77.508878) -> (12.982516, 77.529095)
+2025-06-24 12:38:27,649 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:38:27,651 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:38:27,656 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:38:27,661 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:38:27,668 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:38:27,671 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:40:04,509 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:51:10,769 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:51:10,774 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:51:10,776 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:51:10,778 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:51:10,785 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:51:10,794 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:51:13,522 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:51:33,388 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:51:33,404 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:51:33,419 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:51:33,427 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:51:33,434 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:51:33,446 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:52:58,249 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:53:06,520 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:53:06,522 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:53:06,525 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:53:06,527 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:53:06,529 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:53:06,531 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:53:57,590 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:53:57,593 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:53:57,594 - ERROR - Error handling proximity data: 'State' object has no attribute 'iot_manager'
+2025-06-24 12:53:57,596 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:53:57,598 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:53:57,600 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 12:57:08,768 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-24 12:57:08,769 - INFO - Checking for cached route with key: 5b7d78275d69a235c79bd3e61894f293e5360fbd3cbf84b1bcf38f8ed5240c6b
+2025-06-24 12:57:09,770 - INFO - Cache hit for route: (12.988345, 77.508878) -> (12.982516, 77.529095)
+2025-06-24 13:04:04,293 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 13:04:04,330 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 13:04:04,343 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 13:04:04,372 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 13:14:02,291 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 13:14:02,301 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 13:14:02,308 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 13:14:02,316 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 13:14:04,942 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 13:14:04,948 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 13:16:29,112 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-24 13:16:29,113 - INFO - Checking for cached route with key: 5b7d78275d69a235c79bd3e61894f293e5360fbd3cbf84b1bcf38f8ed5240c6b
+2025-06-24 13:16:30,114 - INFO - Cache hit for route: (12.988345, 77.508878) -> (12.982516, 77.529095)
+2025-06-24 13:16:53,763 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 13:16:53,767 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 13:16:59,284 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 13:16:59,287 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 13:16:59,289 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 13:16:59,291 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 13:17:26,065 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 13:17:26,070 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 13:17:32,536 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-24 13:17:32,536 - INFO - Checking for cached route with key: 5b7d78275d69a235c79bd3e61894f293e5360fbd3cbf84b1bcf38f8ed5240c6b
+2025-06-24 13:17:33,537 - INFO - Cache hit for route: (12.988345, 77.508878) -> (12.982516, 77.529095)
+2025-06-24 13:18:22,357 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 13:18:22,364 - INFO - Fetching routes. No predefined routes will be returned.
