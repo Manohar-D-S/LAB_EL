@@ -23,6 +23,7 @@ function App() {
   const [isSearching, setIsSearching] = useState<boolean>(false); // New state for search button animation
   const [routes, setRoutes] = useState<Route[]>([]);
   const [ambulancePosition, setAmbulancePosition] = useState<{ lat: number; lng: number } | null>(null);
+  const [isSimulationActive, setIsSimulationActive] = useState<boolean>(false); // New state for simulation
 
   useEffect(() => {
     const fetchRoutes = async () => {
@@ -144,29 +145,15 @@ function App() {
       <Header />
       
       <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
-        <aside className="w-full md:w-80 bg-white shadow-sm z-10 overflow-y-auto border-r border-slate-200">
-          <div className="p-4">
-            <div className="flex items-center mb-4">
-              <Navigation className="h-5 w-5 text-indigo-600 mr-2" />
-              <h2 className="text-lg font-semibold text-slate-800">Ambulance Routes</h2>
-            </div>
-            
-            {loading ? (
-              <div className="py-4 text-center text-slate-500">Loading routes...</div>
-            ) : error ? (
-              <div className="py-4 text-center text-rose-500">{error}</div>
-            ) : (
-              <RouteList 
-                locations={locations} 
-                onSearch={handleSearch} 
-                isSearching={isSearching} 
-              />
-            )}
-          </div>
-        </aside>
         
         <main className="flex-1 flex flex-col overflow-hidden bg-white">
-          <Map selectedRoute={selectedRoute} ambulancePosition={ambulancePosition} />
+          <Map
+            selectedRoute={selectedRoute}
+            ambulancePosition={ambulancePosition}
+            isSimulationActive={isSimulationActive}
+            locations={locations}
+            onRouteSelect={handleSearch}
+          />
           <RouteDetails route={selectedRoute || undefined} onSliderChange={handleSliderChange} />
         </main>
       </div>
