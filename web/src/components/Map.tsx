@@ -7,10 +7,10 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
 import Sidebar from './Sidebar';
+import SimulationBar from './SimulationBar';
 
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-import { clear } from 'console';
 
 const DefaultIcon = L.icon({
   iconUrl: icon,
@@ -95,6 +95,7 @@ interface MapProps {
   isSimulationActive?: boolean;
   locations?: Location[];
   onRouteSelect?: (sourceId: string, destinationId: string) => void;
+  onStartSimulation?: () => void; // <-- add this
 }
 
 const EPSILON = 0.0001; // Small threshold for floating-point comparisons
@@ -114,6 +115,7 @@ const MapComponent: React.FC<MapProps> = ({
   isSimulationActive = false,
   locations = defaultLocations,
   onRouteSelect,
+  onStartSimulation,
 }) => {
   const [center, setCenter] = useState<[number, number]>([12.9716, 77.5946]); // Default center (Bangalore)
   const [zoom, setZoom] = useState(13);
@@ -128,6 +130,12 @@ const MapComponent: React.FC<MapProps> = ({
   const [greenSignalId, setGreenSignalId] = useState<string | null>(null);
   const loggedSignalRef = useRef<string | null>(null);
   const [clearedSignalIds, setClearedSignalIds] = useState<Set<string>>(new Set());
+  const [simulationSpeed, setSimulationSpeed] = useState(1);
+
+  function handleSimulationStart() {
+    isSimulationActive(true);
+    // ...your existing simulation logic...
+  }
 
   useEffect(() => {
     if (selectedRoute?.startPoint && selectedRoute?.endPoint) {
@@ -631,6 +639,23 @@ const MapComponent: React.FC<MapProps> = ({
         routeError={routeError}
         ambulancePosition={ambulancePosition}
         signalsCleared={clearedSignalIds.size}
+      />
+      <SimulationBar
+        progress={calculatedDistance && calculatedDistance > 0 ? Math.min((ambulancePosition && selectedRoute?.startPoint
+          ? L.latLng(selectedRoute.startPoint.lat, selectedRoute.startPoint.lng)
+              .distanceTo(L.latLng(ambulancePosition.lat, ambulancePosition.lng)) / (calculatedDistance * 1000)
+          : 0), 1) : 0}
+        distanceCovered={
+          calculatedDistance && ambulancePosition && selectedRoute?.startPoint
+            ? L.latLng(selectedRoute.startPoint.lat, selectedRoute.startPoint.lng)
+                .distanceTo(L.latLng(ambulancePosition.lat, ambulancePosition.lng)) / 1000
+            : 0
+        }
+        totalDistance={calculatedDistance || 0}
+        isSimulationActive={isSimulationActive}
+        onStart={onStartSimulation}
+        speed={simulationSpeed}
+        onSpeedChange={setSimulationSpeed}
       />
     </div>
   );

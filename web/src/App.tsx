@@ -23,7 +23,7 @@ function App() {
   const [isSearching, setIsSearching] = useState<boolean>(false); // New state for search button animation
   const [routes, setRoutes] = useState<Route[]>([]);
   const [ambulancePosition, setAmbulancePosition] = useState<{ lat: number; lng: number } | null>(null);
-  const [isSimulationActive, setIsSimulationActive] = useState<boolean>(false); // New state for simulation
+  const [isSimulationActive, setIsSimulationActive] = useState(false); // New state for simulation
 
   useEffect(() => {
     const fetchRoutes = async () => {
@@ -140,6 +140,8 @@ function App() {
     setAmbulancePosition(position); // Update ambulance position
   };
 
+  const handleSimulationStart = () => setIsSimulationActive(true);
+
   return (
     <div className="flex flex-col h-screen bg-slate-50">
       <Header />
@@ -151,9 +153,11 @@ function App() {
             selectedRoute={selectedRoute}
             ambulancePosition={ambulancePosition}
             isSimulationActive={isSimulationActive}
+            onStartSimulation={handleSimulationStart}
             locations={locations}
             onRouteSelect={handleSearch}
           />
+          
           <RouteDetails route={selectedRoute || undefined} onSliderChange={handleSliderChange} />
         </main>
       </div>
