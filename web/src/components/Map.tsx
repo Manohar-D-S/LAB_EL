@@ -10,6 +10,7 @@ import Sidebar from './Sidebar';
 
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import { clear } from 'console';
 
 const DefaultIcon = L.icon({
   iconUrl: icon,
@@ -126,6 +127,7 @@ const MapComponent: React.FC<MapProps> = ({
   // Track which signal cluster is currently green/blinking
   const [greenSignalId, setGreenSignalId] = useState<string | null>(null);
   const loggedSignalRef = useRef<string | null>(null);
+  const [clearedSignalIds, setClearedSignalIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (selectedRoute?.startPoint && selectedRoute?.endPoint) {
@@ -453,6 +455,16 @@ const MapComponent: React.FC<MapProps> = ({
   );
 
   useEffect(() => {
+    setClearedSignalIds(new Set());
+  }, [selectedRoute]);
+
+  useEffect(() => {
+    if (greenSignalId && !clearedSignalIds.has(greenSignalId)) {
+      setClearedSignalIds(prev => new Set(prev).add(greenSignalId));
+    }
+  }, [greenSignalId]);
+
+  useEffect(() => {
     if (
       !ambulancePosition ||
       !selectedRoute ||
@@ -464,39 +476,25 @@ const MapComponent: React.FC<MapProps> = ({
       return;
     }
 
-    // Find the closest signal cluster that's on the route
     let closestCluster: SignalCluster | null = null;
     let closestDistance = Infinity;
 
     for (const cluster of filteredClusters) {
-      // Only consider signals that are on the route
       if (!signalsOnRoute.includes(cluster.id)) continue;
-
       const distance = L.latLng(ambulancePosition.lat, ambulancePosition.lng)
         .distanceTo(L.latLng(cluster.position[0], cluster.position[1]));
-
       if (distance < closestDistance) {
         closestDistance = distance;
         closestCluster = cluster;
       }
     }
 
-    // If within 200m of closest signal, turn it green
     if (closestCluster && closestDistance <= 200) {
       if (greenSignalId !== closestCluster.id) {
         setGreenSignalId(closestCluster.id);
-
-        // Log only once per signal
-        if (loggedSignalRef.current !== closestCluster.id) {
-          closestCluster.signals.forEach(signal => {
-            // You can send logs here if needed
-          });
-          loggedSignalRef.current = closestCluster.id;
-        }
+        loggedSignalRef.current = closestCluster.id;
       }
-    }
-    // Turn off green if no signals close enough (with buffer)
-    else if ((!closestCluster || closestDistance > 250) && greenSignalId) {
+    } else if ((!closestCluster || closestDistance > 250) && greenSignalId) {
       setGreenSignalId(null);
       loggedSignalRef.current = null;
     }
@@ -632,6 +630,7 @@ const MapComponent: React.FC<MapProps> = ({
         isSimulationActive={isSimulationActive}
         routeError={routeError}
         ambulancePosition={ambulancePosition}
+        signalsCleared={clearedSignalIds.size}
       />
     </div>
   );

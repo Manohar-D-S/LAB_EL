@@ -10,6 +10,7 @@ interface Location {
 
 interface SidebarProps {
   onRouteSelect: (start: [number, number], end: [number, number]) => void;
+  clearedSignalCount?: number;
   locations: Location[];
   selectedRoute?: any;
   calculatedDistance?: number;
@@ -18,6 +19,7 @@ interface SidebarProps {
   isSimulationActive?: boolean;
   routeError?: string | null;
   ambulancePosition?: any;
+  signalsCleared: number;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -29,7 +31,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   greenSignalId,
   isSimulationActive,
   routeError,
-  ambulancePosition
+  ambulancePosition,
+  signalsCleared
 }) => {
   const [sourceLocation, setSourceLocation] = useState('');
   const [destinationLocation, setDestinationLocation] = useState('');
@@ -174,7 +177,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               </div>
 
               <div className="text-center p-2 bg-white/60 rounded-lg">
-                <p className="text-lg font-bold text-blue-700">{greenSignalId ? '1' : '0'}</p>
+                <p className="text-lg font-bold text-blue-700">{signalsCleared}</p>
                 <p className="text-xs text-blue-600 font-medium">Signals Cleared</p>
               </div>
             </div>
