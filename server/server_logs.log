@@ -2428,3 +2428,57 @@ TypeError: build_simplified_graph() missing 2 required positional arguments: 'so
 2025-06-24 00:34:07,636 - INFO - Path found with 39 nodes
 2025-06-24 00:34:07,637 - INFO - Calculated path: [1719192044, 1557182477, 1557182479, 1557189680, 308069164, 308184600, 3982070777, 10841380663, 1719192254, 1719192276, 12607355192, 12607355191, 4696742455, 1719192306, 1548580883, 2227153687, 1548580613, 1548580709, 1548580909, 11017184988, 308069185, 4073227818, 1546937289, 1548580744, 1548580822, 308069192, 11868532436, 1546937459, 4073227819, 1546937402, 10039378354, 2227256963, 10038653713, 308069200, 1542668607, 4696742592, 2227153680, 10039092485, 1546936999]
 2025-06-24 00:34:07,642 - INFO - Route calculated and cached with key: 5b7d78275d69a235c79bd3e61894f293e5360fbd3cbf84b1bcf38f8ed5240c6b
+2025-06-24 00:39:10,925 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 00:39:10,930 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 00:39:10,934 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 00:39:10,938 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 00:39:15,208 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-24 00:39:15,210 - INFO - Checking for cached route with key: 5b7d78275d69a235c79bd3e61894f293e5360fbd3cbf84b1bcf38f8ed5240c6b
+2025-06-24 00:39:16,211 - INFO - Cache hit for route: (12.988345, 77.508878) -> (12.982516, 77.529095)
+2025-06-24 00:42:42,752 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 00:42:42,759 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 00:42:42,762 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 00:42:42,765 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 00:42:46,888 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-24 00:42:46,889 - INFO - Checking for cached route with key: 5b7d78275d69a235c79bd3e61894f293e5360fbd3cbf84b1bcf38f8ed5240c6b
+2025-06-24 00:42:47,889 - INFO - Cache hit for route: (12.988345, 77.508878) -> (12.982516, 77.529095)
+2025-06-24 00:53:00,758 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 00:53:00,764 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 00:53:00,772 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 00:53:00,778 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 01:10:57,239 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 01:10:57,261 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 01:10:57,266 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 01:10:57,270 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 01:15:56,195 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 01:15:56,201 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 01:15:56,204 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 01:15:56,212 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 09:41:37,846 - INFO - Graph file already exists. Skipping download.
+2025-06-24 09:41:37,846 - INFO - Startup complete
+2025-06-24 09:44:04,419 - INFO - Shutting down application
+2025-06-24 09:47:40,509 - INFO - Graph file already exists. Skipping download.
+2025-06-24 09:47:40,509 - INFO - Startup complete
+2025-06-24 09:47:57,649 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 09:47:58,254 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 09:47:58,387 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 09:47:58,531 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 09:48:03,203 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-24 09:48:03,204 - INFO - Loading graph from file: ./data/simplified_bengaluru.graphml
+2025-06-24 09:48:49,472 - INFO - Graph loaded with 152601 nodes and 388165 edges.
+2025-06-24 09:48:49,472 - INFO - Extracting subgraph for source=(12.988345, 77.508878), dest=(12.982516, 77.529095)
+2025-06-24 09:48:49,989 - INFO - Subgraph extracted with 11414 nodes and 31069 edges.
+2025-06-24 09:48:49,989 - INFO - extract_subgraph completed in 0.5167s using CPU
+2025-06-24 09:48:50,030 - INFO - Start node: 1719192044, End node: 1546936999
+2025-06-24 09:48:50,040 - INFO - AmbulanceRouter initialized with graph containing 11414 nodes and 31069 edges.
+2025-06-24 09:48:50,041 - INFO - Finding path from 1719192044 to 1546936999 using A* algorithm
+2025-06-24 09:48:50,075 - INFO - Path found with 39 nodes
+2025-06-24 09:48:50,076 - INFO - Calculated path: [1719192044, 1557182477, 1557182479, 1557189680, 308069164, 308184600, 3982070777, 10841380663, 1719192254, 1719192276, 12607355192, 12607355191, 4696742455, 1719192306, 1548580883, 2227153687, 1548580613, 1548580709, 1548580909, 11017184988, 308069185, 4073227818, 1546937289, 1548580744, 1548580822, 308069192, 11868532436, 1546937459, 4073227819, 1546937402, 10039378354, 2227256963, 10038653713, 308069200, 1542668607, 4696742592, 2227153680, 10039092485, 1546936999]
+2025-06-24 09:48:50,086 - INFO - Route calculated and cached with key: 5b7d78275d69a235c79bd3e61894f293e5360fbd3cbf84b1bcf38f8ed5240c6b
+2025-06-24 09:49:24,368 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 09:49:24,393 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 09:49:24,408 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 09:49:24,414 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 09:49:36,653 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-24 09:49:36,657 - INFO - Checking for cached route with key: 5b7d78275d69a235c79bd3e61894f293e5360fbd3cbf84b1bcf38f8ed5240c6b
+2025-06-24 09:49:37,658 - INFO - Cache hit for route: (12.988345, 77.508878) -> (12.982516, 77.529095)
