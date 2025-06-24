@@ -452,9 +452,55 @@ const MapComponent: React.FC<MapProps> = ({
     [selectedRoute, signalClusters]
   );
 
-  // Remove the duplicate proximity useEffect and keep only one (already present above)
+  useEffect(() => {
+    if (
+      !ambulancePosition ||
+      !selectedRoute ||
+      filteredClusters.length === 0 ||
+      signalsOnRoute.length === 0
+    ) {
+      setGreenSignalId(null);
+      loggedSignalRef.current = null;
+      return;
+    }
 
-  // Remove the old left sidebar UI and search selects from the map (they are now in Sidebar)
+    // Find the closest signal cluster that's on the route
+    let closestCluster: SignalCluster | null = null;
+    let closestDistance = Infinity;
+
+    for (const cluster of filteredClusters) {
+      // Only consider signals that are on the route
+      if (!signalsOnRoute.includes(cluster.id)) continue;
+
+      const distance = L.latLng(ambulancePosition.lat, ambulancePosition.lng)
+        .distanceTo(L.latLng(cluster.position[0], cluster.position[1]));
+
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestCluster = cluster;
+      }
+    }
+
+    // If within 200m of closest signal, turn it green
+    if (closestCluster && closestDistance <= 200) {
+      if (greenSignalId !== closestCluster.id) {
+        setGreenSignalId(closestCluster.id);
+
+        // Log only once per signal
+        if (loggedSignalRef.current !== closestCluster.id) {
+          closestCluster.signals.forEach(signal => {
+            // You can send logs here if needed
+          });
+          loggedSignalRef.current = closestCluster.id;
+        }
+      }
+    }
+    // Turn off green if no signals close enough (with buffer)
+    else if ((!closestCluster || closestDistance > 250) && greenSignalId) {
+      setGreenSignalId(null);
+      loggedSignalRef.current = null;
+    }
+  }, [ambulancePosition, selectedRoute, filteredClusters, signalsOnRoute]);
 
   // Render
   return (

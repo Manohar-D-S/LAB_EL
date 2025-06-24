@@ -34342,3 +34342,10 @@ ConnectionResetError: [WinError 10054] An existing connection was forcibly close
 2025-06-24 13:17:33,537 - INFO - Cache hit for route: (12.988345, 77.508878) -> (12.982516, 77.529095)
 2025-06-24 13:18:22,357 - INFO - Fetching routes. No predefined routes will be returned.
 2025-06-24 13:18:22,364 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 14:22:38,156 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 14:22:38,160 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 14:22:38,165 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 14:22:38,169 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 14:23:09,475 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-24 14:23:09,476 - INFO - Checking for cached route with key: 5b7d78275d69a235c79bd3e61894f293e5360fbd3cbf84b1bcf38f8ed5240c6b
+2025-06-24 14:23:10,477 - INFO - Cache hit for route: (12.988345, 77.508878) -> (12.982516, 77.529095)
