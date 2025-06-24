@@ -1,4 +1,5 @@
 import React from 'react';
+import L from 'leaflet';
 
 interface SimulationBarProps {
   progress: number;

@@ -115,3 +115,35 @@
 2025-06-24 16:46:02,684 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
 2025-06-24 16:46:02,685 - INFO - Checking for cached route with key: 5b7d78275d69a235c79bd3e61894f293e5360fbd3cbf84b1bcf38f8ed5240c6b
 2025-06-24 16:46:03,685 - INFO - Cache hit for route: (12.988345, 77.508878) -> (12.982516, 77.529095)
+2025-06-24 16:54:03,054 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 16:54:03,059 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 16:54:03,064 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 16:54:03,069 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 16:54:11,042 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-24 16:54:11,042 - INFO - Checking for cached route with key: 5b7d78275d69a235c79bd3e61894f293e5360fbd3cbf84b1bcf38f8ed5240c6b
+2025-06-24 16:54:12,043 - INFO - Cache hit for route: (12.988345, 77.508878) -> (12.982516, 77.529095)
+2025-06-24 17:00:11,607 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 17:00:11,612 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 17:00:11,617 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 17:00:11,623 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 17:02:33,001 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 17:02:33,006 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 17:02:33,011 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 17:02:33,029 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 17:02:37,590 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-24 17:02:37,591 - INFO - Checking for cached route with key: 5b7d78275d69a235c79bd3e61894f293e5360fbd3cbf84b1bcf38f8ed5240c6b
+2025-06-24 17:02:38,592 - INFO - Cache hit for route: (12.988345, 77.508878) -> (12.982516, 77.529095)
+2025-06-24 17:08:37,659 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 17:08:37,666 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 17:08:37,675 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 17:08:37,684 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 17:08:45,634 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.982516 dest_lng=77.529095
+2025-06-24 17:08:45,634 - INFO - Checking for cached route with key: 5b7d78275d69a235c79bd3e61894f293e5360fbd3cbf84b1bcf38f8ed5240c6b
+2025-06-24 17:08:46,635 - INFO - Cache hit for route: (12.988345, 77.508878) -> (12.982516, 77.529095)
+2025-06-24 17:14:26,509 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 17:14:26,512 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 17:14:26,514 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 17:14:26,516 - INFO - Fetching routes. No predefined routes will be returned.
+2025-06-24 17:14:30,284 - INFO - Received route calculation request: source_lat=12.988345 source_lng=77.508878 dest_lat=12.988345 dest_lng=77.508878
+2025-06-24 17:14:30,284 - INFO - Checking for cached route with key: 58cef28702b289345d6437922cb2e4d3d66885b4584cc7efffee7af605fb110a
+2025-06-24 17:14:31,285 - INFO - Cache hit for route: (12.988345, 77.508878) -> (12.988345, 77.508878)

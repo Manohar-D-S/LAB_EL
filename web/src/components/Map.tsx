@@ -7,7 +7,6 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
 import Sidebar from './Sidebar';
-import SimulationBar from './SimulationBar';
 
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
@@ -132,10 +131,7 @@ const MapComponent: React.FC<MapProps> = ({
   const [clearedSignalIds, setClearedSignalIds] = useState<Set<string>>(new Set());
   const [simulationSpeed, setSimulationSpeed] = useState(1);
 
-  function handleSimulationStart() {
-    isSimulationActive(true);
-    // ...your existing simulation logic...
-  }
+ 
 
   useEffect(() => {
     if (selectedRoute?.startPoint && selectedRoute?.endPoint) {
@@ -640,23 +636,7 @@ const MapComponent: React.FC<MapProps> = ({
         ambulancePosition={ambulancePosition}
         signalsCleared={clearedSignalIds.size}
       />
-      <SimulationBar
-        progress={calculatedDistance && calculatedDistance > 0 ? Math.min((ambulancePosition && selectedRoute?.startPoint
-          ? L.latLng(selectedRoute.startPoint.lat, selectedRoute.startPoint.lng)
-              .distanceTo(L.latLng(ambulancePosition.lat, ambulancePosition.lng)) / (calculatedDistance * 1000)
-          : 0), 1) : 0}
-        distanceCovered={
-          calculatedDistance && ambulancePosition && selectedRoute?.startPoint
-            ? L.latLng(selectedRoute.startPoint.lat, selectedRoute.startPoint.lng)
-                .distanceTo(L.latLng(ambulancePosition.lat, ambulancePosition.lng)) / 1000
-            : 0
-        }
-        totalDistance={calculatedDistance || 0}
-        isSimulationActive={isSimulationActive}
-        onStart={onStartSimulation}
-        speed={simulationSpeed}
-        onSpeedChange={setSimulationSpeed}
-      />
+     
     </div>
   );
 };
