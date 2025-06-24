@@ -1,6 +1,10 @@
 class SignalProcessor:
     def __init__(self, graph):
         self.graph = graph
+        self.esp32_communicator = None  # Add this attribute
+
+    def set_esp32_communicator(self, communicator):
+        self.esp32_communicator = communicator
 
     def process_proximity(self, data: dict):
         signal_id = data.get("signalId")
