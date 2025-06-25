@@ -1,35 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { Navigation } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Map from './components/Map';
-import RouteList from './components/RouteList';
 import RouteDetails from './components/RouteDetails';
 import { getRoutes } from './services/api';
 import { Route } from './types/route';
-import Sidebar from './components/Sidebar';
-
-type RouteListProps = {
-  routes: Route[]; // Add the missing 'routes' property
-  selectedRouteId: string | undefined;
-  onRouteSelect: (route: Route | null) => void;
-  locations: { id: string; name: string; lat: number; lng: number }[];
-  onSearch: (source: string, destination: string) => Promise<void>;
-  isSearching: boolean;
-};
 
 function App() {
   const [selectedRoute, setSelectedRoute] = useState<Route | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [isSearching, setIsSearching] = useState<boolean>(false); // New state for search button animation
+  const [isSearching, setIsSearching] = useState<boolean>(false);
   const [routes, setRoutes] = useState<Route[]>([]);
   const [ambulancePosition, setAmbulancePosition] = useState<{ lat: number; lng: number } | null>(null);
-  const [isSimulationActive, setIsSimulationActive] = useState(false); // New state for simulation
-  const [calculatedDistance, setCalculatedDistance] = useState<number | null>(null);
-  const [signalsOnRoute, setSignalsOnRoute] = useState<any[]>([]);
-  const [greenSignalId, setGreenSignalId] = useState<string | null>(null);
-  const [routeError, setRouteError] = useState<string | null>(null);
-  const [clearedSignalIds, setClearedSignalIds] = useState<Set<string>>(new Set());
+  const [isSimulationActive, setIsSimulationActive] = useState(false);
   const [pickOnMapMode, setPickOnMapMode] = useState(false);
 
   useEffect(() => {
@@ -45,7 +28,6 @@ function App() {
         setLoading(false);
       }
     };
-    
     fetchRoutes();
   }, []);
 
@@ -58,7 +40,6 @@ function App() {
     { id: "JayadevaHospital", name: "Jayadeva Hospital", lat: 12.917924, lng: 77.599245 },
   ];
 
-  // Replace handleSearch with a version that supports both string and {lat, lng}
   const handleSearch = async (
     source: string | { lat: number; lng: number },
     destination: string | { lat: number; lng: number }
@@ -139,24 +120,8 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    const fetchRoutes = async () => {
-      try {
-        setLoading(true);
-        const data = await getRoutes();
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching routes:', err);
-        setError('Failed to load routes. Please try again later.');
-        setLoading(false);
-      }
-    };
-
-    fetchRoutes();
-  }, []);
-
   const handleSliderChange = (position: { lat: number; lng: number }) => {
-    setAmbulancePosition(position); // Update ambulance position
+    setAmbulancePosition(position);
   };
 
   const handleSimulationStart = () => setIsSimulationActive(true);
@@ -164,9 +129,7 @@ function App() {
   return (
     <div className="flex flex-col h-screen bg-slate-50">
       <Header />
-      
       <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
-        
         <main className="flex-1 flex flex-col overflow-hidden bg-white">
           <Map
             selectedRoute={selectedRoute}
@@ -183,10 +146,8 @@ function App() {
               setPickOnMapMode(false);
             }}
           />
-          
           <RouteDetails route={selectedRoute || undefined} onSliderChange={handleSliderChange} />
         </main>
-        
       </div>
     </div>
   );

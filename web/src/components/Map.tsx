@@ -104,7 +104,6 @@ interface MapProps {
   onPickOnMapComplete?: (source: { lat: number; lng: number }, destination: { lat: number; lng: number }) => void;
 }
 
-const EPSILON = 0.0001; // Small threshold for floating-point comparisons
 
 const defaultLocations: Location[] = [
   { id: "LakshmiHospital", name: "Lakshmi Hospital", lat: 12.988345, lng: 77.508878 },
@@ -115,22 +114,13 @@ const defaultLocations: Location[] = [
   { id: "JayadevaHospital", name: "Jayadeva Hospital", lat: 12.917924, lng: 77.599245 },
 ];
 
-const sourceIcon = new L.Icon({
-  iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
-  iconSize: [32, 32],
-});
-const destIcon = new L.Icon({
-  iconUrl: 'https://cdn-icons-png.flaticon.com/512/149/149059.png',
-  iconSize: [32, 32],
-});
-
 const MapComponent: React.FC<MapProps> = ({
   selectedRoute,
   ambulancePosition,
   isSimulationActive = false,
   locations = defaultLocations,
   onRouteSelect,
-  onStartSimulation,
+  // onStartSimulation,
   onResetRoute,
   isLoading, // <-- Add this
   pickOnMapMode = false,
@@ -149,7 +139,6 @@ const MapComponent: React.FC<MapProps> = ({
   const [greenSignalId, setGreenSignalId] = useState<string | null>(null);
   const loggedSignalRef = useRef<string | null>(null);
   const [clearedSignalIds, setClearedSignalIds] = useState<Set<string>>(new Set());
-  const [simulationSpeed, setSimulationSpeed] = useState(1);
 
   // Source and destination states
   const [source, setSource] = useState<{ lat: number; lng: number } | null>(null);
