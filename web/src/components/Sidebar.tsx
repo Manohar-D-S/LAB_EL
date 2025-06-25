@@ -20,6 +20,8 @@ interface SidebarProps {
   routeError?: string | null;
   ambulancePosition?: any;
   signalsCleared: number;
+  isLoading?: boolean;
+  onResetRoute?: () => void; // <-- Add this prop
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -32,27 +34,33 @@ const Sidebar: React.FC<SidebarProps> = ({
   isSimulationActive,
   routeError,
   ambulancePosition,
-  signalsCleared
+  signalsCleared,
+  onResetRoute,
+  isLoading // <-- Use only the prop
 }) => {
   const [sourceLocation, setSourceLocation] = useState('');
   const [destinationLocation, setDestinationLocation] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-
+    // Only call onRouteSelect, let parent handle loading
     const sourceCoords = locations.find(loc => loc.id === sourceLocation);
     const destCoords = locations.find(loc => loc.id === destinationLocation);
 
     if (sourceCoords && destCoords) {
       onRouteSelect([sourceCoords.lat, sourceCoords.lng], [destCoords.lat, destCoords.lng]);
-      setTimeout(() => setIsLoading(false), 1000);
     } else {
       alert('Please select valid locations');
-      setIsLoading(false);
     }
   };
+
+  // Reset form when route is reset
+  React.useEffect(() => {
+    if (!selectedRoute) {
+      setSourceLocation('');
+      setDestinationLocation('');
+    }
+  }, [selectedRoute]);
 
   return (
     <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-200/50 p-6 z-10 max-w-sm w-full" style={{ width: 380 }}>
@@ -69,72 +77,84 @@ const Sidebar: React.FC<SidebarProps> = ({
         </div>
       </div>
 
-      {/* Route Selection Form */}
-      <form onSubmit={handleSubmit} className="space-y-4 mb-6">
-        <div>
-          <label htmlFor="source" className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
-            Source Location
-          </label>
-          <select
-            id="source"
-            value={sourceLocation}
-            onChange={(e) => setSourceLocation(e.target.value)}
-            className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-            required
+      {/* Show form only if no route is selected */}
+      {!selectedRoute && (
+        <form onSubmit={handleSubmit} className="space-y-4 mb-6">
+          <div>
+            <label htmlFor="source" className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+              Source Location
+            </label>
+            <select
+              id="source"
+              value={sourceLocation}
+              onChange={(e) => setSourceLocation(e.target.value)}
+              className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+              required
+            >
+              <option value="">Select source location</option>
+              {locations.map(loc => (
+                <option key={loc.id} value={loc.id}>{loc.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="destination" className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+              Destination
+            </label>
+            <select
+              id="destination"
+              value={destinationLocation}
+              onChange={(e) => setDestinationLocation(e.target.value)}
+              className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+              required
+            >
+              <option value="">Select destination</option>
+              {locations.map(loc => (
+                <option key={loc.id} value={loc.id}>{loc.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full flex justify-center items-center bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            disabled={isLoading}
           >
-            <option value="">Select source location</option>
-            {locations.map(loc => (
-              <option key={loc.id} value={loc.id}>{loc.name}</option>
-            ))}
-          </select>
-        </div>
+            {isLoading ? (
+              <span className="flex items-center">
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Calculating Route...
+              </span>
+            ) : (
+              <span className="flex items-center font-semibold">
+                <Search className="mr-3 h-5 w-5" />
+                Find Route
+              </span>
+            )}
+          </button>
+        </form>
+      )}
 
-        <div>
-          <label htmlFor="destination" className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
-            Destination
-          </label>
-          <select
-            id="destination"
-            value={destinationLocation}
-            onChange={(e) => setDestinationLocation(e.target.value)}
-            className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-            required
-          >
-            <option value="">Select destination</option>
-            {locations.map(loc => (
-              <option key={loc.id} value={loc.id}>{loc.name}</option>
-            ))}
-          </select>
-        </div>
-
-        <button
-          type="submit"
-          className="w-full flex justify-center items-center bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <span className="flex items-center">
-              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Calculating Route...
-            </span>
-          ) : (
-            <span className="flex items-center font-semibold">
-              <Search className="mr-3 h-5 w-5" />
-              Find Route
-            </span>
-          )}
-        </button>
-      </form>
-
-      {/* Route Details */}
+      {/* Show route details only if a route is selected */}
       {selectedRoute && (
         <>
           <div className="space-y-4">
             {selectedRoute.name && (
-              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+              <div
+                className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-indigo-100 transition"
+                onClick={() => {
+                  setSourceLocation('');
+                  setDestinationLocation('');
+                  if (typeof onResetRoute === 'function') {
+                    onResetRoute(); // Use the dedicated reset handler
+                  }
+                }}
+                title="Click to search a new route"
+              >
                 <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
                   <svg className="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />

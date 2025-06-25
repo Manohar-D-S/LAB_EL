@@ -94,7 +94,9 @@ interface MapProps {
   isSimulationActive?: boolean;
   locations?: Location[];
   onRouteSelect?: (sourceId: string, destinationId: string) => void;
-  onStartSimulation?: () => void; // <-- add this
+  onStartSimulation?: () => void;
+  onResetRoute?: () => void;
+  isLoading?: boolean; // <-- Add this
 }
 
 const EPSILON = 0.0001; // Small threshold for floating-point comparisons
@@ -115,6 +117,8 @@ const MapComponent: React.FC<MapProps> = ({
   locations = defaultLocations,
   onRouteSelect,
   onStartSimulation,
+  onResetRoute,
+  isLoading // <-- Add this
 }) => {
   const [center, setCenter] = useState<[number, number]>([12.9716, 77.5946]); // Default center (Bangalore)
   const [zoom, setZoom] = useState(13);
@@ -626,6 +630,7 @@ const MapComponent: React.FC<MapProps> = ({
             }
           }
         }}
+        onResetRoute={onResetRoute}
         locations={locations}
         selectedRoute={selectedRoute}
         calculatedDistance={calculatedDistance ?? undefined}
@@ -635,6 +640,7 @@ const MapComponent: React.FC<MapProps> = ({
         routeError={routeError}
         ambulancePosition={ambulancePosition}
         signalsCleared={clearedSignalIds.size}
+        isLoading={isLoading}
       />
      
     </div>

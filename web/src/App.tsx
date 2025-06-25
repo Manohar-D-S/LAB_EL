@@ -24,6 +24,11 @@ function App() {
   const [routes, setRoutes] = useState<Route[]>([]);
   const [ambulancePosition, setAmbulancePosition] = useState<{ lat: number; lng: number } | null>(null);
   const [isSimulationActive, setIsSimulationActive] = useState(false); // New state for simulation
+  const [calculatedDistance, setCalculatedDistance] = useState<number | null>(null);
+  const [signalsOnRoute, setSignalsOnRoute] = useState<any[]>([]);
+  const [greenSignalId, setGreenSignalId] = useState<string | null>(null);
+  const [routeError, setRouteError] = useState<string | null>(null);
+  const [clearedSignalIds, setClearedSignalIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const fetchRoutes = async () => {
@@ -156,10 +161,13 @@ function App() {
             onStartSimulation={handleSimulationStart}
             locations={locations}
             onRouteSelect={handleSearch}
+            onResetRoute={() => setSelectedRoute(null)}
+            isLoading={isSearching} // <-- Pass actual loading state
           />
           
           <RouteDetails route={selectedRoute || undefined} onSliderChange={handleSliderChange} />
         </main>
+        
       </div>
     </div>
   );
