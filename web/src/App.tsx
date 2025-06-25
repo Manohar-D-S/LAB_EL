@@ -29,6 +29,7 @@ function App() {
   const [greenSignalId, setGreenSignalId] = useState<string | null>(null);
   const [routeError, setRouteError] = useState<string | null>(null);
   const [clearedSignalIds, setClearedSignalIds] = useState<Set<string>>(new Set());
+  const [pickOnMapMode, setPickOnMapMode] = useState(false);
 
   useEffect(() => {
     const fetchRoutes = async () => {
@@ -56,15 +57,28 @@ function App() {
     { id: "JayadevaHospital", name: "Jayadeva Hospital", lat: 12.917924, lng: 77.599245 },
   ];
 
-  const handleSearch = async (source: string, destination: string) => {
-    setIsSearching(true); // Start the loading animation
+  // Replace handleSearch with a version that supports both string and {lat, lng}
+  const handleSearch = async (
+    source: string | { lat: number; lng: number },
+    destination: string | { lat: number; lng: number }
+  ) => {
+    setIsSearching(true);
     try {
-      const payload = {
-        source_lat: locations.find((loc) => loc.id === source)?.lat,
-        source_lng: locations.find((loc) => loc.id === source)?.lng,
-        dest_lat: locations.find((loc) => loc.id === destination)?.lat,
-        dest_lng: locations.find((loc) => loc.id === destination)?.lng,
-      };
+      let payload: any = {};
+      if (typeof source === 'string') {
+        payload.source_lat = locations.find((loc) => loc.id === source)?.lat;
+        payload.source_lng = locations.find((loc) => loc.id === source)?.lng;
+      } else {
+        payload.source_lat = source.lat;
+        payload.source_lng = source.lng;
+      }
+      if (typeof destination === 'string') {
+        payload.dest_lat = locations.find((loc) => loc.id === destination)?.lat;
+        payload.dest_lng = locations.find((loc) => loc.id === destination)?.lng;
+      } else {
+        payload.dest_lat = destination.lat;
+        payload.dest_lng = destination.lng;
+      }
       console.log('Payload:', payload);
 
       if (
@@ -93,7 +107,6 @@ function App() {
       const routeData = await response.json();
       console.log('Route Data:', routeData);
 
-      // Transform backend response to Route object expected by Map/RouteDetails
       if (routeData.route_coordinates && routeData.route_coordinates.length > 0) {
         const path = routeData.route_coordinates.map(
           ([lat, lng]: [number, number]) => ({ lat, lng })
@@ -102,7 +115,7 @@ function App() {
         const endPoint = path[path.length - 1];
         const route: Route = {
           id: 'dynamic',
-          name: `${source} to ${destination}`,
+          name: `${typeof source === 'string' ? source : 'Custom Source'} to ${typeof destination === 'string' ? destination : 'Custom Destination'}`,
           startPoint,
           endPoint,
           path,
@@ -121,7 +134,7 @@ function App() {
       console.error('Error fetching route:', error);
       setSelectedRoute(null);
     } finally {
-      setIsSearching(false); // Stop the loading animation
+      setIsSearching(false);
     }
   };
 
@@ -162,7 +175,12 @@ function App() {
             locations={locations}
             onRouteSelect={handleSearch}
             onResetRoute={() => setSelectedRoute(null)}
-            isLoading={isSearching} // <-- Pass actual loading state
+            isLoading={isSearching}
+            pickOnMapMode={pickOnMapMode}
+            onPickOnMapComplete={(source, destination) => {
+              handleSearch(source, destination);
+              setPickOnMapMode(false);
+            }}
           />
           
           <RouteDetails route={selectedRoute || undefined} onSliderChange={handleSliderChange} />

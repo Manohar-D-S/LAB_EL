@@ -22,6 +22,7 @@ interface SidebarProps {
   signalsCleared: number;
   isLoading?: boolean;
   onResetRoute?: () => void; // <-- Add this prop
+  onPickOnMapStart?: () => void; // Add this prop
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -36,10 +37,12 @@ const Sidebar: React.FC<SidebarProps> = ({
   ambulancePosition,
   signalsCleared,
   onResetRoute,
+  onPickOnMapStart, // Add this prop
   isLoading // <-- Use only the prop
 }) => {
   const [sourceLocation, setSourceLocation] = useState('');
   const [destinationLocation, setDestinationLocation] = useState('');
+  const [pickOnMap, setPickOnMap] = useState(false); // New state
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,6 +55,11 @@ const Sidebar: React.FC<SidebarProps> = ({
     } else {
       alert('Please select valid locations');
     }
+  };
+
+  const handlePickOnMap = () => {
+    setPickOnMap(true);
+    if (onPickOnMapStart) onPickOnMapStart();
   };
 
   // Reset form when route is reset
@@ -80,6 +88,23 @@ const Sidebar: React.FC<SidebarProps> = ({
       {/* Show form only if no route is selected */}
       {!selectedRoute && (
         <form onSubmit={handleSubmit} className="space-y-4 mb-6">
+          {/* Choose on Map Button */}
+          <button
+            type="button"
+            className="w-full flex justify-center items-center bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white py-2 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mb-2"
+            onClick={handlePickOnMap}
+            disabled={pickOnMap || isLoading}
+          >
+            {pickOnMap ? "Click on map to select source & destination..." : "Choose on Map"}
+          </button>
+
+          {/* Show guidance if picking on map */}
+          {pickOnMap && (
+            <div className="text-sm text-green-700 bg-green-50 rounded-lg p-2 mb-2 text-center">
+              Click on the map to select <b>source</b> and then <b>destination</b>.
+            </div>
+          )}
+
           <div>
             <label htmlFor="source" className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
               Source Location
@@ -90,6 +115,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               onChange={(e) => setSourceLocation(e.target.value)}
               className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               required
+              disabled={pickOnMap}
             >
               <option value="">Select source location</option>
               {locations.map(loc => (
@@ -108,6 +134,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               onChange={(e) => setDestinationLocation(e.target.value)}
               className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               required
+              disabled={pickOnMap}
             >
               <option value="">Select destination</option>
               {locations.map(loc => (
@@ -119,7 +146,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           <button
             type="submit"
             className="w-full flex justify-center items-center bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            disabled={isLoading}
+            disabled={isLoading || pickOnMap}
           >
             {isLoading ? (
               <span className="flex items-center">

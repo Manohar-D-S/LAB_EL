@@ -2,7 +2,7 @@
 // This component displays a map with a route, traffic signals, and an ambulance marker.
 
 import React, { useEffect, useState, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap, useMapEvent } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
@@ -93,10 +93,15 @@ interface MapProps {
   ambulancePosition: { lat: number; lng: number } | null;
   isSimulationActive?: boolean;
   locations?: Location[];
-  onRouteSelect?: (sourceId: string, destinationId: string) => void;
+  onRouteSelect?: (
+    source: string | { lat: number; lng: number },
+    destination: string | { lat: number; lng: number }
+  ) => void;
   onStartSimulation?: () => void;
   onResetRoute?: () => void;
   isLoading?: boolean; // <-- Add this
+  pickOnMapMode?: boolean;
+  onPickOnMapComplete?: (source: { lat: number; lng: number }, destination: { lat: number; lng: number }) => void;
 }
 
 const EPSILON = 0.0001; // Small threshold for floating-point comparisons
@@ -110,6 +115,15 @@ const defaultLocations: Location[] = [
   { id: "JayadevaHospital", name: "Jayadeva Hospital", lat: 12.917924, lng: 77.599245 },
 ];
 
+const sourceIcon = new L.Icon({
+  iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+  iconSize: [32, 32],
+});
+const destIcon = new L.Icon({
+  iconUrl: 'https://cdn-icons-png.flaticon.com/512/149/149059.png',
+  iconSize: [32, 32],
+});
+
 const MapComponent: React.FC<MapProps> = ({
   selectedRoute,
   ambulancePosition,
@@ -118,7 +132,9 @@ const MapComponent: React.FC<MapProps> = ({
   onRouteSelect,
   onStartSimulation,
   onResetRoute,
-  isLoading // <-- Add this
+  isLoading, // <-- Add this
+  pickOnMapMode = false,
+  onPickOnMapComplete,
 }) => {
   const [center, setCenter] = useState<[number, number]>([12.9716, 77.5946]); // Default center (Bangalore)
   const [zoom, setZoom] = useState(13);
@@ -135,7 +151,12 @@ const MapComponent: React.FC<MapProps> = ({
   const [clearedSignalIds, setClearedSignalIds] = useState<Set<string>>(new Set());
   const [simulationSpeed, setSimulationSpeed] = useState(1);
 
- 
+  // Source and destination states
+  const [source, setSource] = useState<{ lat: number; lng: number } | null>(null);
+  const [destination, setDestination] = useState<{ lat: number; lng: number } | null>(null);
+  const [pickCount, setPickCount] = useState(0);
+  const [tempSource, setTempSource] = useState<{ lat: number; lng: number } | null>(null);
+  const [tempDestination, setTempDestination] = useState<{ lat: number; lng: number } | null>(null);
 
   useEffect(() => {
     if (selectedRoute?.startPoint && selectedRoute?.endPoint) {
@@ -508,6 +529,54 @@ const MapComponent: React.FC<MapProps> = ({
     }
   }, [ambulancePosition, selectedRoute, filteredClusters, signalsOnRoute]);
 
+  // Click handler component
+  function ClickHandler({ onClick }: { onClick: (latlng: L.LatLng) => void }) {
+    useMapEvent('click', (e) => {
+      onClick(e.latlng);
+    });
+    return null;
+  }
+
+  // Handle map click to set source/destination (dynamic picking)
+  const handleMapClick = (latlng: L.LatLng) => {
+    const point = { lat: latlng.lat, lng: latlng.lng };
+    if (pickOnMapMode) {
+      if (pickCount === 0) {
+        setTempSource(point);
+        setTempDestination(null);
+        setPickCount(1);
+      } else if (pickCount === 1 && tempSource) {
+        setTempDestination(point);
+        if (onPickOnMapComplete) {
+          onPickOnMapComplete(tempSource, point);
+        }
+        setTempSource(null);
+        setTempDestination(null);
+        setPickCount(0);
+      }
+      return;
+    }
+    if (!source) {
+      setSource(point);
+    } else if (!destination) {
+      setDestination(point);
+      // Optionally call backend here:
+      if (onRouteSelect) onRouteSelect(source, point);
+    } else {
+      setSource(point);
+      setDestination(null);
+    }
+  };
+
+  // Reset pick state if mode is turned off
+  React.useEffect(() => {
+    if (!pickOnMapMode) {
+      setPickCount(0);
+      setTempSource(null);
+      setTempDestination(null);
+    }
+  }, [pickOnMapMode]);
+
   // Render
   return (
     <div className="flex-1 w-full relative">
@@ -521,6 +590,21 @@ const MapComponent: React.FC<MapProps> = ({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+
+        {/* Click handler for selecting source/destination */}
+        <ClickHandler onClick={handleMapClick} />
+
+        {/* Temporary markers for pick-on-map mode */}
+        {pickOnMapMode && tempSource && (
+          <Marker position={[tempSource.lat, tempSource.lng]} icon={StartIcon}>
+            <Popup>Picked Source</Popup>
+          </Marker>
+        )}
+        {pickOnMapMode && tempDestination && (
+          <Marker position={[tempDestination.lat, tempDestination.lng]} icon={EndIcon}>
+            <Popup>Picked Destination</Popup>
+          </Marker>
+        )}
 
         {/* Start and End markers */}
         {selectedRoute?.startPoint && (
@@ -619,15 +703,13 @@ const MapComponent: React.FC<MapProps> = ({
       <Sidebar
         onRouteSelect={(start, end) => {
           if (onRouteSelect) {
-            const source = locations.find(
-              loc => Math.abs(loc.lat - start[0]) < EPSILON && Math.abs(loc.lng - start[1]) < EPSILON
-            );
-            const dest = locations.find(
-              loc => Math.abs(loc.lat - end[0]) < EPSILON && Math.abs(loc.lng - end[1]) < EPSILON
-            );
-            if (source && dest) {
-              onRouteSelect(source.id, dest.id);
-            }
+            // If start/end are objects, pass as is, else try to resolve from locations
+            const getIdOrCoords = (val: any) => {
+              if (typeof val === 'string') return val;
+              if (typeof val === 'object' && val.lat !== undefined && val.lng !== undefined) return val;
+              return '';
+            };
+            onRouteSelect(getIdOrCoords(start), getIdOrCoords(end));
           }
         }}
         onResetRoute={onResetRoute}
