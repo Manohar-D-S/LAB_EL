@@ -23,6 +23,12 @@ function App() {
   const [isSearching, setIsSearching] = useState<boolean>(false); // New state for search button animation
   const [routes, setRoutes] = useState<Route[]>([]);
   const [ambulancePosition, setAmbulancePosition] = useState<{ lat: number; lng: number } | null>(null);
+  const [isSimulationActive, setIsSimulationActive] = useState(false); // New state for simulation
+  const [calculatedDistance, setCalculatedDistance] = useState<number | null>(null);
+  const [signalsOnRoute, setSignalsOnRoute] = useState<any[]>([]);
+  const [greenSignalId, setGreenSignalId] = useState<string | null>(null);
+  const [routeError, setRouteError] = useState<string | null>(null);
+  const [clearedSignalIds, setClearedSignalIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const fetchRoutes = async () => {
@@ -139,36 +145,29 @@ function App() {
     setAmbulancePosition(position); // Update ambulance position
   };
 
+  const handleSimulationStart = () => setIsSimulationActive(true);
+
   return (
     <div className="flex flex-col h-screen bg-slate-50">
       <Header />
       
       <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
-        <aside className="w-full md:w-80 bg-white shadow-sm z-10 overflow-y-auto border-r border-slate-200">
-          <div className="p-4">
-            <div className="flex items-center mb-4">
-              <Navigation className="h-5 w-5 text-indigo-600 mr-2" />
-              <h2 className="text-lg font-semibold text-slate-800">Ambulance Routes</h2>
-            </div>
-            
-            {loading ? (
-              <div className="py-4 text-center text-slate-500">Loading routes...</div>
-            ) : error ? (
-              <div className="py-4 text-center text-rose-500">{error}</div>
-            ) : (
-              <RouteList 
-                locations={locations} 
-                onSearch={handleSearch} 
-                isSearching={isSearching} 
-              />
-            )}
-          </div>
-        </aside>
         
         <main className="flex-1 flex flex-col overflow-hidden bg-white">
-          <Map selectedRoute={selectedRoute} ambulancePosition={ambulancePosition} />
+          <Map
+            selectedRoute={selectedRoute}
+            ambulancePosition={ambulancePosition}
+            isSimulationActive={isSimulationActive}
+            onStartSimulation={handleSimulationStart}
+            locations={locations}
+            onRouteSelect={handleSearch}
+            onResetRoute={() => setSelectedRoute(null)}
+            isLoading={isSearching} // <-- Pass actual loading state
+          />
+          
           <RouteDetails route={selectedRoute || undefined} onSliderChange={handleSliderChange} />
         </main>
+        
       </div>
     </div>
   );

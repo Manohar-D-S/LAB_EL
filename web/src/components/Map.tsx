@@ -6,8 +6,8 @@ import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
+import Sidebar from './Sidebar';
 
-// Fix Leaflet marker icon issues
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
@@ -32,18 +32,24 @@ const EndIcon = new L.Icon({
   iconAnchor: [12, 41],
 });
 
-// Custom ambulance icon
 const ambulanceIcon = new L.Icon({
-  iconUrl: '/ambulance.png', // Updated path to reflect public folder
+  iconUrl: '/ambulance.png',
   iconSize: [32, 32],
   iconAnchor: [16, 16],
 });
 
-// Custom traffic signal icon
-const TrafficSignalIcon = new L.Icon({
-  iconUrl: '/traffic.png', // Ensure this image is placed in the public folder
-  iconSize: [35, 35], // Adjusted size for better visibility
-  iconAnchor: [18, 18], // Center the icon
+const trafficSignalIcon = L.divIcon({
+  html: `<img src="/traffic.svg" alt="Traffic Signal" style="width:35px;height:35px;" />`,
+  className: '',
+  iconSize: [35, 35],
+  iconAnchor: [18, 18],
+});
+
+const greenTrafficSignalIcon = L.divIcon({
+  html: `<img src="/traffic-green.svg" alt="Green Traffic Signal" style="width:50px;height:50px;" />`,
+  className: '',
+  iconSize: [63, 63],
+  iconAnchor: [31, 31],
 });
 
 L.Marker.prototype.options.icon = DefaultIcon;
@@ -75,16 +81,44 @@ interface SignalCluster {
   signals: TrafficSignal[];
 }
 
+interface Location {
+  id: string;
+  name: string;
+  lat: number;
+  lng: number;
+}
+
 interface MapProps {
   selectedRoute: Route | null;
   ambulancePosition: { lat: number; lng: number } | null;
   isSimulationActive?: boolean;
+  locations?: Location[];
+  onRouteSelect?: (sourceId: string, destinationId: string) => void;
+  onStartSimulation?: () => void;
+  onResetRoute?: () => void;
+  isLoading?: boolean; // <-- Add this
 }
+
+const EPSILON = 0.0001; // Small threshold for floating-point comparisons
+
+const defaultLocations: Location[] = [
+  { id: "LakshmiHospital", name: "Lakshmi Hospital", lat: 12.988345, lng: 77.508878 },
+  { id: "Kamakshipalya", name: "Kamakshipalya", lat: 12.982516, lng: 77.529095 },
+  { id: "SanjeeviniHospital", name: "Sanjeevini Hospital", lat: 12.982157, lng: 77.598217 },
+  { id: "MythicSociety", name: "Mythic Society", lat: 12.972791, lng: 77.586308 },
+  { id: "VetCollege", name: "Vet College", lat: 12.907877, lng: 77.592391 },
+  { id: "JayadevaHospital", name: "Jayadeva Hospital", lat: 12.917924, lng: 77.599245 },
+];
 
 const MapComponent: React.FC<MapProps> = ({
   selectedRoute,
   ambulancePosition,
-  isSimulationActive = false
+  isSimulationActive = false,
+  locations = defaultLocations,
+  onRouteSelect,
+  onStartSimulation,
+  onResetRoute,
+  isLoading // <-- Add this
 }) => {
   const [center, setCenter] = useState<[number, number]>([12.9716, 77.5946]); // Default center (Bangalore)
   const [zoom, setZoom] = useState(13);
@@ -98,6 +132,10 @@ const MapComponent: React.FC<MapProps> = ({
   // Track which signal cluster is currently green/blinking
   const [greenSignalId, setGreenSignalId] = useState<string | null>(null);
   const loggedSignalRef = useRef<string | null>(null);
+  const [clearedSignalIds, setClearedSignalIds] = useState<Set<string>>(new Set());
+  const [simulationSpeed, setSimulationSpeed] = useState(1);
+
+ 
 
   useEffect(() => {
     if (selectedRoute?.startPoint && selectedRoute?.endPoint) {
@@ -134,6 +172,7 @@ const MapComponent: React.FC<MapProps> = ({
             const trafficSignalPoints = response.data.elements.map((element: any) => ({
               position: [element.lat, element.lon] as [number, number],
               name: element.tags?.name || 'Unnamed',
+              id: element.id.toString(),
             }));
             setTrafficSignals(trafficSignalPoints);
           }
@@ -154,18 +193,33 @@ const MapComponent: React.FC<MapProps> = ({
   }, [selectedRoute]);
 
   // Helper function to send proximity log to Python server
-  function sendProximityLog(signal: any, distance: number) {
+  function sendProximityLog(signal: any, distance: number, routeDistance?: number) {
+    const payload = {
+      signalId: signal.id || signal.name || 'unknown',
+      name: signal.name || 'Unnamed Signal',
+      lat: signal.position[0],
+      lng: signal.position[1],
+      distance: Math.round(distance),
+      routeDistance: routeDistance ? Math.round(routeDistance) : undefined,
+      timestamp: new Date().toISOString(),
+      ambulancePosition: ambulancePosition ? {
+        lat: ambulancePosition.lat,
+        lng: ambulancePosition.lng
+      } : null
+    };
+
+    // Send to both endpoints for compatibility
     fetch('http://localhost:8000/iot/proximity', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        signalId: signal.id || signal.name || '', // Prefer OSM node id, fallback to name
-        name: signal.name || '',
-        lat: signal.position[0],
-        lng: signal.position[1],
-        distance: distance // Send distance as a separate field
-      })
-    });
+      body: JSON.stringify(payload)
+    }).catch(err => console.error('Failed to send IoT proximity log:', err));
+
+    fetch('http://localhost:8000/proximity', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).catch(err => console.error('Failed to send proximity log:', err));
   }
 
   useEffect(() => {
@@ -176,9 +230,6 @@ const MapComponent: React.FC<MapProps> = ({
             L.latLng(signal.position[0], signal.position[1])
           );
           if (distance <= 150) {
-            console.log(
-              `Ambulance within 150m of ${signal.name} signal. Distance: ${distance.toFixed(1)}m`
-            );
             sendProximityLog(signal, distance);
           }
         });
@@ -228,7 +279,8 @@ const MapComponent: React.FC<MapProps> = ({
             name: element.tags?.name || `Signal ${element.id}`
           }));
           setTrafficSignals(signals);
-          const clusters = clusterSignals(signals);
+          // Use the new clustering function
+          const clusters = clusterSignals(signals, 120);
           setSignalClusters(clusters);
           const onRouteClusterIds: string[] = clusters
             .filter(cluster =>
@@ -277,251 +329,186 @@ const MapComponent: React.FC<MapProps> = ({
     }
   }, [selectedRoute]);
        
-  // Helper: Get the next signal cluster on the route that the ambulance hasn't passed yet
-  const getNextSignalCluster = () => {
-    if (!ambulancePosition || !selectedRoute || signalsOnRoute.length === 0) return null;
-    let minIndex = Infinity;
-    let nextCluster: SignalCluster | null = null;
-    for (const cluster of signalClusters) {
-      if (!signalsOnRoute.includes(cluster.id)) continue;
-      let closestIdx = 0;
-      let minDist = Infinity;
-      selectedRoute.path.forEach((pt, idx) => {
-        const dist = L.latLng(pt.lat, pt.lng).distanceTo(L.latLng(cluster.position[0], cluster.position[1]));
-        if (dist < minDist) {
-          minDist = dist;
-          closestIdx = idx;
+  // Cluster signals that are within a certain distance (e.g., 60m) of each other
+  const clusterSignals = (signals: TrafficSignal[], maxDistance: number = 60): SignalCluster[] => {
+    const clusters: SignalCluster[] = [];
+    const used = new Set<string>();
+    for (let i = 0; i < signals.length; i++) {
+      if (used.has(signals[i].id)) continue;
+      const clusterSignals: TrafficSignal[] = [signals[i]];
+      used.add(signals[i].id);
+      for (let j = i + 1; j < signals.length; j++) {
+        if (used.has(signals[j].id)) continue;
+        const dist = L.latLng(signals[i].position[0], signals[i].position[1])
+          .distanceTo(L.latLng(signals[j].position[0], signals[j].position[1]));
+        if (dist <= maxDistance) {
+          clusterSignals.push(signals[j]);
+          used.add(signals[j].id);
         }
+      }
+      // Compute cluster center
+      const lat = clusterSignals.reduce((sum, s) => sum + s.position[0], 0) / clusterSignals.length;
+      const lng = clusterSignals.reduce((sum, s) => sum + s.position[1], 0) / clusterSignals.length;
+      clusters.push({
+        id: clusterSignals.map(s => s.id).join('-'),
+        position: [lat, lng],
+        name: clusterSignals.length > 1
+          ? `Cluster (${clusterSignals.length} signals)`
+          : clusterSignals[0].name,
+        count: clusterSignals.length,
+        signals: clusterSignals,
       });
-      let ambIdx = 0;
-      let ambMinDist = Infinity;
-      selectedRoute.path.forEach((pt, idx) => {
-        const dist = L.latLng(pt.lat, pt.lng).distanceTo(L.latLng(ambulancePosition.lat, ambulancePosition.lng));
-        if (dist < ambMinDist) {
-          ambMinDist = dist;
-          ambIdx = idx;
-        }
-      });
-      if (closestIdx >= ambIdx && closestIdx < minIndex) {
-        minIndex = closestIdx;
-        nextCluster = cluster;
-      }
     }
-    return nextCluster;
+    return clusters;
   };
 
-  // Helper: Calculate route distance from ambulance to signal along the path (signed)
-  const getRouteDistanceToSignal = (
-    ambulance: { lat: number; lng: number },
-    signal: [number, number],
-    path: RoutePoint[]
-  ): number => {
-    if (!path || path.length < 2) return 0;
-    let ambIdx = 0, ambMinDist = Infinity;
-    path.forEach((pt, idx) => {
-      const d = L.latLng(pt.lat, pt.lng).distanceTo(L.latLng(ambulance.lat, ambulance.lng));
-      if (d < ambMinDist) {
-        ambMinDist = d;
-        ambIdx = idx;
-      }
-    });
-    let sigIdx = 0, sigMinDist = Infinity;
-    path.forEach((pt, idx) => {
-      const d = L.latLng(pt.lat, pt.lng).distanceTo(L.latLng(signal[0], signal[1]));
-      if (d < sigMinDist) {
-        sigMinDist = d;
-        sigIdx = idx;
-      }
-    });
-    if (ambIdx > sigIdx) {
-      let dist = L.latLng(signal[0], signal[1]).distanceTo(L.latLng(path[sigIdx].lat, path[sigIdx].lng));
-      for (let i = sigIdx; i < ambIdx; i++) {
-        dist += L.latLng(path[i].lat, path[i].lng).distanceTo(L.latLng(path[i + 1].lat, path[i + 1].lng));
-      }
-      dist += L.latLng(path[ambIdx].lat, path[ambIdx].lng).distanceTo(L.latLng(ambulance.lat, ambulance.lng));
-      return -dist;
-    }
-    let dist = L.latLng(ambulance.lat, ambulance.lng).distanceTo(L.latLng(path[ambIdx].lat, path[ambIdx].lng));
-    for (let i = ambIdx; i < sigIdx; i++) {
-      dist += L.latLng(path[i].lat, path[i].lng).distanceTo(L.latLng(path[i + 1].lat, path[i + 1].lng));
-    }
-    dist += L.latLng(path[sigIdx].lat, path[sigIdx].lng).distanceTo(L.latLng(signal[0], signal[1]));
-    return dist;
-  };
+  // --- Add this helper function for edge-based signal filtering ---
+  function getEdgeFilteredClusters(
+    route: RoutePoint[],
+    clusters: SignalCluster[],
+    maxDistance = 120
+  ): SignalCluster[] {
+    const usedSignalIds = new Set<string>();
+    const filtered: SignalCluster[] = [];
+    if (!route || route.length < 2) return filtered;
 
-  // Effect: Handle green/blinking logic and logging
-  useEffect(() => {
-    if (!ambulancePosition || !selectedRoute || !isSimulationActive) {
-      setGreenSignalId(null);
-      loggedSignalRef.current = null;
-      return;
-    }
-    const nextCluster = getNextSignalCluster();
-    if (!nextCluster) {
-      setGreenSignalId(null);
-      loggedSignalRef.current = null;
-      return;
-    }
-    const dist = getRouteDistanceToSignal(
-      ambulancePosition,
-      nextCluster.position,
-      selectedRoute.path
-    );
-    if (dist >= 0 && dist <= 200 && greenSignalId !== nextCluster.id) {
-      setGreenSignalId(nextCluster.id);
-      if (loggedSignalRef.current !== nextCluster.id) {
-        nextCluster.signals.forEach(signal => {
-          const signalDist = getRouteDistanceToSignal(
-            ambulancePosition,
-            signal.position,
-            selectedRoute.path
-          );
-          fetch('http://localhost:8000/proximity', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              signalId: signal.id,
-              name: signal.name,
-              lat: signal.position[0],
-              lng: signal.position[1],
-              distance: signalDist
-            })
-          }).catch(err => console.error('Failed to send proximity log:', err));
-        });
-        loggedSignalRef.current = nextCluster.id;
-      }
-    }
-    if (greenSignalId) {
-      const greenCluster = signalClusters.find(c => c.id === greenSignalId);
-      if (greenCluster) {
-        const distToGreen = getRouteDistanceToSignal(
-          ambulancePosition,
-          greenCluster.position,
-          selectedRoute.path
-        );
-        if (distToGreen < -100) {
-          setGreenSignalId(null);
-          loggedSignalRef.current = null;
-        }
-      }
-    }
-  // eslint-disable-next-line
-  }, [ambulancePosition, isSimulationActive, selectedRoute, signalClusters, signalsOnRoute, greenSignalId]);
-
-  // Add blinking CSS
-  useEffect(() => {
-    const styleId = "blinking-signal-style";
-    if (!document.getElementById(styleId)) {
-      const style = document.createElement("style");
-      style.id = styleId;
-      style.innerHTML = `
-        .blinking-signal {
-          animation: blink-signal 1s linear infinite;
-          box-shadow: 0 0 16px 6px #22c55e, 0 2px 4px rgba(0,0,0,0.2);
-          border-color: #22c55e !important;
-        }
-        @keyframes blink-signal {
-          0% { filter: brightness(1.2); }
-          50% { filter: brightness(2.5); }
-          100% { filter: brightness(1.2); }
-        }
-      `;
-      document.head.appendChild(style);
-    }
-  }, []);
-
-  const getBoundsFromRoute = (route: [number, number][]) => {
-    const lats = route.map((point) => point[0]);
-    const lngs = route.map((point) => point[1]);
-    return {
-      north: Math.max(...lats),
-      south: Math.min(...lats),
-      east: Math.max(...lngs),
-      west: Math.min(...lngs),
-    };
-  };
-
-  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
-    const R = 6371; // Radius of the Earth in kilometers
-    const dLat = ((lat2 - lat1) * Math.PI) / 180;
-    const dLon = ((lon2 - lon1) * Math.PI) / 180;
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c; // Distance in kilometers
-  };
-
-  const getRoutePath = (): [number, number][] => {
-    if (!selectedRoute) return [];
-    if (calculatedRoute.length > 0) {
-      return calculatedRoute;
-    }
-    if (selectedRoute.startPoint && selectedRoute.endPoint) {
-      return [
-        [selectedRoute.startPoint.lat, selectedRoute.startPoint.lng],
-        ...(selectedRoute.waypoints?.map((point) => [point.lat, point.lng] as [number, number]) || []),
-        [selectedRoute.endPoint.lat, selectedRoute.endPoint.lng],
-      ];
-    }
-    return [];
-  };
-
-  const clusterSignals = (signals: TrafficSignal[]): SignalCluster[] => {
-    const clusters: { [key: string]: SignalCluster } = {};
-    signals.forEach(signal => {
-      const clusterId = signal.position.toString();
-      if (!clusters[clusterId]) {
-        clusters[clusterId] = {
-          id: clusterId,
-          position: signal.position,
-          name: signal.name,
-          count: 0,
-          signals: []
-        };
-      }
-      clusters[clusterId].count++;
-      clusters[clusterId].signals.push(signal);
-    });
-    return Object.values(clusters);
-  };
-
-  const isSignalOnRoute = (signalPosition: [number, number], route: RoutePoint[]): boolean => {
-    if (!route || route.length < 2) return false;
     for (let i = 0; i < route.length - 1; i++) {
       const start = route[i];
       const end = route[i + 1];
-      if (isPointNearLineSegment(signalPosition, start, end)) {
-        return true;
+      let foundCluster: SignalCluster | null = null;
+      let minDist = Infinity;
+
+      for (const cluster of clusters) {
+        // Skip if any signal in this cluster is already used
+        if (cluster.signals.some(s => usedSignalIds.has(s.id))) continue;
+        // Use cluster center for distance
+        const dist = getDistancePointToSegment(cluster.position, start, end);
+        if (dist <= maxDistance && dist < minDist) {
+          foundCluster = cluster;
+          minDist = dist;
+        }
+      }
+
+      if (foundCluster) {
+        filtered.push(foundCluster);
+        foundCluster.signals.forEach(s => usedSignalIds.add(s.id));
       }
     }
-    return false;
-  };
 
-  const getSignalIcon = (count: number) => {
-    if (count === 1) {
-      return TrafficSignalIcon;
+    return filtered;
+  }
+
+  // 4. Updated isSignalOnRoute function with better logging
+  const isSignalOnRoute = (signalPosition: [number, number], route: RoutePoint[]): boolean => {
+    if (!route || route.length < 2) {
+      return false;
     }
-    return new L.Icon({
-      iconUrl: `/traffic-${Math.min(count, 4)}.png`,
-      iconSize: [35, 35],
-      iconAnchor: [18, 18],
-      className: '' // Add default empty className
-    } as L.IconOptions);
+
+    let minDistance = Infinity;
+
+    for (let i = 0; i < route.length - 1; i++) {
+      const start = route[i];
+      const end = route[i + 1];
+      const distance = getDistancePointToSegment(signalPosition, start, end);
+      if (distance < minDistance) {
+        minDistance = distance;
+      }
+    }
+
+    return minDistance <= 100; // 100m threshold
   };
 
-  const isPointNearLineSegment = (point: [number, number], start: RoutePoint, end: RoutePoint, tolerance = 0.0001): boolean => {
-    const lat = point[0], lng = point[1];
-    const lat1 = start.lat, lng1 = start.lng;
-    const lat2 = end.lat, lng2 = end.lng;
-    const d = Math.abs(
-      (lat2 - lat1) * (lng - lng1) - (lat - lat1) * (lng2 - lng1)
-    ) / Math.sqrt(
-      (lat2 - lat1) ** 2 + (lng2 - lng1) ** 2
-    );
-    return d <= tolerance;
-  };
+  // 5. Updated getDistancePointToSegment with error handling
+  function getDistancePointToSegment(
+    point: [number, number],
+    start: RoutePoint,
+    end: RoutePoint
+  ): number {
+    try {
+      const p = L.latLng(point[0], point[1]);
+      const v = L.latLng(start.lat, start.lng);
+      const w = L.latLng(end.lat, end.lng);
 
+      const l2 = v.distanceTo(w) ** 2;
+      if (l2 === 0) return p.distanceTo(v);
+
+      const t = Math.max(
+        0,
+        Math.min(
+          1,
+          ((p.lat - v.lat) * (w.lat - v.lat) + (p.lng - v.lng) * (w.lng - v.lng)) /
+            ((w.lat - v.lat) ** 2 + (w.lng - v.lng) ** 2)
+        )
+      );
+
+      const proj = L.latLng(
+        v.lat + t * (w.lat - v.lat),
+        v.lng + t * (w.lng - v.lng)
+      );
+
+      return p.distanceTo(proj);
+    } catch (error) {
+      return Infinity;
+    }
+  }
+
+  // Proximity logic: green breathing effect and log
+  // Define filteredClusters at the top level of the component
+  const filteredClusters = React.useMemo(
+    () =>
+      selectedRoute && signalClusters.length > 0
+        ? getEdgeFilteredClusters(selectedRoute.path, signalClusters, 120)
+        : [],
+    [selectedRoute, signalClusters]
+  );
+
+  useEffect(() => {
+    setClearedSignalIds(new Set());
+  }, [selectedRoute]);
+
+  useEffect(() => {
+    if (greenSignalId && !clearedSignalIds.has(greenSignalId)) {
+      setClearedSignalIds(prev => new Set(prev).add(greenSignalId));
+    }
+  }, [greenSignalId]);
+
+  useEffect(() => {
+    if (
+      !ambulancePosition ||
+      !selectedRoute ||
+      filteredClusters.length === 0 ||
+      signalsOnRoute.length === 0
+    ) {
+      setGreenSignalId(null);
+      loggedSignalRef.current = null;
+      return;
+    }
+
+    let closestCluster: SignalCluster | null = null;
+    let closestDistance = Infinity;
+
+    for (const cluster of filteredClusters) {
+      if (!signalsOnRoute.includes(cluster.id)) continue;
+      const distance = L.latLng(ambulancePosition.lat, ambulancePosition.lng)
+        .distanceTo(L.latLng(cluster.position[0], cluster.position[1]));
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestCluster = cluster;
+      }
+    }
+
+    if (closestCluster && closestDistance <= 200) {
+      if (greenSignalId !== closestCluster.id) {
+        setGreenSignalId(closestCluster.id);
+        loggedSignalRef.current = closestCluster.id;
+      }
+    } else if ((!closestCluster || closestDistance > 250) && greenSignalId) {
+      setGreenSignalId(null);
+      loggedSignalRef.current = null;
+    }
+  }, [ambulancePosition, selectedRoute, filteredClusters, signalsOnRoute]);
+
+  // Render
   return (
     <div className="flex-1 w-full relative">
       <MapContainer
@@ -535,6 +522,7 @@ const MapComponent: React.FC<MapProps> = ({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
+        {/* Start and End markers */}
         {selectedRoute?.startPoint && (
           <Marker position={[selectedRoute.startPoint.lat, selectedRoute.startPoint.lng]} icon={StartIcon}>
             <Popup>
@@ -545,7 +533,6 @@ const MapComponent: React.FC<MapProps> = ({
             </Popup>
           </Marker>
         )}
-
         {selectedRoute?.endPoint && (
           <Marker position={[selectedRoute.endPoint.lat, selectedRoute.endPoint.lng]} icon={EndIcon}>
             <Popup>
@@ -557,33 +544,19 @@ const MapComponent: React.FC<MapProps> = ({
           </Marker>
         )}
 
-        {selectedRoute?.waypoints?.map((point, index) => (
-          <Marker key={index} position={[point.lat, point.lng]} icon={DefaultIcon}>
-            <Popup>
-              <div>
-                <h3 className="font-semibold text-slate-800">Waypoint {index + 1}</h3>
-                <p className="text-slate-600">
-                  {point.timestamp && new Date(point.timestamp).toLocaleTimeString()}
-                </p>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
-
-        <Polyline positions={getRoutePath()} color="blue" weight={5} />
+        {/* Route polyline */}
+        {selectedRoute?.path && selectedRoute.path.length > 0 && (
+          <Polyline positions={selectedRoute.path.map(pt => [pt.lat, pt.lng])} color="blue" weight={5} />
+        )}
 
         {/* Traffic Signal Markers */}
-        {signalClusters.map((cluster) => {
-          if (isSimulationActive && !signalsOnRoute.includes(cluster.id)) {
+        {filteredClusters.map((cluster) => {
+          if (selectedRoute && !signalsOnRoute.includes(cluster.id)) {
             return null;
           }
           const isGreen = greenSignalId === cluster.id;
-          const icon = getSignalIcon(cluster.count);
-          if (isGreen && icon && 'options' in icon) {
-            (icon.options as L.IconOptions).className = ((icon.options as L.IconOptions).className || "") + " blinking-signal";
-          } else if (icon && 'options' in icon) {
-            (icon.options as L.IconOptions).className = ((icon.options as L.IconOptions).className || "").replace("blinking-signal", "");
-          }
+          const icon = isGreen ? greenTrafficSignalIcon : trafficSignalIcon;
+
           return (
             <Marker
               key={cluster.id}
@@ -606,11 +579,11 @@ const MapComponent: React.FC<MapProps> = ({
                       </ul>
                     </div>
                   )}
-                  {isSimulationActive && signalsOnRoute.includes(cluster.id) && (
+                  {selectedRoute && signalsOnRoute.includes(cluster.id) && (
                     <div className="text-xs text-blue-600 mt-1 font-semibold">On Route</div>
                   )}
                   {isGreen && (
-                    <div className="text-xs text-green-600 mt-1 font-bold animate-pulse">
+                    <div className="text-xs text-green-600 mt-1 font-bold">
                       🚦 Green for Ambulance!
                     </div>
                   )}
@@ -623,27 +596,108 @@ const MapComponent: React.FC<MapProps> = ({
         {/* Ambulance Marker */}
         {ambulancePosition && (
           <Marker position={ambulancePosition} icon={ambulanceIcon}>
-            <Popup>Ambulance</Popup>
+            <Popup>
+              <div className="text-center">
+                <strong>🚑 Ambulance</strong>
+                <div className="text-xs text-gray-600 mt-1">
+                  Lat: {ambulancePosition.lat.toFixed(6)}<br/>
+                  Lng: {ambulancePosition.lng.toFixed(6)}
+                </div>
+                {isSimulationActive && (
+                  <div className="text-xs text-red-600 mt-1 font-semibold">
+                    Emergency Response Active
+                  </div>
+                )}
+              </div>
+            </Popup>
           </Marker>
         )}
-      </MapContainer>
-      {/* Details Section */}
-      <div className="absolute top-4 left-4 z-[1000] bg-white text-slate-800 px-4 py-2 rounded-lg shadow-sm border border-slate-200">
-        <h3 className="font-semibold">Details</h3>
-        {calculatedDistance !== null ? (
-          <p>Distance: {calculatedDistance.toFixed(2)} km</p>
-        ) : (
-          <p>No route selected</p>
-        )}
-      </div>
 
-      {routeError && (
-        <div className="absolute top-4 right-4 z-[1000] bg-rose-50 text-rose-700 px-4 py-2 rounded-lg shadow-sm border border-rose-200">
-          {routeError}
-        </div>
-      )}
+        {/* Map view updater */}
+        <MapUpdater center={center} zoom={zoom} />
+      </MapContainer>
+      <Sidebar
+        onRouteSelect={(start, end) => {
+          if (onRouteSelect) {
+            const source = locations.find(
+              loc => Math.abs(loc.lat - start[0]) < EPSILON && Math.abs(loc.lng - start[1]) < EPSILON
+            );
+            const dest = locations.find(
+              loc => Math.abs(loc.lat - end[0]) < EPSILON && Math.abs(loc.lng - end[1]) < EPSILON
+            );
+            if (source && dest) {
+              onRouteSelect(source.id, dest.id);
+            }
+          }
+        }}
+        onResetRoute={onResetRoute}
+        locations={locations}
+        selectedRoute={selectedRoute}
+        calculatedDistance={calculatedDistance ?? undefined}
+        signalsOnRoute={signalsOnRoute}
+        greenSignalId={greenSignalId}
+        isSimulationActive={isSimulationActive}
+        routeError={routeError}
+        ambulancePosition={ambulancePosition}
+        signalsCleared={clearedSignalIds.size}
+        isLoading={isLoading}
+      />
+     
     </div>
   );
 };
 
+// Component to handle map view updates
+const MapUpdater: React.FC<{ center: [number, number]; zoom: number }> = ({ center, zoom }) => {
+  const map = useMap();
+  
+  useEffect(() => {
+    map.setView(center, zoom);
+  }, [map, center, zoom]);
+  
+  return null;
+};
+
 export default MapComponent;
+
+function getBoundsFromRoute(routePoints: [number, number][]) {
+  if (!routePoints || routePoints.length === 0) {
+    // Return default bounds for Bangalore if no points
+    return {
+      north: 13.0827,
+      south: 12.8557,
+      east: 77.7526,
+      west: 77.4701
+    };
+  }
+
+  // Initialize bounds with first point
+  let north = routePoints[0][0];
+  let south = routePoints[0][0];
+  let east = routePoints[0][1];
+  let west = routePoints[0][1];
+
+  for (const [lat, lng] of routePoints) {
+    north = Math.max(north, lat);
+    south = Math.min(south, lat);
+    east = Math.max(east, lng);
+    west = Math.min(west, lng);
+  }
+
+  return { north, south, east, west };
+}
+
+function calculateDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
+  // Returns distance in kilometers
+  const R = 6371; // Radius of the Earth in km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) *
+      Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLng / 2) *
+      Math.sin(dLng / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}

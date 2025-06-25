@@ -15,7 +15,7 @@ const RouteDetails: React.FC<RouteDetailsProps> = ({
 }) => {
   const [isStarted, setIsStarted] = useState(false);
   const [sliderValue, setSliderValue] = useState(0);
-  const [speed, setSpeed] = useState(1);
+  const [speed, setSpeed] = useState(1); // Default speed is 1x, can go up to 4x
 
   const animationRef = useRef<number | null>(null);
   const lastTimestampRef = useRef<number | null>(null);
@@ -184,51 +184,109 @@ const RouteDetails: React.FC<RouteDetailsProps> = ({
 
   if (!route) return null;
 
+  const actualDistanceCovered = (() => {
+    if (!route?.path || route.path.length < 2) return 0;
+    const index = Math.min(
+      Math.floor((sliderValue / 100) * (route.path.length - 1)),
+      pathDistancesRef.current.length - 1
+    );
+    return pathDistancesRef.current[index] || 0;
+  })();
+
+  const percentCovered = totalDistanceRef.current
+    ? (actualDistanceCovered / totalDistanceRef.current) * 100
+    : 0;
+
+  console.log({
+    sliderValue,
+    actualDistanceCovered,
+    percentCovered,
+    totalDistance: totalDistanceRef.current
+  });
+
   return (
-    <div className="bg-white shadow-sm border-t border-slate-200 p-4">
-      <div className="flex justify-between items-center mb-3">
-        <h3 className="text-lg font-medium text-gray-700">
-          Route Simulation
-          {isStarted && <span className="ml-2 text-sm text-green-600 animate-pulse">(Active)</span>}
-        </h3>
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center">
-            <span className="text-sm text-gray-600 mr-2">Speed:</span>
+    <div
+      className="fixed bottom-6 left-6 z-30"
+      style={{ minWidth: 420, maxWidth: 600, width: '38vw', pointerEvents: 'auto' }}
+    >
+      <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-200/50 px-8 py-5 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="flex items-center gap-3 mb-4 md:mb-0">
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+            </svg>
+          </div>
+          <div>
+            <h3 className="font-bold text-xl text-gray-800">Route Simulation</h3>
+            <p className="text-sm text-gray-500">
+              {isStarted ? (
+                <span className="text-green-600 font-semibold animate-pulse">Active</span>
+              ) : (
+                'Ready'
+              )}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-4 w-full">
+          <div className="flex flex-col gap-2">
+            <div className="w-full bg-gray-200 rounded-full h-3">
+              <div
+                className="bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full transition-all duration-500"
+                style={{ width: `${percentCovered}%` }}
+              ></div>
+            </div>
+            <div className="flex justify-between text-xs text-gray-500 mt-1">
+              <span>{percentCovered.toFixed(1)}% Distance Covered</span>
+              <span>
+                {(actualDistanceCovered / 1000).toFixed(2)} km / {(totalDistanceRef.current / 1000).toFixed(2)} km
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4 mt-2">
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-500">Speed</span>
+              <button
+                type="button"
+                className={`px-4 py-1 rounded-lg text-xs font-semibold border transition-all duration-150 ${
+                  'bg-blue-600 text-white border-blue-700 shadow hover:bg-blue-700'
+                }`}
+                onClick={() => setSpeed(s => (s < 4 ? s + 1 : 1))}
+              >
+                {speed}
+              </button>
+            </div>
             <button
-              onClick={handleSpeedChange}
-              className={`px-3 py-1 rounded text-sm font-medium bg-gray-200 hover:bg-gray-300`}
+              onClick={() => {
+                if (!isStarted) {
+                  handleStartClick();
+                } else {
+                  // Stop simulation and reset everything
+                  setIsStarted(false);
+                  if (onSimulationStart) onSimulationStart(false);
+                  if (animationRef.current) {
+                    cancelAnimationFrame(animationRef.current);
+                    animationRef.current = null;
+                    lastTimestampRef.current = null;
+                  }
+                  setSliderValue(0);
+                  sliderValueRef.current = 0;
+                  if (route?.path && route.path.length > 0) {
+                    onSliderChange(route.path[0]);
+                  }
+                }
+              }}
+              className={`ml-auto px-6 py-2 rounded-xl font-semibold text-white shadow-lg transition-all duration-200 ${
+                isStarted
+                  ? 'bg-red-600 hover:bg-red-700'
+                  : 'bg-blue-600 hover:bg-blue-700'
+              }`}
             >
-              {speed}x
+              {isStarted ? 'Finish' : 'Start'}
             </button>
           </div>
         </div>
-      </div>
-      <div className="flex items-center justify-between">
-        <div className="flex-1 mr-4">
-          <input
-            type="range"
-            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-            min="0"
-            max="100"
-            value={sliderValue}
-            onChange={handleSliderChange}
-            aria-label="Distance covered slider"
-          />
-          <div className="text-sm text-slate-600 mt-1 text-center">
-            {sliderValue.toFixed(1)}% Distance Covered
-          </div>
-        </div>
-        <button
-          onClick={handleStartClick}
-          className={`px-4 py-2 rounded-lg shadow transition duration-200 ${
-            isStarted
-              ? 'bg-red-600 hover:bg-red-700 text-white'
-              : 'bg-indigo-600 hover:bg-indigo-700 text-white'
-          }`}
-          title={isStarted ? 'Finish' : 'Start'}
-        >
-          {isStarted ? 'Finish' : 'Start'}
-        </button>
       </div>
     </div>
   );
