@@ -53,6 +53,10 @@ const Sidebar: React.FC<SidebarProps> = ({
     setPickOnMap(pickOnMapMode);
   }, [pickOnMapMode]);
 
+  // Filter out selected destination from source options and vice versa
+  const filteredSourceLocations = locations.filter(loc => loc.id !== destinationLocation);
+  const filteredDestinationLocations = locations.filter(loc => loc.id !== sourceLocation);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Only call onRouteSelect, let parent handle loading
@@ -127,7 +131,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               disabled={pickOnMap}
             >
               <option value="">Select source location</option>
-              {locations.map(loc => (
+              {filteredSourceLocations.map(loc => (
                 <option key={loc.id} value={loc.id}>{loc.name}</option>
               ))}
             </select>
@@ -146,7 +150,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               disabled={pickOnMap}
             >
               <option value="">Select destination</option>
-              {locations.map(loc => (
+              {filteredDestinationLocations.map(loc => (
                 <option key={loc.id} value={loc.id}>{loc.name}</option>
               ))}
             </select>
