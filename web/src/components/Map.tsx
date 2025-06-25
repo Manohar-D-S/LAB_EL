@@ -548,11 +548,18 @@ const MapComponent: React.FC<MapProps> = ({
       } else if (pickCount === 1 && tempSource) {
         setTempDestination(point);
         if (onPickOnMapComplete) {
+          // Delay clearing so marker is visible for a moment
+          setTimeout(() => {
+            setTempSource(null);
+            setTempDestination(null);
+            setPickCount(0);
+          }, 300); // 300ms delay for UX
           onPickOnMapComplete(tempSource, point);
+        } else {
+          setTempSource(null);
+          setTempDestination(null);
+          setPickCount(0);
         }
-        setTempSource(null);
-        setTempDestination(null);
-        setPickCount(0);
       }
       return;
     }

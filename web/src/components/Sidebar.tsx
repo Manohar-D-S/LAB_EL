@@ -23,6 +23,8 @@ interface SidebarProps {
   isLoading?: boolean;
   onResetRoute?: () => void; // <-- Add this prop
   onPickOnMapStart?: () => void; // Add this prop
+  pickOnMapMode?: boolean;
+  onPickOnMapEnd?: () => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -38,11 +40,18 @@ const Sidebar: React.FC<SidebarProps> = ({
   signalsCleared,
   onResetRoute,
   onPickOnMapStart, // Add this prop
+  pickOnMapMode = false,
+  onPickOnMapEnd,
   isLoading // <-- Use only the prop
 }) => {
   const [sourceLocation, setSourceLocation] = useState('');
   const [destinationLocation, setDestinationLocation] = useState('');
   const [pickOnMap, setPickOnMap] = useState(false); // New state
+
+  // Sync local pickOnMap state with prop from parent
+  React.useEffect(() => {
+    setPickOnMap(pickOnMapMode);
+  }, [pickOnMapMode]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

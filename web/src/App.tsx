@@ -6,6 +6,7 @@ import RouteList from './components/RouteList';
 import RouteDetails from './components/RouteDetails';
 import { getRoutes } from './services/api';
 import { Route } from './types/route';
+import Sidebar from './components/Sidebar';
 
 type RouteListProps = {
   routes: Route[]; // Add the missing 'routes' property
