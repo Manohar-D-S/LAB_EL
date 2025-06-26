@@ -5,6 +5,7 @@ import RouteDetails from './components/RouteDetails';
 import Sidebar from './components/Sidebar';
 import { getRoutes } from './services/api';
 import { Route } from './types/route';
+import AlgorithmComparisonModal from './components/AlgorithmComparisonModal';
 
 function App() {
   const [selectedRoute, setSelectedRoute] = useState<Route | null>(null);
@@ -130,7 +131,6 @@ function App() {
     <div className="flex flex-col h-screen bg-slate-50">
       <Header />
       <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
-        
         <main className="flex-1 flex flex-col overflow-hidden bg-white">
           <Map
             selectedRoute={selectedRoute}
@@ -144,13 +144,19 @@ function App() {
             pickOnMapMode={pickOnMapMode}
             onPickOnMapEnd={() => setPickOnMapMode(false)}
             onPickOnMapStart={() => setPickOnMapMode(true)}
-            algorithmComparisonResults={algorithmComparisonResults} // ✅ ADD THIS
+            algorithmComparisonResults={algorithmComparisonResults}
             setShowComparisonModal={setShowComparisonModal}
           />
           <RouteDetails route={selectedRoute || undefined} onSliderChange={handleSliderChange} />
         </main>
       </div>
 
+      {showComparisonModal && (
+        <AlgorithmComparisonModal
+          onClose={() => setShowComparisonModal(false)}
+          comparisonData={algorithmComparisonResults}
+        />
+      )}
     </div>
   );
 }
