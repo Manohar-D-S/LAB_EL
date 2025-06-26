@@ -8,6 +8,13 @@ interface Location {
   lng: number;
 }
 
+interface AlgorithmResult {
+  algorithm: string;
+  time: number;
+  nodes: number;
+  distance: number;
+}
+
 interface SidebarProps {
   onRouteSelect: (start: [number, number], end: [number, number]) => void;
   clearedSignalCount?: number;
@@ -25,6 +32,8 @@ interface SidebarProps {
   onPickOnMapStart?: () => void;
   pickOnMapMode?: boolean;
   onPickOnMapEnd?: () => void;
+  algorithmComparisonResults?: AlgorithmResult[];
+  setShowComparisonModal: (open: boolean) => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -37,24 +46,17 @@ const Sidebar: React.FC<SidebarProps> = ({
   isSimulationActive,
   routeError,
   signalsCleared,
+  onPickOnMapEnd,
   onResetRoute,
   onPickOnMapStart,
   pickOnMapMode = false,
-  isLoading
+  isLoading,
+  algorithmComparisonResults,
+  setShowComparisonModal
 }) => {
   const [sourceLocation, setSourceLocation] = useState('');
   const [destinationLocation, setDestinationLocation] = useState('');
-  const [pickOnMap, setPickOnMap] = useState(false);
 
-  React.useEffect(() => {
-    setPickOnMap(pickOnMapMode);
-  }, [pickOnMapMode]);
-
-  React.useEffect(() => {
-    if (!pickOnMapMode) {
-      setPickOnMap(false);
-    }
-  }, [pickOnMapMode]);
 
   const filteredSourceLocations = locations.filter(loc => loc.id !== destinationLocation);
   const filteredDestinationLocations = locations.filter(loc => loc.id !== sourceLocation);
@@ -72,7 +74,6 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const handlePickOnMap = () => {
-    setPickOnMap(true);
     if (onPickOnMapStart) onPickOnMapStart();
   };
 
@@ -103,11 +104,11 @@ const Sidebar: React.FC<SidebarProps> = ({
             type="button"
             className="w-full flex justify-center items-center bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white py-2 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mb-2"
             onClick={handlePickOnMap}
-            disabled={pickOnMap || isLoading}
+            disabled={pickOnMapMode  || isLoading}
           >
-            {pickOnMap ? "Click on map to select source & destination..." : "Choose on Map"}
+            {pickOnMapMode  ? "Click on map to select source & destination..." : "Choose on Map"}
           </button>
-          {pickOnMap && (
+          {pickOnMapMode  && (
             <div className="text-sm text-green-700 bg-green-50 rounded-lg p-2 mb-2 text-center">
               Click on the map to select <b>source</b> and then <b>destination</b>.
             </div>
@@ -119,10 +120,14 @@ const Sidebar: React.FC<SidebarProps> = ({
             <select
               id="source"
               value={sourceLocation}
-              onChange={(e) => setSourceLocation(e.target.value)}
+              onChange={(e) => {
+                setSourceLocation(e.target.value);
+                if (onPickOnMapEnd) onPickOnMapEnd(); // Exit map-pick mode   
+              }}
+
               className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               required
-              disabled={pickOnMap}
+              disabled={pickOnMapMode }
             >
               <option value="">Select source location</option>
               {filteredSourceLocations.map(loc => (
@@ -137,10 +142,13 @@ const Sidebar: React.FC<SidebarProps> = ({
             <select
               id="destination"
               value={destinationLocation}
-              onChange={(e) => setDestinationLocation(e.target.value)}
+              onChange={(e) => {
+                setDestinationLocation(e.target.value);
+                if (onPickOnMapEnd) onPickOnMapEnd(); // Exit map-pick mode
+              }}
               className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               required
-              disabled={pickOnMap}
+              disabled={pickOnMapMode }
             >
               <option value="">Select destination</option>
               {filteredDestinationLocations.map(loc => (
@@ -151,7 +159,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           <button
             type="submit"
             className="w-full flex justify-center items-center bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            disabled={isLoading || pickOnMap}
+            disabled={isLoading || pickOnMapMode }
           >
             {isLoading ? (
               <span className="flex items-center">
@@ -254,6 +262,16 @@ const Sidebar: React.FC<SidebarProps> = ({
             </div>
           )}
         </>
+      )}
+
+      {/* Compare Algorithms Button */}
+      {selectedRoute && algorithmComparisonResults && algorithmComparisonResults.length > 1 && (
+        <button
+          className="w-full mt-4 py-2 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition"
+          onClick={() => setShowComparisonModal(true)}
+        >
+          Compare Algorithms
+        </button>
       )}
     </div>
   );

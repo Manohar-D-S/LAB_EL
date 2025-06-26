@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Map from './components/Map';
 import RouteDetails from './components/RouteDetails';
+import Sidebar from './components/Sidebar';
 import { getRoutes } from './services/api';
 import { Route } from './types/route';
 
@@ -14,6 +15,8 @@ function App() {
   const [ambulancePosition, setAmbulancePosition] = useState<{ lat: number; lng: number } | null>(null);
   const [isSimulationActive, setIsSimulationActive] = useState(false);
   const [pickOnMapMode, setPickOnMapMode] = useState(false);
+  const [algorithmComparisonResults, setAlgorithmComparisonResults] = useState<any[]>([]);
+  const [showComparisonModal, setShowComparisonModal] = useState(false);
 
   useEffect(() => {
     const fetchRoutes = async () => {
@@ -74,41 +77,38 @@ function App() {
         return;
       }
 
-      const response = await fetch(`http://localhost:8000/routes`, {
+      const response = await fetch('http://localhost:8000/routes', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch route');
-      }
-
       const routeData = await response.json();
-      console.log('Route Data:', routeData);
 
-      if (routeData.route_coordinates && routeData.route_coordinates.length > 0) {
-        const path = routeData.route_coordinates.map(
-          ([lat, lng]: [number, number]) => ({ lat, lng })
-        );
-        const startPoint = path[0];
-        const endPoint = path[path.length - 1];
-        const route: Route = {
-          id: 'dynamic',
-          name: `${typeof source === 'string' ? source : 'Custom Source'} to ${typeof destination === 'string' ? destination : 'Custom Destination'}`,
-          startPoint,
-          endPoint,
-          path,
-          distance: routeData.distance_km,
-          time_mins: routeData.time_mins,
-          waypoints: [],
-          status: 'in-progress',
-          duration: Math.round((routeData.time_mins || 0) * 60),
-          createdAt: new Date().toISOString(),
-        };
-        setSelectedRoute(route);
+      if (routeData.results && routeData.results.length > 0) {
+        setAlgorithmComparisonResults(routeData.results);
+        
+        const astarResult = routeData.results.find((r: any) => r.algorithm === "A*");
+        if (astarResult && astarResult.route.length > 0) {
+          const path = astarResult.route.map(([lat, lng]: [number, number]) => ({ lat, lng }));
+          const startPoint = path[0];
+          const endPoint = path[path.length - 1];
+          const route: Route = {
+            id: 'dynamic',
+            name: `${source} to ${destination}`,
+            startPoint,
+            endPoint,
+            path,
+            distance: astarResult.distance,
+            time_mins: astarResult.distance / 30 * 60,
+            waypoints: [],
+            status: 'in-progress',
+            duration: Math.round((astarResult.distance / 30 * 60) * 60),
+            createdAt: new Date().toISOString(),
+          };
+          setSelectedRoute(route);
+        } else {
+          setSelectedRoute(null);
+        }
       } else {
         setSelectedRoute(null);
       }
@@ -130,6 +130,7 @@ function App() {
     <div className="flex flex-col h-screen bg-slate-50">
       <Header />
       <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
+        
         <main className="flex-1 flex flex-col overflow-hidden bg-white">
           <Map
             selectedRoute={selectedRoute}
@@ -145,10 +146,13 @@ function App() {
               handleSearch(source, destination);
               setPickOnMapMode(false);
             }}
+            algorithmComparisonResults={algorithmComparisonResults} // ✅ ADD THIS
+            setShowComparisonModal={setShowComparisonModal}
           />
           <RouteDetails route={selectedRoute || undefined} onSliderChange={handleSliderChange} />
         </main>
       </div>
+
     </div>
   );
 }

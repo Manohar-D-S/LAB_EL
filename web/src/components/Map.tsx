@@ -7,7 +7,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
 import Sidebar from './Sidebar';
-
+import { AlgorithmResult } from '../types/route';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
@@ -99,9 +99,11 @@ interface MapProps {
   ) => void;
   onStartSimulation?: () => void;
   onResetRoute?: () => void;
-  isLoading?: boolean; // <-- Add this
+  isLoading?: boolean;
   pickOnMapMode?: boolean;
   onPickOnMapComplete?: (source: { lat: number; lng: number }, destination: { lat: number; lng: number }) => void;
+  algorithmComparisonResults?: AlgorithmResult[];
+  setShowComparisonModal?: (open: boolean) => void;
 }
 
 
@@ -123,8 +125,10 @@ const MapComponent: React.FC<MapProps> = ({
   // onStartSimulation,
   onResetRoute,
   isLoading, // <-- Add this
-  pickOnMapMode = false,
+  pickOnMapMode,
   onPickOnMapComplete,
+  algorithmComparisonResults,
+  setShowComparisonModal,
 }) => {
   const [center, setCenter] = useState<[number, number]>([12.9716, 77.5946]); // Default center (Bangalore)
   const [zoom, setZoom] = useState(13);
@@ -134,6 +138,7 @@ const MapComponent: React.FC<MapProps> = ({
   const [signalsOnRoute, setSignalsOnRoute] = useState<string[]>([]);
   const [routeError, setRouteError] = useState<string | null>(null);
   const [calculatedRoute, setCalculatedRoute] = useState<[number, number][]>([]);
+
 
   // Track which signal cluster is currently green/blinking
   const [greenSignalId, setGreenSignalId] = useState<string | null>(null);
@@ -146,6 +151,7 @@ const MapComponent: React.FC<MapProps> = ({
   const [pickCount, setPickCount] = useState(0);
   const [tempSource, setTempSource] = useState<{ lat: number; lng: number } | null>(null);
   const [tempDestination, setTempDestination] = useState<{ lat: number; lng: number } | null>(null);
+  const [pickOnMapMode, setPickOnMapMode] = useState(false);
 
   useEffect(() => {
     if (selectedRoute?.startPoint && selectedRoute?.endPoint) {
@@ -716,11 +722,31 @@ const MapComponent: React.FC<MapProps> = ({
         greenSignalId={greenSignalId}
         isSimulationActive={isSimulationActive}
         routeError={routeError}
+        onPickOnMapEnd={() => setPickOnMapMode(false)} // ✅ Pass it as a prop
         ambulancePosition={ambulancePosition}
         signalsCleared={clearedSignalIds.size}
         isLoading={isLoading}
+        algorithmComparisonResults={algorithmComparisonResults}
+        setShowComparisonModal={setShowComparisonModal || (() => {})}
       />
-     
+{/* 
+      <Sidebar
+          onRouteSelect={(start: [number, number], end: [number, number]) => {
+            handleSearch({ lat: start[0], lng: start[1] }, { lat: end[0], lng: end[1] });
+          }}
+          locations={locations}
+          selectedRoute={selectedRoute}
+          calculatedDistance={selectedRoute?.distance}
+          signalsOnRoute={[]}
+          greenSignalId={null}
+          isSimulationActive={isSimulationActive}
+          routeError={error}
+          signalsCleared={0}
+          isLoading={isSearching}
+          onResetRoute={() => setSelectedRoute(null)}
+          onPickOnMapStart={() => setPickOnMapMode(true)}
+          pickOnMapMode={pickOnMapMode}
+        /> */}
     </div>
   );
 };

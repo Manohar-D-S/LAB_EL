@@ -30,3 +30,14 @@ class RouteResponse(BaseModel):
     time_mins: float
     computation_time: float
     algorithm_comparison: List[Dict[str, Any]]
+
+class AlgorithmResult(BaseModel):
+    algorithm: str
+    time: float
+    nodes: int
+    distance: float
+    route: List[List[float]]  # or List[Tuple[float, float]]
+
+
+class RouteComparisonResponse(BaseModel):
+    results: List[AlgorithmResult]

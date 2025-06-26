@@ -2,6 +2,7 @@ import networkx as nx
 import heapq
 import numpy as np
 import logging
+import time as time_module
 from typing import List, Dict, Any, Tuple
 from fastapi import HTTPException
 from core.metrics import calculate_route_metrics
@@ -30,11 +31,12 @@ class AmbulanceRouter:
         # Use Euclidean distance as a simple heuristic
         return np.sqrt((lat2 - lat1)**2 + (lng2 - lng1)**2)
     
-    def find_route(self, start_node: int, end_node: int) -> Dict[str, Any]:
+    def find_route(self, start_node: int, end_node: int) -> dict:
         """
         Find the shortest route from start_node to end_node using A* algorithm.
         Returns route information including path, distance, and time.
         """
+        start_time = time_module.perf_counter()
         logger.info(f"Finding route from node {start_node} to node {end_node}.")
         
         # Initialize data structures for A*
@@ -64,11 +66,13 @@ class AmbulanceRouter:
                 nodes = self._get_path_coordinates(path)
                 
                 logger.info(f"Route found: {len(path)} nodes, {distance:.2f} km, {time:.2f} mins.")
+                elapsed = time_module.perf_counter() - start_time
                 return {
-                    'path': path,
-                    'nodes': nodes,
-                    'distance_km': distance,
-                    'time_mins': time
+                    "algorithm": "A*",
+                    "time": elapsed,
+                    "nodes": len(path),
+                    "distance": distance,
+                    "route": nodes
                 }
             
             # Explore neighbors

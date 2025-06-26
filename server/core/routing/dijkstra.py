@@ -3,7 +3,7 @@ import heapq
 import logging
 from typing import List, Dict, Any, Tuple, Optional
 import osmnx as ox
-import time
+import time as time_module
 from geopy.distance import geodesic
 
 # Check if CuPy is available
@@ -58,11 +58,8 @@ class DijkstraRouter:
         
         return (lat, lon)
 
-    def find_route(self, start_node: int, end_node: int) -> Dict[str, Any]:
-        """
-        Find the shortest route from start_node to end_node using Dijkstra's algorithm.
-        Returns route information including path, distance, and time.
-        """
+    def find_route(self, start_node: int, end_node: int) -> dict:
+        start_time = time_module.perf_counter()
         logger.info(f"Finding route from node {start_node} to node {end_node} using Dijkstra's algorithm.")
         logger.info(f"Starting Dijkstra search from node {start_node} to node {end_node}.")
         
@@ -127,11 +124,14 @@ class DijkstraRouter:
         nodes = self._get_path_coordinates(path)
         
         logger.info(f"Route found with distance {distance:.2f} km and time {time:.2f} minutes.")
+        elapsed = time_module.perf_counter() - start_time
+
         return {
-            'path': path,
-            'nodes': nodes,
-            'distance_km': distance,
-            'time_mins': time
+            "algorithm": "Dijkstra",
+            "time": elapsed,
+            "nodes": len(path),
+            "distance": distance,
+            "route": nodes
         }
     
     def _calculate_route_metrics(self, path: List[int]) -> Tuple[float, float]:
@@ -426,7 +426,7 @@ class DijkstraRouter:
         Find a route from start to goal with exact source and destination coordinates.
         Returns a complete path including the last mile to the exact destination.
         """
-        start_time = time.time()  # Start timing
+        start_time = time_module.time()  # Start timing
         logger.info(f"Finding route from {start} to {goal} with exact destination using Dijkstra.")
         
         # Get the basic path from node to node
@@ -470,8 +470,8 @@ class DijkstraRouter:
             distance_km = 0
         
         # Calculate total computation time including last-mile routing
-        total_computation_time = time.time() - start_time
-        
+        total_computation_time = time_module.time() - start_time
+
         # Print performance including the last-mile calculation
         print("\n========== TOTAL DIJKSTRA ROUTE CALCULATION ==========")
         print(f"Total computation time (with last-mile): {total_computation_time:.4f} seconds")

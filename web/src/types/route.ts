@@ -1,3 +1,4 @@
+
 export interface RoutePoint {
   lat: number;
   lng: number;
@@ -16,4 +17,12 @@ export interface Route {
   time_mins?: number;
   createdAt?: string;
   path: { lat: number; lng: number }[]; // Array of coordinates representing the route
+}
+
+export interface AlgorithmResult {
+  algorithm: string;
+  time: number;
+  nodes: number;
+  distance: number;
+  route?: [number, number][];
 }
