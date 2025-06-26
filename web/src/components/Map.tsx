@@ -154,7 +154,7 @@ const MapComponent: React.FC<MapProps> = ({
   const [pickCount, setPickCount] = useState(0);
   const [tempSource, setTempSource] = useState<{ lat: number; lng: number } | null>(null);
   const [tempDestination, setTempDestination] = useState<{ lat: number; lng: number } | null>(null);
-  // const [pickOnMapMode, setPickOnMapMode] = useState(false);
+  const [pickedPoints, setPickedPoints] = useState<{ source: { lat: number; lng: number } | null, destination: { lat: number; lng: number } | null }>({ source: null, destination: null });
 
   useEffect(() => {
     if (selectedRoute?.startPoint && selectedRoute?.endPoint) {
@@ -539,24 +539,15 @@ const MapComponent: React.FC<MapProps> = ({
   const handleMapClick = (latlng: L.LatLng) => {
     const point = { lat: latlng.lat, lng: latlng.lng };
     if (pickOnMapMode) {
-      if (pickCount === 0) {
-        setTempSource(point);
-        setTempDestination(null);
-        setPickCount(1);
-      } else if (pickCount === 1 && tempSource) {
-        setTempDestination(point);
+      if (!pickedPoints.source) {
+        setPickedPoints({ source: point, destination: null });
+      } else if (!pickedPoints.destination) {
+        setPickedPoints(prev => ({ ...prev, destination: point }));
         if (onPickOnMapComplete) {
-          // Delay clearing so marker is visible for a moment
           setTimeout(() => {
-            setTempSource(null);
-            setTempDestination(null);
-            setPickCount(0);
-          }, 300); // 300ms delay for UX
-          onPickOnMapComplete(tempSource, point);
-        } else {
-          setTempSource(null);
-          setTempDestination(null);
-          setPickCount(0);
+            onPickOnMapComplete(pickedPoints.source!, point);
+            setPickedPoints({ source: null, destination: null });
+          }, 300);
         }
       }
       return;
@@ -576,9 +567,7 @@ const MapComponent: React.FC<MapProps> = ({
   // Reset pick state if mode is turned off
   React.useEffect(() => {
     if (!pickOnMapMode) {
-      setPickCount(0);
-      setTempSource(null);
-      setTempDestination(null);
+      setPickedPoints({ source: null, destination: null });
     }
   }, [pickOnMapMode]);
 
@@ -609,13 +598,13 @@ const MapComponent: React.FC<MapProps> = ({
         <ClickHandler onClick={handleMapClick} />
 
         {/* Temporary markers for pick-on-map mode */}
-        {pickOnMapMode && tempSource && (
-          <Marker position={[tempSource.lat, tempSource.lng]} icon={StartIcon}>
+        {pickOnMapMode && pickedPoints.source && (
+          <Marker position={[pickedPoints.source.lat, pickedPoints.source.lng]} icon={StartIcon}>
             <Popup>Picked Source</Popup>
           </Marker>
         )}
-        {pickOnMapMode && tempDestination && (
-          <Marker position={[tempDestination.lat, tempDestination.lng]} icon={EndIcon}>
+        {pickOnMapMode && pickedPoints.destination && (
+          <Marker position={[pickedPoints.destination.lat, pickedPoints.destination.lng]} icon={EndIcon}>
             <Popup>Picked Destination</Popup>
           </Marker>
         )}
