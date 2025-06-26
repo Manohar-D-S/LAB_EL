@@ -49,35 +49,52 @@ function App() {
     destination: string | { lat: number; lng: number }
   ) => {
     setIsSearching(true);
+    setError(null);
+    
+    let payload: any = {};
+    let routeName = '';
+    
+    if (typeof source === 'string') {
+      const src = locations.find((loc) => loc.id === source);
+      payload.source_lat = src?.lat;
+      payload.source_lng = src?.lng;
+      routeName += src?.name || 'Unknown';
+    } else {
+      payload.source_lat = source.lat;
+      payload.source_lng = source.lng;
+      routeName += 'Dynamic Point'; // For dynamic source
+    }
+    
+    if (typeof destination === 'string') {
+      const dst = locations.find((loc) => loc.id === destination);
+      payload.dest_lat = dst?.lat;
+      payload.dest_lng = dst?.lng;
+      routeName += ` to ${dst?.name || 'Unknown'}`;
+    } else {
+      payload.dest_lat = destination.lat;
+      payload.dest_lng = destination.lng;
+      routeName += ' to Dynamic Point'; // For dynamic destination
+    }
+
+    // If both are dynamic points, set name to 'Dynamic'
+    if (typeof source !== 'string' && typeof destination !== 'string') {
+      routeName = 'Dynamic';
+    }
+
+    console.log('Payload:', payload);
+
+    if (
+      payload.source_lat === undefined ||
+      payload.source_lng === undefined ||
+      payload.dest_lat === undefined ||
+      payload.dest_lng === undefined
+    ) {
+      alert('Invalid source or destination');
+      setIsSearching(false);
+      return;
+    }
+
     try {
-      let payload: any = {};
-      if (typeof source === 'string') {
-        payload.source_lat = locations.find((loc) => loc.id === source)?.lat;
-        payload.source_lng = locations.find((loc) => loc.id === source)?.lng;
-      } else {
-        payload.source_lat = source.lat;
-        payload.source_lng = source.lng;
-      }
-      if (typeof destination === 'string') {
-        payload.dest_lat = locations.find((loc) => loc.id === destination)?.lat;
-        payload.dest_lng = locations.find((loc) => loc.id === destination)?.lng;
-      } else {
-        payload.dest_lat = destination.lat;
-        payload.dest_lng = destination.lng;
-      }
-      console.log('Payload:', payload);
-
-      if (
-        payload.source_lat === undefined ||
-        payload.source_lng === undefined ||
-        payload.dest_lat === undefined ||
-        payload.dest_lng === undefined
-      ) {
-        console.error('Invalid source or destination');
-        setIsSearching(false);
-        return;
-      }
-
       const response = await fetch('http://localhost:8000/routes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -87,15 +104,16 @@ function App() {
 
       if (routeData.results && routeData.results.length > 0) {
         setAlgorithmComparisonResults(routeData.results);
-        
+
+        // Use A* for map display
         const astarResult = routeData.results.find((r: any) => r.algorithm === "A*");
         if (astarResult && astarResult.route.length > 0) {
           const path = astarResult.route.map(([lat, lng]: [number, number]) => ({ lat, lng }));
           const startPoint = path[0];
           const endPoint = path[path.length - 1];
-          const route: Route = {
+          setSelectedRoute({
             id: 'dynamic',
-            name: `${source} to ${destination}`,
+            name: routeName, // Use the constructed name
             startPoint,
             endPoint,
             path,
@@ -105,8 +123,7 @@ function App() {
             status: 'in-progress',
             duration: Math.round((astarResult.distance / 30 * 60) * 60),
             createdAt: new Date().toISOString(),
-          };
-          setSelectedRoute(route);
+          });
         } else {
           setSelectedRoute(null);
         }
@@ -115,6 +132,7 @@ function App() {
       }
     } catch (error) {
       console.error('Error fetching route:', error);
+      alert('Error fetching route');
       setSelectedRoute(null);
     } finally {
       setIsSearching(false);
