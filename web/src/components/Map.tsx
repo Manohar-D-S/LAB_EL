@@ -2,12 +2,12 @@
 // This component displays a map with a route, traffic signals, and an ambulance marker.
 
 import React, { useEffect, useState, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap, useMapEvent } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
 import Sidebar from './Sidebar';
-
+import { AlgorithmResult } from '../types/route';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
@@ -93,13 +93,21 @@ interface MapProps {
   ambulancePosition: { lat: number; lng: number } | null;
   isSimulationActive?: boolean;
   locations?: Location[];
-  onRouteSelect?: (sourceId: string, destinationId: string) => void;
+  onRouteSelect?: (
+    source: string | { lat: number; lng: number },
+    destination: string | { lat: number; lng: number }
+  ) => void;
   onStartSimulation?: () => void;
   onResetRoute?: () => void;
-  isLoading?: boolean; // <-- Add this
+  isLoading?: boolean;
+  pickOnMapMode?: boolean;
+  onPickOnMapEnd?: () => void;
+  onPickOnMapStart?: () => void;
+  onPickOnMapComplete?: (source: { lat: number; lng: number }, destination: { lat: number; lng: number }) => void;
+  algorithmComparisonResults?: AlgorithmResult[];
+  setShowComparisonModal?: (open: boolean) => void;
 }
 
-const EPSILON = 0.0001; // Small threshold for floating-point comparisons
 
 const defaultLocations: Location[] = [
   { id: "LakshmiHospital", name: "Lakshmi Hospital", lat: 12.988345, lng: 77.508878 },
@@ -116,26 +124,37 @@ const MapComponent: React.FC<MapProps> = ({
   isSimulationActive = false,
   locations = defaultLocations,
   onRouteSelect,
-  onStartSimulation,
   onResetRoute,
-  isLoading // <-- Add this
+  isLoading,
+  pickOnMapMode,
+  onPickOnMapComplete,
+  algorithmComparisonResults,
+  setShowComparisonModal,
+  onPickOnMapEnd,
+  onPickOnMapStart,
 }) => {
   const [center, setCenter] = useState<[number, number]>([12.9716, 77.5946]); // Default center (Bangalore)
   const [zoom, setZoom] = useState(13);
-  const [calculatedDistance, setCalculatedDistance] = useState<number | null>(null);
+  const [calculatedDistance, setCalculatedDistance] = useState<number | null>(null); 
   const [trafficSignals, setTrafficSignals] = useState<TrafficSignal[]>([]);
   const [signalClusters, setSignalClusters] = useState<SignalCluster[]>([]);
   const [signalsOnRoute, setSignalsOnRoute] = useState<string[]>([]);
   const [routeError, setRouteError] = useState<string | null>(null);
   const [calculatedRoute, setCalculatedRoute] = useState<[number, number][]>([]);
 
+
   // Track which signal cluster is currently green/blinking
   const [greenSignalId, setGreenSignalId] = useState<string | null>(null);
   const loggedSignalRef = useRef<string | null>(null);
   const [clearedSignalIds, setClearedSignalIds] = useState<Set<string>>(new Set());
-  const [simulationSpeed, setSimulationSpeed] = useState(1);
 
- 
+  // Source and destination states
+  const [source, setSource] = useState<{ lat: number; lng: number } | null>(null);
+  const [destination, setDestination] = useState<{ lat: number; lng: number } | null>(null);
+  const [pickCount, setPickCount] = useState(0);
+  const [tempSource, setTempSource] = useState<{ lat: number; lng: number } | null>(null);
+  const [tempDestination, setTempDestination] = useState<{ lat: number; lng: number } | null>(null);
+  const [pickedPoints, setPickedPoints] = useState<{ source: { lat: number; lng: number } | null, destination: { lat: number; lng: number } | null }>({ source: null, destination: null });
 
   useEffect(() => {
     if (selectedRoute?.startPoint && selectedRoute?.endPoint) {
@@ -508,6 +527,62 @@ const MapComponent: React.FC<MapProps> = ({
     }
   }, [ambulancePosition, selectedRoute, filteredClusters, signalsOnRoute]);
 
+  // Click handler component
+  function ClickHandler({ onClick }: { onClick: (latlng: L.LatLng) => void }) {
+    useMapEvent('click', (e) => {
+      onClick(e.latlng);
+    });
+    return null;
+  }
+
+  // Handle map click to set source/destination (dynamic picking)
+  const handleMapClick = (latlng: L.LatLng) => {
+    const point = { lat: latlng.lat, lng: latlng.lng };
+    if (pickOnMapMode) {
+      if (!pickedPoints.source) {
+        setPickedPoints({ source: point, destination: null });
+      } else if (!pickedPoints.destination) {
+        setPickedPoints(prev => ({ ...prev, destination: point }));
+      }
+      return;
+    }
+    if (!source) {
+      setSource(point);
+    } else if (!destination) {
+      setDestination(point);
+      // Optionally call backend here:
+      if (onRouteSelect) onRouteSelect(source, point);
+    } else {
+      setSource(point);
+      setDestination(null);
+    }
+  };
+
+  // Reset pick state if mode is turned off
+  React.useEffect(() => {
+    if (!pickOnMapMode) {
+      setPickedPoints({ source: null, destination: null });
+    }
+  }, [pickOnMapMode]);
+
+  const handleSearch = (start: { lat: number; lng: number }, end: { lat: number; lng: number }) => {
+    if (onRouteSelect) {
+      // Clear any previous route data
+      setSource(start);
+      setDestination(end);
+      onRouteSelect(start, end);
+    }
+  };
+
+  // Sync picked points with parent component
+  useEffect(() => {
+    if (pickedPoints.source && pickedPoints.destination && onRouteSelect) {
+      onRouteSelect(pickedPoints.source, pickedPoints.destination);
+      if (onPickOnMapEnd) onPickOnMapEnd();
+      setPickedPoints({ source: null, destination: null });
+    }
+  }, [pickedPoints.source, pickedPoints.destination]);
+
   // Render
   return (
     <div className="flex-1 w-full relative">
@@ -521,6 +596,21 @@ const MapComponent: React.FC<MapProps> = ({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+
+        {/* Click handler for selecting source/destination */}
+        <ClickHandler onClick={handleMapClick} />
+
+        {/* Temporary markers for pick-on-map mode */}
+        {pickOnMapMode && pickedPoints.source && (
+          <Marker position={[pickedPoints.source.lat, pickedPoints.source.lng]} icon={StartIcon}>
+            <Popup>Picked Source</Popup>
+          </Marker>
+        )}
+        {pickOnMapMode && pickedPoints.destination && (
+          <Marker position={[pickedPoints.destination.lat, pickedPoints.destination.lng]} icon={EndIcon}>
+            <Popup>Picked Destination</Popup>
+          </Marker>
+        )}
 
         {/* Start and End markers */}
         {selectedRoute?.startPoint && (
@@ -618,17 +708,10 @@ const MapComponent: React.FC<MapProps> = ({
       </MapContainer>
       <Sidebar
         onRouteSelect={(start, end) => {
-          if (onRouteSelect) {
-            const source = locations.find(
-              loc => Math.abs(loc.lat - start[0]) < EPSILON && Math.abs(loc.lng - start[1]) < EPSILON
-            );
-            const dest = locations.find(
-              loc => Math.abs(loc.lat - end[0]) < EPSILON && Math.abs(loc.lng - end[1]) < EPSILON
-            );
-            if (source && dest) {
-              onRouteSelect(source.id, dest.id);
-            }
-          }
+          // Convert [lat, lng] arrays to { lat, lng } objects if needed
+          const toLatLng = (val: any) =>
+            Array.isArray(val) ? { lat: val[0], lng: val[1] } : val;
+          handleSearch(toLatLng(start), toLatLng(end));
         }}
         onResetRoute={onResetRoute}
         locations={locations}
@@ -638,11 +721,33 @@ const MapComponent: React.FC<MapProps> = ({
         greenSignalId={greenSignalId}
         isSimulationActive={isSimulationActive}
         routeError={routeError}
+        onPickOnMapEnd={onPickOnMapEnd} // ✅ Use the prop, not setPickOnMapMode
+        onPickOnMapStart={onPickOnMapStart} // (if you want to allow starting from Sidebar)
+        pickOnMapMode={pickOnMapMode}
         ambulancePosition={ambulancePosition}
         signalsCleared={clearedSignalIds.size}
         isLoading={isLoading}
+        algorithmComparisonResults={algorithmComparisonResults}
+        setShowComparisonModal={setShowComparisonModal || (() => {})}
       />
-     
+{/* 
+      <Sidebar
+          onRouteSelect={(start: [number, number], end: [number, number]) => {
+            handleSearch({ lat: start[0], lng: start[1] }, { lat: end[0], lng: end[1] });
+          }}
+          locations={locations}
+          selectedRoute={selectedRoute}
+          calculatedDistance={selectedRoute?.distance}
+          signalsOnRoute={[]}
+          greenSignalId={null}
+          isSimulationActive={isSimulationActive}
+          routeError={error}
+          signalsCleared={0}
+          isLoading={isSearching}
+          onResetRoute={() => setSelectedRoute(null)}
+          onPickOnMapStart={() => setPickOnMapMode(true)}
+          pickOnMapMode={pickOnMapMode}
+        /> */}
     </div>
   );
 };

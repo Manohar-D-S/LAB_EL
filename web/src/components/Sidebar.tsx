@@ -8,6 +8,13 @@ interface Location {
   lng: number;
 }
 
+interface AlgorithmResult {
+  algorithm: string;
+  time: number;
+  nodes: number;
+  distance: number;
+}
+
 interface SidebarProps {
   onRouteSelect: (start: [number, number], end: [number, number]) => void;
   clearedSignalCount?: number;
@@ -21,7 +28,12 @@ interface SidebarProps {
   ambulancePosition?: any;
   signalsCleared: number;
   isLoading?: boolean;
-  onResetRoute?: () => void; // <-- Add this prop
+  onResetRoute?: () => void;
+  onPickOnMapStart?: () => void;
+  pickOnMapMode?: boolean;
+  onPickOnMapEnd?: () => void;
+  algorithmComparisonResults?: AlgorithmResult[];
+  setShowComparisonModal: (open: boolean) => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -33,21 +45,24 @@ const Sidebar: React.FC<SidebarProps> = ({
   greenSignalId,
   isSimulationActive,
   routeError,
-  ambulancePosition,
   signalsCleared,
+  onPickOnMapEnd,
   onResetRoute,
-  isLoading // <-- Use only the prop
+  onPickOnMapStart,
+  pickOnMapMode = false,
+  isLoading,
+  algorithmComparisonResults,
+  setShowComparisonModal
 }) => {
   const [sourceLocation, setSourceLocation] = useState('');
   const [destinationLocation, setDestinationLocation] = useState('');
 
-  // Filter out selected destination from source options and vice versa
+
   const filteredSourceLocations = locations.filter(loc => loc.id !== destinationLocation);
   const filteredDestinationLocations = locations.filter(loc => loc.id !== sourceLocation);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Only call onRouteSelect, let parent handle loading
     const sourceCoords = locations.find(loc => loc.id === sourceLocation);
     const destCoords = locations.find(loc => loc.id === destinationLocation);
 
@@ -58,7 +73,10 @@ const Sidebar: React.FC<SidebarProps> = ({
     }
   };
 
-  // Reset form when route is reset
+  const handlePickOnMap = () => {
+    if (onPickOnMapStart) onPickOnMapStart();
+  };
+
   React.useEffect(() => {
     if (!selectedRoute) {
       setSourceLocation('');
@@ -68,7 +86,6 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-200/50 p-6 z-10 max-w-sm w-full" style={{ width: 380 }}>
-      {/* Header */}
       <div className="flex items-center gap-3 mb-4">
         <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
           <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -81,9 +98,21 @@ const Sidebar: React.FC<SidebarProps> = ({
         </div>
       </div>
 
-      {/* Show form only if no route is selected */}
       {!selectedRoute && (
         <form onSubmit={handleSubmit} className="space-y-4 mb-6">
+          <button
+            type="button"
+            className="w-full flex justify-center items-center bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white py-2 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mb-2"
+            onClick={handlePickOnMap}
+            disabled={pickOnMapMode  || isLoading}
+          >
+            {pickOnMapMode  ? "Click on map to select source & destination..." : "Choose on Map"}
+          </button>
+          {pickOnMapMode  && (
+            <div className="text-sm text-green-700 bg-green-50 rounded-lg p-2 mb-2 text-center">
+              Click on the map to select <b>source</b> and then <b>destination</b>.
+            </div>
+          )}
           <div>
             <label htmlFor="source" className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
               Source Location
@@ -91,9 +120,14 @@ const Sidebar: React.FC<SidebarProps> = ({
             <select
               id="source"
               value={sourceLocation}
-              onChange={(e) => setSourceLocation(e.target.value)}
+              onChange={(e) => {
+                setSourceLocation(e.target.value);
+                if (onPickOnMapEnd) onPickOnMapEnd(); // Exit map-pick mode   
+              }}
+
               className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               required
+              disabled={pickOnMapMode }
             >
               <option value="">Select source location</option>
               {filteredSourceLocations.map(loc => (
@@ -101,7 +135,6 @@ const Sidebar: React.FC<SidebarProps> = ({
               ))}
             </select>
           </div>
-
           <div>
             <label htmlFor="destination" className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
               Destination
@@ -109,9 +142,13 @@ const Sidebar: React.FC<SidebarProps> = ({
             <select
               id="destination"
               value={destinationLocation}
-              onChange={(e) => setDestinationLocation(e.target.value)}
+              onChange={(e) => {
+                setDestinationLocation(e.target.value);
+                if (onPickOnMapEnd) onPickOnMapEnd(); // Exit map-pick mode
+              }}
               className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               required
+              disabled={pickOnMapMode }
             >
               <option value="">Select destination</option>
               {filteredDestinationLocations.map(loc => (
@@ -119,11 +156,10 @@ const Sidebar: React.FC<SidebarProps> = ({
               ))}
             </select>
           </div>
-
           <button
             type="submit"
             className="w-full flex justify-center items-center bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            disabled={isLoading}
+            disabled={isLoading || pickOnMapMode }
           >
             {isLoading ? (
               <span className="flex items-center">
@@ -143,7 +179,6 @@ const Sidebar: React.FC<SidebarProps> = ({
         </form>
       )}
 
-      {/* Show route details only if a route is selected */}
       {selectedRoute && (
         <>
           <div className="space-y-4">
@@ -154,7 +189,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   setSourceLocation('');
                   setDestinationLocation('');
                   if (typeof onResetRoute === 'function') {
-                    onResetRoute(); // Use the dedicated reset handler
+                    onResetRoute();
                   }
                 }}
                 title="Click to search a new route"
@@ -171,7 +206,6 @@ const Sidebar: React.FC<SidebarProps> = ({
                 </div>
               </div>
             )}
-
             {calculatedDistance && (
               <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
                 <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
@@ -186,33 +220,27 @@ const Sidebar: React.FC<SidebarProps> = ({
               </div>
             )}
           </div>
-
-          {/* Status Section */}
           <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
             <div className="flex items-center gap-2 mb-3">
               <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
               <span className="text-sm font-bold text-blue-800">Route Active</span>
             </div>
-
             <div className="grid grid-cols-2 gap-3">
               <div className="text-center p-2 bg-white/60 rounded-lg">
                 <p className="text-lg font-bold text-blue-700">{signalsOnRoute.length}</p>
                 <p className="text-xs text-blue-600 font-medium">Traffic Signals</p>
               </div>
-
               <div className="text-center p-2 bg-white/60 rounded-lg">
                 <p className="text-lg font-bold text-blue-700">{signalsCleared}</p>
                 <p className="text-xs text-blue-600 font-medium">Signals Cleared</p>
               </div>
             </div>
-
             {greenSignalId && (
               <div className="mt-3 flex items-center gap-2 p-2 bg-green-100 rounded-lg border border-green-200">
                 <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                 <span className="text-sm font-semibold text-green-700">🟢 Signal cleared ahead</span>
               </div>
             )}
-
             {isSimulationActive && (
               <div className="mt-3 flex items-center gap-2 p-2 bg-red-100 rounded-lg border border-red-200">
                 <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
@@ -220,8 +248,6 @@ const Sidebar: React.FC<SidebarProps> = ({
               </div>
             )}
           </div>
-
-          {/* Error Section */}
           {routeError && (
             <div className="mt-4 p-3 bg-red-50 rounded-xl border border-red-200">
               <div className="flex gap-2">
@@ -235,8 +261,17 @@ const Sidebar: React.FC<SidebarProps> = ({
               </div>
             </div>
           )}
-
         </>
+      )}
+
+      {/* Compare Algorithms Button */}
+      {selectedRoute && algorithmComparisonResults && algorithmComparisonResults.length > 1 && (
+        <button
+          className="w-full mt-4 py-2 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition"
+          onClick={() => setShowComparisonModal(true)}
+        >
+          Compare Algorithms
+        </button>
       )}
     </div>
   );

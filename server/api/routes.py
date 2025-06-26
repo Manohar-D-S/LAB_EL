@@ -12,8 +12,9 @@ from time import sleep
 
 from core.routing.graph_builder import build_simplified_graph, load_graph_from_file, extract_subgraph
 from core.routing.a_star import AmbulanceRouter
+from core.routing.dijkstra import DijkstraRouter
 from utils.geo_helpers import snap_to_nearest_node
-from api.schemas import RouteRequest
+from api.schemas import RouteRequest, AlgorithmResult, RouteComparisonResponse
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -46,8 +47,8 @@ async def get_routes():
     logger.info("Fetching routes. No predefined routes will be returned.")
     return {"routes": []}  # Return an empty list or remove this endpoint entirely
 
-@router.post("/routes")
-async def calculate_route(route_request: RouteRequest):
+@router.post("/routes", response_model=RouteComparisonResponse)
+async def calculate_route(request: Request, route_request: RouteRequest):
     # Ensure the bangalore_map.graphml file exists
     data_folder = os.path.join(os.getcwd(), "data")
     os.makedirs(data_folder, exist_ok=True)
@@ -85,57 +86,24 @@ async def calculate_route(route_request: RouteRequest):
         end_node = snap_to_nearest_node(subgraph, destination)
         logger.info(f"Start node: {start_node}, End node: {end_node}")
 
-        # Use the A* algorithm to calculate the shortest path
-        router = AmbulanceRouter(subgraph)
-        path = router.astar(start_node, end_node)
-        logger.info(f"Calculated path: {path}")
+        # Use the A* algorithm and Dijkstra's algorithm to calculate the shortest path
+        astar_router = AmbulanceRouter(subgraph)
+        dijkstra_router = DijkstraRouter(subgraph)
 
-        # Calculate the distance of the route
-        try:
-            # Try to use geopy for more accurate distance calculation
-            from geopy.distance import geodesic
-            distance = sum(
-                geodesic(
-                    (subgraph.nodes[path[i]]["y"], subgraph.nodes[path[i]]["x"]),
-                    (subgraph.nodes[path[i + 1]]["y"], subgraph.nodes[path[i + 1]]["x"])
-                ).kilometers
-                for i in range(len(path) - 1)
-            )
-        except Exception:
-            # Fall back to euclidean distance if geopy fails
-            distance = sum(
-                ox.distance.great_circle(
-                    subgraph.nodes[path[i]]["y"], subgraph.nodes[path[i]]["x"],
-                    subgraph.nodes[path[i + 1]]["y"], subgraph.nodes[path[i + 1]]["x"]
-                ) / 1000  # Convert meters to kilometers
-                for i in range(len(path) - 1)
-            )
-
-        # Calculate estimated travel time (assuming average speed of 30 km/h)
-        time_mins = distance / 30 * 60  # Time in minutes
+        astar_result = astar_router.find_route(start_node, end_node)
+        dijkstra_result = dijkstra_router.find_route(start_node, end_node)
 
         # Format response
-        route_coordinates = [(subgraph.nodes[node]["y"], subgraph.nodes[node]["x"]) for node in path]
-        
         response = {
-            "route_coordinates": route_coordinates,
-            "distance_km": distance,
-            "time_mins": time_mins,
-            "algorithm_comparison": [
-                {
-                    "algorithm": "A* Algorithm",
-                    "computation_time": 0,  # Not measuring computation time
-                    "distance_km": distance,
-                    "nodes_count": len(path)
-                }
-            ]
+            "astar_route": astar_result,
+            "dijkstra_route": dijkstra_result
         }
 
         # Store the route in the cache
         route_cache[cache_key] = response
         logger.info(f"Route calculated and cached with key: {cache_key}")
 
-        return response
+        return {"results": [astar_result, dijkstra_result]}
     except Exception as e:
         logger.error(f"Error calculating route: {e}")
         raise HTTPException(status_code=500, detail="Failed to calculate route")

@@ -1,34 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { Navigation } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Map from './components/Map';
-import RouteList from './components/RouteList';
 import RouteDetails from './components/RouteDetails';
+import Sidebar from './components/Sidebar';
 import { getRoutes } from './services/api';
 import { Route } from './types/route';
-
-type RouteListProps = {
-  routes: Route[]; // Add the missing 'routes' property
-  selectedRouteId: string | undefined;
-  onRouteSelect: (route: Route | null) => void;
-  locations: { id: string; name: string; lat: number; lng: number }[];
-  onSearch: (source: string, destination: string) => Promise<void>;
-  isSearching: boolean;
-};
+import AlgorithmComparisonModal from './components/AlgorithmComparisonModal';
 
 function App() {
   const [selectedRoute, setSelectedRoute] = useState<Route | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [isSearching, setIsSearching] = useState<boolean>(false); // New state for search button animation
+  const [isSearching, setIsSearching] = useState<boolean>(false);
   const [routes, setRoutes] = useState<Route[]>([]);
   const [ambulancePosition, setAmbulancePosition] = useState<{ lat: number; lng: number } | null>(null);
-  const [isSimulationActive, setIsSimulationActive] = useState(false); // New state for simulation
-  const [calculatedDistance, setCalculatedDistance] = useState<number | null>(null);
-  const [signalsOnRoute, setSignalsOnRoute] = useState<any[]>([]);
-  const [greenSignalId, setGreenSignalId] = useState<string | null>(null);
-  const [routeError, setRouteError] = useState<string | null>(null);
-  const [clearedSignalIds, setClearedSignalIds] = useState<Set<string>>(new Set());
+  const [isSimulationActive, setIsSimulationActive] = useState(false);
+  const [pickOnMapMode, setPickOnMapMode] = useState(false);
+  const [algorithmComparisonResults, setAlgorithmComparisonResults] = useState<any[]>([]);
+  const [showComparisonModal, setShowComparisonModal] = useState(false);
 
   useEffect(() => {
     const fetchRoutes = async () => {
@@ -43,7 +32,6 @@ function App() {
         setLoading(false);
       }
     };
-    
     fetchRoutes();
   }, []);
 
@@ -56,93 +44,103 @@ function App() {
     { id: "JayadevaHospital", name: "Jayadeva Hospital", lat: 12.917924, lng: 77.599245 },
   ];
 
-  const handleSearch = async (source: string, destination: string) => {
-    setIsSearching(true); // Start the loading animation
+  const handleSearch = async (
+    source: string | { lat: number; lng: number },
+    destination: string | { lat: number; lng: number }
+  ) => {
+    setIsSearching(true);
+    setError(null);
+    
+    let payload: any = {};
+    let routeName = '';
+    
+    if (typeof source === 'string') {
+      const src = locations.find((loc) => loc.id === source);
+      payload.source_lat = src?.lat;
+      payload.source_lng = src?.lng;
+      routeName += src?.name || 'Unknown';
+    } else {
+      payload.source_lat = source.lat;
+      payload.source_lng = source.lng;
+      routeName += 'Dynamic Point'; // For dynamic source
+    }
+    
+    if (typeof destination === 'string') {
+      const dst = locations.find((loc) => loc.id === destination);
+      payload.dest_lat = dst?.lat;
+      payload.dest_lng = dst?.lng;
+      routeName += ` to ${dst?.name || 'Unknown'}`;
+    } else {
+      payload.dest_lat = destination.lat;
+      payload.dest_lng = destination.lng;
+      routeName += ' to Dynamic Point'; // For dynamic destination
+    }
+
+    // If both are dynamic points, set name to 'Dynamic'
+    if (typeof source !== 'string' && typeof destination !== 'string') {
+      routeName = 'Dynamic';
+    }
+
+    console.log('Payload:', payload);
+
+    if (
+      payload.source_lat === undefined ||
+      payload.source_lng === undefined ||
+      payload.dest_lat === undefined ||
+      payload.dest_lng === undefined
+    ) {
+      alert('Invalid source or destination');
+      setIsSearching(false);
+      return;
+    }
+
     try {
-      const payload = {
-        source_lat: locations.find((loc) => loc.id === source)?.lat,
-        source_lng: locations.find((loc) => loc.id === source)?.lng,
-        dest_lat: locations.find((loc) => loc.id === destination)?.lat,
-        dest_lng: locations.find((loc) => loc.id === destination)?.lng,
-      };
-      console.log('Payload:', payload);
-
-      if (
-        payload.source_lat === undefined ||
-        payload.source_lng === undefined ||
-        payload.dest_lat === undefined ||
-        payload.dest_lng === undefined
-      ) {
-        console.error('Invalid source or destination');
-        setIsSearching(false);
-        return;
-      }
-
-      const response = await fetch(`http://localhost:8000/routes`, {
+      const response = await fetch('http://localhost:8000/routes', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch route');
-      }
-
       const routeData = await response.json();
-      console.log('Route Data:', routeData);
 
-      // Transform backend response to Route object expected by Map/RouteDetails
-      if (routeData.route_coordinates && routeData.route_coordinates.length > 0) {
-        const path = routeData.route_coordinates.map(
-          ([lat, lng]: [number, number]) => ({ lat, lng })
-        );
-        const startPoint = path[0];
-        const endPoint = path[path.length - 1];
-        const route: Route = {
-          id: 'dynamic',
-          name: `${source} to ${destination}`,
-          startPoint,
-          endPoint,
-          path,
-          distance: routeData.distance_km,
-          time_mins: routeData.time_mins,
-          waypoints: [],
-          status: 'in-progress',
-          duration: Math.round((routeData.time_mins || 0) * 60),
-          createdAt: new Date().toISOString(),
-        };
-        setSelectedRoute(route);
+      if (routeData.results && routeData.results.length > 0) {
+        setAlgorithmComparisonResults(routeData.results);
+
+        // Use A* for map display
+        const astarResult = routeData.results.find((r: any) => r.algorithm === "A*");
+        if (astarResult && astarResult.route.length > 0) {
+          const path = astarResult.route.map(([lat, lng]: [number, number]) => ({ lat, lng }));
+          const startPoint = path[0];
+          const endPoint = path[path.length - 1];
+          setSelectedRoute({
+            id: 'dynamic',
+            name: routeName, // Use the constructed name
+            startPoint,
+            endPoint,
+            path,
+            distance: astarResult.distance,
+            time_mins: astarResult.distance / 30 * 60,
+            waypoints: [],
+            status: 'in-progress',
+            duration: Math.round((astarResult.distance / 30 * 60) * 60),
+            createdAt: new Date().toISOString(),
+          });
+        } else {
+          setSelectedRoute(null);
+        }
       } else {
         setSelectedRoute(null);
       }
     } catch (error) {
       console.error('Error fetching route:', error);
+      alert('Error fetching route');
       setSelectedRoute(null);
     } finally {
-      setIsSearching(false); // Stop the loading animation
+      setIsSearching(false);
     }
   };
 
-  useEffect(() => {
-    const fetchRoutes = async () => {
-      try {
-        setLoading(true);
-        const data = await getRoutes();
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching routes:', err);
-        setError('Failed to load routes. Please try again later.');
-        setLoading(false);
-      }
-    };
-
-    fetchRoutes();
-  }, []);
-
   const handleSliderChange = (position: { lat: number; lng: number }) => {
-    setAmbulancePosition(position); // Update ambulance position
+    setAmbulancePosition(position);
   };
 
   const handleSimulationStart = () => setIsSimulationActive(true);
@@ -150,9 +148,7 @@ function App() {
   return (
     <div className="flex flex-col h-screen bg-slate-50">
       <Header />
-      
       <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
-        
         <main className="flex-1 flex flex-col overflow-hidden bg-white">
           <Map
             selectedRoute={selectedRoute}
@@ -162,13 +158,23 @@ function App() {
             locations={locations}
             onRouteSelect={handleSearch}
             onResetRoute={() => setSelectedRoute(null)}
-            isLoading={isSearching} // <-- Pass actual loading state
+            isLoading={isSearching}
+            pickOnMapMode={pickOnMapMode}
+            onPickOnMapEnd={() => setPickOnMapMode(false)}
+            onPickOnMapStart={() => setPickOnMapMode(true)}
+            algorithmComparisonResults={algorithmComparisonResults}
+            setShowComparisonModal={setShowComparisonModal}
           />
-          
           <RouteDetails route={selectedRoute || undefined} onSliderChange={handleSliderChange} />
         </main>
-        
       </div>
+
+      {showComparisonModal && (
+        <AlgorithmComparisonModal
+          onClose={() => setShowComparisonModal(false)}
+          comparisonData={algorithmComparisonResults}
+        />
+      )}
     </div>
   );
 }
