@@ -542,16 +542,7 @@ const MapComponent: React.FC<MapProps> = ({
       if (!pickedPoints.source) {
         setPickedPoints({ source: point, destination: null });
       } else if (!pickedPoints.destination) {
-        setPickedPoints(prev => {
-          const newPoints = { ...prev, destination: point };
-          // Trigger route search automatically after both points are picked
-          if (onRouteSelect && newPoints.source && newPoints.destination) {
-            onRouteSelect(newPoints.source, newPoints.destination);
-          }
-          // Optionally exit pick mode here if you want:
-          if (onPickOnMapEnd) onPickOnMapEnd();
-          return newPoints;
-        });
+        setPickedPoints(prev => ({ ...prev, destination: point }));
       }
       return;
     }
@@ -582,6 +573,15 @@ const MapComponent: React.FC<MapProps> = ({
       onRouteSelect(start, end);
     }
   };
+
+  // Sync picked points with parent component
+  useEffect(() => {
+    if (pickedPoints.source && pickedPoints.destination && onRouteSelect) {
+      onRouteSelect(pickedPoints.source, pickedPoints.destination);
+      if (onPickOnMapEnd) onPickOnMapEnd();
+      setPickedPoints({ source: null, destination: null });
+    }
+  }, [pickedPoints.source, pickedPoints.destination]);
 
   // Render
   return (
