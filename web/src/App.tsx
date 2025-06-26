@@ -142,10 +142,8 @@ function App() {
             onResetRoute={() => setSelectedRoute(null)}
             isLoading={isSearching}
             pickOnMapMode={pickOnMapMode}
-            onPickOnMapComplete={(source, destination) => {
-              handleSearch(source, destination);
-              setPickOnMapMode(false);
-            }}
+            onPickOnMapEnd={() => setPickOnMapMode(false)}
+            onPickOnMapStart={() => setPickOnMapMode(true)}
             algorithmComparisonResults={algorithmComparisonResults} // ✅ ADD THIS
             setShowComparisonModal={setShowComparisonModal}
           />

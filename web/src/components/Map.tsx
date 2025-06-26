@@ -101,6 +101,8 @@ interface MapProps {
   onResetRoute?: () => void;
   isLoading?: boolean;
   pickOnMapMode?: boolean;
+  onPickOnMapEnd?: () => void;
+  onPickOnMapStart?: () => void;
   onPickOnMapComplete?: (source: { lat: number; lng: number }, destination: { lat: number; lng: number }) => void;
   algorithmComparisonResults?: AlgorithmResult[];
   setShowComparisonModal?: (open: boolean) => void;
@@ -122,17 +124,18 @@ const MapComponent: React.FC<MapProps> = ({
   isSimulationActive = false,
   locations = defaultLocations,
   onRouteSelect,
-  // onStartSimulation,
   onResetRoute,
-  isLoading, // <-- Add this
+  isLoading,
   pickOnMapMode,
   onPickOnMapComplete,
   algorithmComparisonResults,
   setShowComparisonModal,
+  onPickOnMapEnd,
+  onPickOnMapStart,
 }) => {
   const [center, setCenter] = useState<[number, number]>([12.9716, 77.5946]); // Default center (Bangalore)
   const [zoom, setZoom] = useState(13);
-  const [calculatedDistance, setCalculatedDistance] = useState<number | null>(null);
+  const [calculatedDistance, setCalculatedDistance] = useState<number | null>(null); 
   const [trafficSignals, setTrafficSignals] = useState<TrafficSignal[]>([]);
   const [signalClusters, setSignalClusters] = useState<SignalCluster[]>([]);
   const [signalsOnRoute, setSignalsOnRoute] = useState<string[]>([]);
@@ -151,7 +154,7 @@ const MapComponent: React.FC<MapProps> = ({
   const [pickCount, setPickCount] = useState(0);
   const [tempSource, setTempSource] = useState<{ lat: number; lng: number } | null>(null);
   const [tempDestination, setTempDestination] = useState<{ lat: number; lng: number } | null>(null);
-  const [pickOnMapMode, setPickOnMapMode] = useState(false);
+  // const [pickOnMapMode, setPickOnMapMode] = useState(false);
 
   useEffect(() => {
     if (selectedRoute?.startPoint && selectedRoute?.endPoint) {
@@ -579,6 +582,15 @@ const MapComponent: React.FC<MapProps> = ({
     }
   }, [pickOnMapMode]);
 
+  const handleSearch = (start: { lat: number; lng: number }, end: { lat: number; lng: number }) => {
+    if (onRouteSelect) {
+      // Clear any previous route data
+      setSource(start);
+      setDestination(end);
+      onRouteSelect(start, end);
+    }
+  };
+
   // Render
   return (
     <div className="flex-1 w-full relative">
@@ -704,15 +716,10 @@ const MapComponent: React.FC<MapProps> = ({
       </MapContainer>
       <Sidebar
         onRouteSelect={(start, end) => {
-          if (onRouteSelect) {
-            // If start/end are objects, pass as is, else try to resolve from locations
-            const getIdOrCoords = (val: any) => {
-              if (typeof val === 'string') return val;
-              if (typeof val === 'object' && val.lat !== undefined && val.lng !== undefined) return val;
-              return '';
-            };
-            onRouteSelect(getIdOrCoords(start), getIdOrCoords(end));
-          }
+          // Convert [lat, lng] arrays to { lat, lng } objects if needed
+          const toLatLng = (val: any) =>
+            Array.isArray(val) ? { lat: val[0], lng: val[1] } : val;
+          handleSearch(toLatLng(start), toLatLng(end));
         }}
         onResetRoute={onResetRoute}
         locations={locations}
@@ -722,7 +729,9 @@ const MapComponent: React.FC<MapProps> = ({
         greenSignalId={greenSignalId}
         isSimulationActive={isSimulationActive}
         routeError={routeError}
-        onPickOnMapEnd={() => setPickOnMapMode(false)} // ✅ Pass it as a prop
+        onPickOnMapEnd={onPickOnMapEnd} // ✅ Use the prop, not setPickOnMapMode
+        onPickOnMapStart={onPickOnMapStart} // (if you want to allow starting from Sidebar)
+        pickOnMapMode={pickOnMapMode}
         ambulancePosition={ambulancePosition}
         signalsCleared={clearedSignalIds.size}
         isLoading={isLoading}
