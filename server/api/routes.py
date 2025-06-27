@@ -10,11 +10,11 @@ import osmnx as ox
 from datetime import datetime
 from time import sleep
 
-from core.routing.graph_builder import build_simplified_graph, load_graph_from_file, extract_subgraph
+from core.routing.graph_builder import  load_graph_from_file, extract_subgraph, visualize_dijkstra_points, visualize_astar_points
 from core.routing.a_star import AmbulanceRouter
 from core.routing.dijkstra import DijkstraRouter
 from utils.geo_helpers import snap_to_nearest_node
-from api.schemas import RouteRequest, AlgorithmResult, RouteComparisonResponse
+from api.schemas import RouteRequest,  RouteComparisonResponse
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -63,7 +63,6 @@ async def calculate_route(request: Request, route_request: RouteRequest):
     source = (route_request.source_lat, route_request.source_lng)
     destination = (route_request.dest_lat, route_request.dest_lng)
 
-    # Generate a cache key for the route
     cache_key = generate_cache_key(source, destination)
 
     # Check if the route is already cached
@@ -74,11 +73,9 @@ async def calculate_route(request: Request, route_request: RouteRequest):
         return route_cache[cache_key]  # Always returns {"results": [...]}
 
     try:
-        # Load the full graph from the local file
         graph_file = "./data/simplified_bengaluru.graphml"
         G = load_graph_from_file(graph_file)
 
-        # Extract the subgraph for the bounding box
         subgraph = extract_subgraph(G, source, destination)
 
         # Snap source and destination to the nearest nodes in the subgraph
@@ -93,8 +90,34 @@ async def calculate_route(request: Request, route_request: RouteRequest):
         astar_result = astar_router.find_route(start_node, end_node)
         dijkstra_result = dijkstra_router.find_route(start_node, end_node)
 
-        # Format response
-        response = {"results": [astar_result, dijkstra_result]}
+        # Generate two images: Dijkstra only, and A* with route
+        img_dijkstra = visualize_dijkstra_points(
+            subgraph,
+            dijkstra_result.get("visited_nodes", []),
+            dijkstra_result.get("route", []),
+            start_node,
+            end_node,
+            data_folder
+        )
+        img_astar = visualize_astar_points(
+            subgraph,
+            astar_result.get("visited_nodes", []),
+            astar_result.get("route", []),
+            start_node,
+            end_node,
+            data_folder
+        )
+        logger.info(f"Dijkstra image: {img_dijkstra}, A* image: {img_astar}")
+
+        def filter_result(res):
+            return {
+                "algorithm": res.get("algorithm"),
+                "time": res.get("time"),
+                "nodes": res.get("nodes"),
+                "distance": res.get("distance"),
+                "route": res.get("route"),
+            }
+        response = {"results": [filter_result(astar_result), filter_result(dijkstra_result)]}
 
         # Store the route in the cache
         route_cache[cache_key] = response

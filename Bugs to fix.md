@@ -5,6 +5,6 @@
 
 #Frontend
 
-
+Generate a image on how many points have been visited.
 
 

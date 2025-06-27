@@ -1,11 +1,12 @@
-import osmnx as ox
-from geopy.distance import great_circle
-import logging
-import networkx as nx
-import numpy as np
 import os
 import time
+import logging
+import osmnx as ox
+import numpy as np
+import networkx as nx
 from functools import wraps
+import matplotlib.pyplot as plt
+from geopy.distance import great_circle
 
 # Lighter GPU dependencies
 try:
@@ -138,6 +139,8 @@ def extract_subgraph(G: nx.MultiDiGraph, source: tuple, dest: tuple) -> nx.Multi
         ]
         subgraph = G.subgraph(nodes_within_bbox).copy()
         logger.info(f"Subgraph extracted with {len(subgraph.nodes)} nodes and {len(subgraph.edges)} edges.")
+        # Add traffic data to subgraph before returning
+        add_random_traffic_to_subgraph(subgraph)
         return subgraph
     except Exception as e:
         logger.error(f"Failed to extract subgraph: {e}")
@@ -220,4 +223,76 @@ def densify_route_path(G: nx.MultiDiGraph, node_path: list[int]) -> list[dict]:
                 points.append({'lat': G.nodes[u]['y'], 'lng': G.nodes[u]['x']})
             points.append({'lat': G.nodes[v]['y'], 'lng': G.nodes[v]['x']})
     return points
+
+def add_random_traffic_to_subgraph(subgraph: nx.MultiDiGraph, min_factor=0.7, max_factor=1.5):
+    """
+    Add random traffic factors to each edge in the subgraph and update travel_time accordingly.
+    - min_factor, max_factor: range for traffic multiplier (1.0 = normal, >1.0 = slower, <1.0 = faster)
+    """
+    rng = np.random.default_rng()
+    for u, v, k, data in subgraph.edges(keys=True, data=True):
+        # Assign a random traffic factor
+        traffic_factor = float(rng.uniform(min_factor, max_factor))
+        data['traffic_factor'] = traffic_factor
+        # Update travel_time if present
+        if 'travel_time' in data:
+            data['travel_time'] = data['travel_time'] * traffic_factor
+    return subgraph
+
+
+def visualize_dijkstra_points(subgraph, visited_d, route, source, dest, outdir):
+    """
+    Plots only Dijkstra visited nodes (blue), source (orange star), and destination (purple star).
+    """
+    fig, ax = ox.plot_graph(subgraph, show=False, close=False, node_color="#cccccc", node_size=3, edge_color="#bbbbbb", bgcolor="white")
+    visited_d = set(visited_d)
+    if visited_d:
+        x = [subgraph.nodes[n]['x'] for n in visited_d]
+        y = [subgraph.nodes[n]['y'] for n in visited_d]
+        ax.scatter(x, y, c='blue', s=6, label='Dijkstra visited', alpha=0.7, zorder=5)
+    
+    if route:
+        rx = [pt[1] for pt in route]
+        ry = [pt[0] for pt in route]
+        ax.scatter(rx, ry, c='red', s=10, label='Dijkstra\'s route', alpha=0.9, zorder=6)
+
+    src_x, src_y = subgraph.nodes[source]['x'], subgraph.nodes[source]['y']
+    dst_x, dst_y = subgraph.nodes[dest]['x'], subgraph.nodes[dest]['y']
+    ax.scatter([src_x], [src_y], c='orange', s=30, marker='*', label='Source', zorder=10)
+    ax.scatter([dst_x], [dst_y], c='purple', s=30, marker='*', label='Destination', zorder=10)
+    ax.legend()
+    ax.set_title('Dijkstra Visited Nodes (blue)')
+    fname = f"dijkstra_{subgraph.nodes[source]['y']:.5f}.{subgraph.nodes[source]['x']:.5f}.{subgraph.nodes[dest]['y']:.5f}.{subgraph.nodes[dest]['x']:.5f}.png"
+    outpath = os.path.join(outdir, fname)
+    plt.savefig(outpath, dpi=200, bbox_inches='tight')
+    plt.close(fig)
+    return outpath
+
+def visualize_astar_points(subgraph, visited_a, route, source, dest, outdir):
+    """
+    Plots A* visited nodes (green), the generated route (red), source (orange star), and destination (purple star).
+    """
+
+    fig, ax = ox.plot_graph(subgraph, show=False, close=False, node_color="#cccccc", node_size=3, edge_color="#bbbbbb", bgcolor="white")
+    visited_a = set(visited_a)
+    if visited_a:
+        x = [subgraph.nodes[n]['x'] for n in visited_a]
+        y = [subgraph.nodes[n]['y'] for n in visited_a]
+        ax.scatter(x, y, c='green', s=6, label='A* visited', alpha=0.7, zorder=5)
+    # Plot route as red points
+    if route:
+        rx = [pt[1] for pt in route]
+        ry = [pt[0] for pt in route]
+        ax.scatter(rx, ry, c='red', s=10, label='A* route', alpha=0.9, zorder=6)
+    src_x, src_y = subgraph.nodes[source]['x'], subgraph.nodes[source]['y']
+    dst_x, dst_y = subgraph.nodes[dest]['x'], subgraph.nodes[dest]['y']
+    ax.scatter([src_x], [src_y], c='orange', s=30, marker='*', label='Source', zorder=10)
+    ax.scatter([dst_x], [dst_y], c='purple', s=30, marker='*', label='Destination', zorder=10)
+    ax.legend()
+    ax.set_title('A* Visited Nodes (green), Route (red)')
+    fname = f"astar_{subgraph.nodes[source]['y']:.5f}.{subgraph.nodes[source]['x']:.5f}.{subgraph.nodes[dest]['y']:.5f}.{subgraph.nodes[dest]['x']:.5f}.png"
+    outpath = os.path.join(outdir, fname)
+    plt.savefig(outpath, dpi=200, bbox_inches='tight')
+    plt.close(fig)
+    return outpath
 
