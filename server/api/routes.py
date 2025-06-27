@@ -71,7 +71,7 @@ async def calculate_route(request: Request, route_request: RouteRequest):
         logger.info(f"Checking for cached route with key: {cache_key}")
         sleep(1)  # Simulate a delay for cache hit
         logger.info(f"Cache hit for route: {source} -> {destination}")
-        return route_cache[cache_key]
+        return route_cache[cache_key]  # Always returns {"results": [...]}
 
     try:
         # Load the full graph from the local file
@@ -94,16 +94,13 @@ async def calculate_route(request: Request, route_request: RouteRequest):
         dijkstra_result = dijkstra_router.find_route(start_node, end_node)
 
         # Format response
-        response = {
-            "astar_route": astar_result,
-            "dijkstra_route": dijkstra_result
-        }
+        response = {"results": [astar_result, dijkstra_result]}
 
         # Store the route in the cache
         route_cache[cache_key] = response
         logger.info(f"Route calculated and cached with key: {cache_key}")
 
-        return {"results": [astar_result, dijkstra_result]}
+        return response
     except Exception as e:
         logger.error(f"Error calculating route: {e}")
         raise HTTPException(status_code=500, detail="Failed to calculate route")

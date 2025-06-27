@@ -151,10 +151,10 @@ const MapComponent: React.FC<MapProps> = ({
   // Source and destination states
   const [source, setSource] = useState<{ lat: number; lng: number } | null>(null);
   const [destination, setDestination] = useState<{ lat: number; lng: number } | null>(null);
-  const [pickCount, setPickCount] = useState(0);
-  const [tempSource, setTempSource] = useState<{ lat: number; lng: number } | null>(null);
-  const [tempDestination, setTempDestination] = useState<{ lat: number; lng: number } | null>(null);
   const [pickedPoints, setPickedPoints] = useState<{ source: { lat: number; lng: number } | null, destination: { lat: number; lng: number } | null }>({ source: null, destination: null });
+  // const [pickCount, setPickCount] = useState(0);
+  // const [tempSource, setTempSource] = useState<{ lat: number; lng: number } | null>(null);
+  // const [tempDestination, setTempDestination] = useState<{ lat: number; lng: number } | null>(null);
 
   useEffect(() => {
     if (selectedRoute?.startPoint && selectedRoute?.endPoint) {
