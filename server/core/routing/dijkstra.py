@@ -72,14 +72,16 @@ class DijkstraRouter:
         
         priority_queue = [(0, start_node)]  # (distance, node)
         visited = set()
+        visited_count = 0  # Counter for nodes that have been expanded
         
         while priority_queue:
             current_distance, current_node = heapq.heappop(priority_queue)
             
             if current_node in visited:
                 continue
-                
+            
             visited.add(current_node)
+            visited_count += 1
             
             if current_node == end_node:
                 break
@@ -125,13 +127,13 @@ class DijkstraRouter:
         # Densify the route using geometry
         densified_route = densify_route_path(self.graph, path)
         route_coords = [[pt['lat'], pt['lng']] for pt in densified_route]
-        logger.info(f"Route found with distance {distance:.2f} km and time {time:.2f} minutes.")
+        logger.info(f"Route found with distance {distance:.2f} km and time {time:.2f} minutes. Visited {visited_count} nodes.")
         elapsed = time_module.perf_counter() - start_time
 
         return {
             "algorithm": "Dijkstra",
             "time": elapsed,
-            "nodes": len(path),
+            "nodes": visited_count,
             "distance": distance,
             "route": route_coords
         }
