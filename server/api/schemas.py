@@ -41,3 +41,5 @@ class AlgorithmResult(BaseModel):
 
 class RouteComparisonResponse(BaseModel):
     results: List[AlgorithmResult]
+
+    

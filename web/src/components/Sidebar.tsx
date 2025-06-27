@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search } from 'lucide-react';
+import { Search, MapPin } from 'lucide-react';
 
 interface Location {
   id: string;
@@ -84,6 +84,22 @@ const Sidebar: React.FC<SidebarProps> = ({
     }
   }, [selectedRoute]);
 
+  // Helper to get display name or coordinates
+  function getLocationDisplay(loc: any, locations: Location[]): string {
+    if (!loc) return '';
+    // If loc is a string, try to find in locations
+    if (typeof loc === 'string') {
+      const found = locations.find(l => l.id === loc);
+      if (found) return found.name;
+      return loc;
+    }
+    // If loc is an object with lat/lng
+    if (typeof loc === 'object' && loc.lat !== undefined && loc.lng !== undefined) {
+      return `(${loc.lat.toFixed(5)}, ${loc.lng.toFixed(5)})`;
+    }
+    return '';
+  }
+
   return (
     <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-200/50 p-6 z-10 max-w-sm w-full" style={{ width: 380 }}>
       <div className="flex items-center gap-3 mb-4">
@@ -100,41 +116,52 @@ const Sidebar: React.FC<SidebarProps> = ({
 
       {!selectedRoute && (
         <form onSubmit={handleSubmit} className="space-y-4 mb-6">
-          <button
-            type="button"
-            className="w-full flex justify-center items-center bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white py-2 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mb-2"
-            onClick={handlePickOnMap}
-            disabled={pickOnMapMode  || isLoading}
-          >
-            {pickOnMapMode  ? "Click on map to select source & destination..." : "Choose on Map"}
-          </button>
-          {pickOnMapMode  && (
-            <div className="text-sm text-green-700 bg-green-50 rounded-lg p-2 mb-2 text-center">
-              Click on the map to select <b>source</b> and then <b>destination</b>.
-            </div>
-          )}
-          <div>
-            <label htmlFor="source" className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+          <div className="flex items-center gap-2 mb-2">
+            <label htmlFor="source" className="block text-xs font-medium text-gray-500 uppercase tracking-wide">
               Source Location
             </label>
-            <select
-              id="source"
-              value={sourceLocation}
-              onChange={(e) => {
-                setSourceLocation(e.target.value);
-                if (onPickOnMapEnd) onPickOnMapEnd(); // Exit map-pick mode   
+            <button
+              type="button"
+              className="ml-auto text-xs px-2 py-1 rounded bg-blue-100 text-blue-700 hover:bg-blue-200 border border-blue-200 transition"
+              onClick={() => {
+                if (navigator.geolocation) {
+                  navigator.geolocation.getCurrentPosition((pos) => {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+                    // Add a temporary location to the locations list and set as source
+                    const tempId = '__current_location__';
+                    if (!locations.find(loc => loc.id === tempId)) {
+                      locations.unshift({ id: tempId, name: 'Current Location', lat, lng });
+                    }
+                    setSourceLocation(tempId);
+                  }, () => {
+                    alert('Unable to fetch current location.');
+                  });
+                } else {
+                  alert('Geolocation is not supported by your browser.');
+                }
               }}
-
-              className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-              required
-              disabled={pickOnMapMode }
+              disabled={pickOnMapMode}
             >
-              <option value="">Select source location</option>
-              {filteredSourceLocations.map(loc => (
-                <option key={loc.id} value={loc.id}>{loc.name}</option>
-              ))}
-            </select>
+              Use Current Location
+            </button>
           </div>
+          <select
+            id="source"
+            value={sourceLocation}
+            onChange={(e) => {
+              setSourceLocation(e.target.value);
+              if (onPickOnMapEnd) onPickOnMapEnd(); // Exit map-pick mode   
+            }}
+            className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+            required
+            disabled={pickOnMapMode }
+          >
+            <option value="">Source</option>
+            {filteredSourceLocations.map(loc => (
+              <option key={loc.id} value={loc.id}>{loc.name}</option>
+            ))}
+          </select>
           <div>
             <label htmlFor="destination" className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
               Destination
@@ -150,7 +177,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               required
               disabled={pickOnMapMode }
             >
-              <option value="">Select destination</option>
+              <option value="">Destination</option>
               {filteredDestinationLocations.map(loc => (
                 <option key={loc.id} value={loc.id}>{loc.name}</option>
               ))}
@@ -176,38 +203,74 @@ const Sidebar: React.FC<SidebarProps> = ({
               </span>
             )}
           </button>
+          <button
+            type="button"
+            className="w-full flex justify-center items-center bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white py-2 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mb-2"
+            onClick={handlePickOnMap}
+            disabled={pickOnMapMode  || isLoading}
+          >
+            <span className="flex items-center font-semibold">
+              <MapPin className="mr-3 h-5 w-5" />
+              {pickOnMapMode  ? "Click on map to select source & destination..." : "Choose on Map"}
+            </span>
+          </button>
+          {pickOnMapMode  && (
+            <div className="text-sm text-green-700 bg-green-50 rounded-lg p-2 mb-2 text-center">
+              Click on the map to select <b>source</b> and then <b>destination</b>.
+            </div>
+          )}
         </form>
       )}
 
       {selectedRoute && (
         <>
           <div className="space-y-4">
-            {selectedRoute.name && (
-              <div
-                className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-indigo-100 transition"
-                onClick={() => {
-                  setSourceLocation('');
-                  setDestinationLocation('');
-                  if (typeof onResetRoute === 'function') {
-                    onResetRoute();
-                  }
-                }}
-                title="Click to search a new route"
-              >
-                <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
-                  <svg className="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Route Name</p>
-                  <p className="font-semibold text-gray-800 truncate">{selectedRoute.name}</p>
+            {/* Route Name Section: Show source to destination in required format */}
+            <div
+              className="flex items-center gap-3 p-3 bg-gray-100 border border-gray-150 rounded-xl cursor-pointer hover:bg-indigo-300 transition"
+              onClick={() => {
+                setSourceLocation('');
+                setDestinationLocation('');
+                if (typeof onResetRoute === 'function') {
+                  onResetRoute();
+                }
+              }}
+              title="Click to search a new route"
+            >
+              <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+                <svg className="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Route Name</p>
+                <div className="font-semibold text-gray-800 truncate whitespace-pre-line flex flex-col items-center">
+                  {/* Source */}
+                  {(() => {
+                    const src = selectedRoute.startPoint;
+                    const dst = selectedRoute.endPoint;
+                    const srcLoc = locations.find(loc =>
+                      Math.abs(loc.lat - src.lat) < 1e-5 && Math.abs(loc.lng - src.lng) < 1e-5
+                    );
+                    const dstLoc = locations.find(loc =>
+                      Math.abs(loc.lat - dst.lat) < 1e-5 && Math.abs(loc.lng - dst.lng) < 1e-5
+                    );
+                    const srcStr = srcLoc ? srcLoc.name : `(${src.lat.toFixed(5)}, ${src.lng.toFixed(5)})`;
+                    const dstStr = dstLoc ? dstLoc.name : `(${dst.lat.toFixed(5)}, ${dst.lng.toFixed(5)})`;
+                    return (
+                      <>
+                        <span className="w-full text-center">{srcStr}</span>
+                        <span className="w-full text-center text-base text-indigo-600 font-bold">to</span>
+                        <span className="w-full text-center">{dstStr}</span>
+                      </>
+                    );
+                  })()}
                 </div>
               </div>
-            )}
+            </div>
             {calculatedDistance && (
-              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+              <div className="flex items-center gap-3 p-3 bg-gray-100 border border-gray-150 rounded-xl">
                 <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                   <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />

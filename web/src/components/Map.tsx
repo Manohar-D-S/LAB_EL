@@ -116,6 +116,9 @@ const defaultLocations: Location[] = [
   { id: "MythicSociety", name: "Mythic Society", lat: 12.972791, lng: 77.586308 },
   { id: "VetCollege", name: "Vet College", lat: 12.907877, lng: 77.592391 },
   { id: "JayadevaHospital", name: "Jayadeva Hospital", lat: 12.917924, lng: 77.599245 },
+  { id: "SparshHospital", name: "Sparsh Hospital", lat: 13.0277298, lng: 77.5428356 },
+  { id: "Narayana Hrudayalaya", name: "Narayana Hrudayalaya", lat: 12.9238254, lng: 77.6508147 },
+  { id: "NIMHANS", name: "NIMHANS", lat: 12.940071, lng: 77.593115 }
 ];
 
 const MapComponent: React.FC<MapProps> = ({
@@ -151,10 +154,10 @@ const MapComponent: React.FC<MapProps> = ({
   // Source and destination states
   const [source, setSource] = useState<{ lat: number; lng: number } | null>(null);
   const [destination, setDestination] = useState<{ lat: number; lng: number } | null>(null);
-  const [pickCount, setPickCount] = useState(0);
-  const [tempSource, setTempSource] = useState<{ lat: number; lng: number } | null>(null);
-  const [tempDestination, setTempDestination] = useState<{ lat: number; lng: number } | null>(null);
   const [pickedPoints, setPickedPoints] = useState<{ source: { lat: number; lng: number } | null, destination: { lat: number; lng: number } | null }>({ source: null, destination: null });
+  // const [pickCount, setPickCount] = useState(0);
+  // const [tempSource, setTempSource] = useState<{ lat: number; lng: number } | null>(null);
+  // const [tempDestination, setTempDestination] = useState<{ lat: number; lng: number } | null>(null);
 
   useEffect(() => {
     if (selectedRoute?.startPoint && selectedRoute?.endPoint) {

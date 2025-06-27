@@ -136,7 +136,8 @@ class DijkstraRouter:
             "time": elapsed,
             "nodes": visited_count,
             "distance": distance,
-            "route": route_coords
+            "route": route_coords,
+            "visited_nodes": list(visited)
         }
     
     def _calculate_route_metrics(self, path: List[int]) -> Tuple[float, float]:

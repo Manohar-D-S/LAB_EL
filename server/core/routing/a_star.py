@@ -60,11 +60,13 @@ class AmbulanceRouter:
         
         visited_count = 0  # Counter for nodes that have been expanded
         path = []  # Initialize path
+        visited_nodes = set()
         
         while open_set:
             _, current = heapq.heappop(open_set)
             open_set_hash.remove(current)
             visited_count += 1
+            visited_nodes.add(current)
             
             if current == end_node:
                 # Found the goal - reconstruct path and break
@@ -138,7 +140,8 @@ class AmbulanceRouter:
             "densification_time": densification_time,
             "nodes": visited_count,
             "distance": distance,
-            "route": route_coords
+            "route": route_coords,
+            "visited_nodes": list(visited_nodes)
         }
     
     def _reconstruct_path(self, came_from: Dict[int, int], current: int) -> List[int]:
