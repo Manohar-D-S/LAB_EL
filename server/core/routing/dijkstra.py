@@ -5,6 +5,7 @@ from typing import List, Dict, Any, Tuple, Optional
 import osmnx as ox
 import time as time_module
 from geopy.distance import geodesic
+from core.routing.graph_builder import densify_route_path
 
 # Check if CuPy is available
 try:
@@ -121,8 +122,9 @@ class DijkstraRouter:
             }
         
         distance, time = self._calculate_route_metrics(path)
-        nodes = self._get_path_coordinates(path)
-        
+        # Densify the route using geometry
+        densified_route = densify_route_path(self.graph, path)
+        route_coords = [[pt['lat'], pt['lng']] for pt in densified_route]
         logger.info(f"Route found with distance {distance:.2f} km and time {time:.2f} minutes.")
         elapsed = time_module.perf_counter() - start_time
 
@@ -131,7 +133,7 @@ class DijkstraRouter:
             "time": elapsed,
             "nodes": len(path),
             "distance": distance,
-            "route": nodes
+            "route": route_coords
         }
     
     def _calculate_route_metrics(self, path: List[int]) -> Tuple[float, float]:

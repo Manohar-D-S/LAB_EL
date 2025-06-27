@@ -6,7 +6,7 @@ import time as time_module
 from typing import List, Dict, Any, Tuple
 from fastapi import HTTPException
 from core.metrics import calculate_route_metrics
-import osmnx as ox
+from core.routing.graph_builder import densify_route_path
 
 logger = logging.getLogger(__name__)
 
@@ -62,8 +62,9 @@ class AmbulanceRouter:
                 path = self._reconstruct_path(came_from, current)
                 distance, time = self._calculate_route_metrics(path)
                 
-                # Get coordinate nodes for visualization
-                nodes = self._get_path_coordinates(path)
+                # Densify the route using geometry
+                densified_route = densify_route_path(self.graph, path)
+                route_coords = [[pt['lat'], pt['lng']] for pt in densified_route]
                 
                 logger.info(f"Route found: {len(path)} nodes, {distance:.2f} km, {time:.2f} mins.")
                 elapsed = time_module.perf_counter() - start_time
@@ -72,7 +73,7 @@ class AmbulanceRouter:
                     "time": elapsed,
                     "nodes": len(path),
                     "distance": distance,
-                    "route": nodes
+                    "route": route_coords
                 }
             
             # Explore neighbors

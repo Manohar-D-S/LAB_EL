@@ -193,3 +193,31 @@ def extract_route_subgraph(G: nx.MultiDiGraph, source: tuple, dest: tuple, use_g
         logger.info(f"Using CPU for subgraph extraction: {reason}")
         return extract_subgraph(G, source, dest)
 
+def densify_route_path(G: nx.MultiDiGraph, node_path: list[int]) -> list[dict]:
+    """
+    Given a graph and a list of node IDs representing a route,
+    return a list of {'lat': float, 'lng': float} points that follow the road geometry,
+    including all intermediate points from edge geometries.
+    """
+    if not node_path or len(node_path) < 2:
+        return []
+
+    points = []
+    for i in range(len(node_path) - 1):
+        u, v = node_path[i], node_path[i + 1]
+        edge_data = min(G.get_edge_data(u, v).values(), key=lambda x: x.get('length', 0))
+        # If geometry exists, use all its points
+        if 'geometry' in edge_data:
+            coords = list(edge_data['geometry'].coords)
+            # Avoid duplicate: skip first point if not the first edge
+            if i > 0:
+                coords = coords[1:]
+            for lng, lat in coords:
+                points.append({'lat': lat, 'lng': lng})
+        else:
+            # No geometry, just use node coordinates
+            if i == 0:
+                points.append({'lat': G.nodes[u]['y'], 'lng': G.nodes[u]['x']})
+            points.append({'lat': G.nodes[v]['y'], 'lng': G.nodes[v]['x']})
+    return points
+
