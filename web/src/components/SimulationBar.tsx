@@ -24,8 +24,8 @@ const SimulationBar: React.FC<SimulationBarProps> = ({
 }) => {
   return (
     <div
-      className="fixed bottom-6 left-6 z-30"
-      style={{ minWidth: 420, maxWidth: 600, width: '38vw', pointerEvents: 'auto' }}
+      className="fixed left-auto !right-6 z-30"
+      style={{ top: 'calc(50% + 240px)', right: '1.5rem', minWidth: 420, maxWidth: 600, width: '38vw', pointerEvents: 'auto' }}
     >
       <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-200/50 px-8 py-5 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex flex-col gap-1 min-w-[160px]">

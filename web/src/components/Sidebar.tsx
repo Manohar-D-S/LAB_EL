@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search } from 'lucide-react';
+import { Search, MapPin } from 'lucide-react';
 
 interface Location {
   id: string;
@@ -116,19 +116,6 @@ const Sidebar: React.FC<SidebarProps> = ({
 
       {!selectedRoute && (
         <form onSubmit={handleSubmit} className="space-y-4 mb-6">
-          <button
-            type="button"
-            className="w-full flex justify-center items-center bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white py-2 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mb-2"
-            onClick={handlePickOnMap}
-            disabled={pickOnMapMode  || isLoading}
-          >
-            {pickOnMapMode  ? "Click on map to select source & destination..." : "Choose on Map"}
-          </button>
-          {pickOnMapMode  && (
-            <div className="text-sm text-green-700 bg-green-50 rounded-lg p-2 mb-2 text-center">
-              Click on the map to select <b>source</b> and then <b>destination</b>.
-            </div>
-          )}
           <div className="flex items-center gap-2 mb-2">
             <label htmlFor="source" className="block text-xs font-medium text-gray-500 uppercase tracking-wide">
               Source Location
@@ -170,7 +157,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             required
             disabled={pickOnMapMode }
           >
-            <option value="">Select source location</option>
+            <option value="">Source</option>
             {filteredSourceLocations.map(loc => (
               <option key={loc.id} value={loc.id}>{loc.name}</option>
             ))}
@@ -190,7 +177,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               required
               disabled={pickOnMapMode }
             >
-              <option value="">Select destination</option>
+              <option value="">Destination</option>
               {filteredDestinationLocations.map(loc => (
                 <option key={loc.id} value={loc.id}>{loc.name}</option>
               ))}
@@ -216,6 +203,22 @@ const Sidebar: React.FC<SidebarProps> = ({
               </span>
             )}
           </button>
+          <button
+            type="button"
+            className="w-full flex justify-center items-center bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white py-2 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mb-2"
+            onClick={handlePickOnMap}
+            disabled={pickOnMapMode  || isLoading}
+          >
+            <span className="flex items-center font-semibold">
+              <MapPin className="mr-3 h-5 w-5" />
+              {pickOnMapMode  ? "Click on map to select source & destination..." : "Choose on Map"}
+            </span>
+          </button>
+          {pickOnMapMode  && (
+            <div className="text-sm text-green-700 bg-green-50 rounded-lg p-2 mb-2 text-center">
+              Click on the map to select <b>source</b> and then <b>destination</b>.
+            </div>
+          )}
         </form>
       )}
 
