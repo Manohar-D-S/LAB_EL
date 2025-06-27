@@ -113,28 +113,52 @@ const Sidebar: React.FC<SidebarProps> = ({
               Click on the map to select <b>source</b> and then <b>destination</b>.
             </div>
           )}
-          <div>
-            <label htmlFor="source" className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+          <div className="flex items-center gap-2 mb-2">
+            <label htmlFor="source" className="block text-xs font-medium text-gray-500 uppercase tracking-wide">
               Source Location
             </label>
-            <select
-              id="source"
-              value={sourceLocation}
-              onChange={(e) => {
-                setSourceLocation(e.target.value);
-                if (onPickOnMapEnd) onPickOnMapEnd(); // Exit map-pick mode   
+            <button
+              type="button"
+              className="ml-auto text-xs px-2 py-1 rounded bg-blue-100 text-blue-700 hover:bg-blue-200 border border-blue-200 transition"
+              onClick={() => {
+                if (navigator.geolocation) {
+                  navigator.geolocation.getCurrentPosition((pos) => {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+                    // Add a temporary location to the locations list and set as source
+                    const tempId = '__current_location__';
+                    if (!locations.find(loc => loc.id === tempId)) {
+                      locations.unshift({ id: tempId, name: 'Current Location', lat, lng });
+                    }
+                    setSourceLocation(tempId);
+                  }, () => {
+                    alert('Unable to fetch current location.');
+                  });
+                } else {
+                  alert('Geolocation is not supported by your browser.');
+                }
               }}
-
-              className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-              required
-              disabled={pickOnMapMode }
+              disabled={pickOnMapMode}
             >
-              <option value="">Select source location</option>
-              {filteredSourceLocations.map(loc => (
-                <option key={loc.id} value={loc.id}>{loc.name}</option>
-              ))}
-            </select>
+              Use Current Location
+            </button>
           </div>
+          <select
+            id="source"
+            value={sourceLocation}
+            onChange={(e) => {
+              setSourceLocation(e.target.value);
+              if (onPickOnMapEnd) onPickOnMapEnd(); // Exit map-pick mode   
+            }}
+            className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+            required
+            disabled={pickOnMapMode }
+          >
+            <option value="">Select source location</option>
+            {filteredSourceLocations.map(loc => (
+              <option key={loc.id} value={loc.id}>{loc.name}</option>
+            ))}
+          </select>
           <div>
             <label htmlFor="destination" className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
               Destination
