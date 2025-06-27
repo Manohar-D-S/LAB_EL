@@ -259,14 +259,8 @@ const MapComponent: React.FC<MapProps> = ({
   }, [ambulancePosition, trafficSignals]);
 
   useEffect(() => {
-    if (selectedRoute?.startPoint && selectedRoute?.endPoint) {
-      const distance = calculateDistance(
-        selectedRoute.startPoint.lat,
-        selectedRoute.startPoint.lng,
-        selectedRoute.endPoint.lat,
-        selectedRoute.endPoint.lng
-      );
-      setCalculatedDistance(distance);
+    if (selectedRoute?.distance && selectedRoute?.distance > 0) {
+      setCalculatedDistance(selectedRoute.distance);
     } else {
       setCalculatedDistance(null);
     }
