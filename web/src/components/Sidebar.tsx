@@ -20,7 +20,7 @@ interface SidebarProps {
   clearedSignalCount?: number;
   locations: Location[];
   selectedRoute?: any;
-  calculatedDistance?: number;
+calculatedDistance?: number;
   signalsOnRoute?: any[];
   greenSignalId?: string | null;
   isSimulationActive?: boolean;

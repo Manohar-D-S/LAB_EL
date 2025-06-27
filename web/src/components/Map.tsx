@@ -540,11 +540,14 @@ const MapComponent: React.FC<MapProps> = ({
       }
       return;
     }
+    // Block normal click if a route is already selected
+    if (selectedRoute) {
+      return;
+    }
     if (!source) {
       setSource(point);
     } else if (!destination) {
       setDestination(point);
-      // Optionally call backend here:
       if (onRouteSelect) onRouteSelect(source, point);
     } else {
       setSource(point);
@@ -576,6 +579,14 @@ const MapComponent: React.FC<MapProps> = ({
       setPickedPoints({ source: null, destination: null });
     }
   }, [pickedPoints.source, pickedPoints.destination]);
+
+  // Reset source/destination when a route is selected
+  useEffect(() => {
+    if (selectedRoute) {
+      setSource(null);
+      setDestination(null);
+    }
+  }, [selectedRoute]);
 
   // Render
   return (
