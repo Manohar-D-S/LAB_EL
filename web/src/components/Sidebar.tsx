@@ -224,7 +224,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           <div className="space-y-4">
             {/* Route Name Section: Show source to destination in required format */}
             <div
-              className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-indigo-100 transition"
+              className="flex items-center gap-3 p-3 bg-gray-100 border border-gray-150 rounded-xl cursor-pointer hover:bg-indigo-300 transition"
               onClick={() => {
                 setSourceLocation('');
                 setDestinationLocation('');
@@ -241,14 +241,12 @@ const Sidebar: React.FC<SidebarProps> = ({
                 </svg>
               </div>
               <div className="flex-1">
-                <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Route</p>
-                <p className="font-semibold text-gray-800 truncate whitespace-pre-line">
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Route Name</p>
+                <div className="font-semibold text-gray-800 truncate whitespace-pre-line flex flex-col items-center">
                   {/* Source */}
                   {(() => {
-                    // Try to find source and destination from selectedRoute
                     const src = selectedRoute.startPoint;
                     const dst = selectedRoute.endPoint;
-                    // Try to match with locations list
                     const srcLoc = locations.find(loc =>
                       Math.abs(loc.lat - src.lat) < 1e-5 && Math.abs(loc.lng - src.lng) < 1e-5
                     );
@@ -257,13 +255,19 @@ const Sidebar: React.FC<SidebarProps> = ({
                     );
                     const srcStr = srcLoc ? srcLoc.name : `(${src.lat.toFixed(5)}, ${src.lng.toFixed(5)})`;
                     const dstStr = dstLoc ? dstLoc.name : `(${dst.lat.toFixed(5)}, ${dst.lng.toFixed(5)})`;
-                    return `${srcStr}\nto\n${dstStr}`;
+                    return (
+                      <>
+                        <span className="w-full text-center">{srcStr}</span>
+                        <span className="w-full text-center text-base text-indigo-600 font-bold">to</span>
+                        <span className="w-full text-center">{dstStr}</span>
+                      </>
+                    );
                   })()}
-                </p>
+                </div>
               </div>
             </div>
             {calculatedDistance && (
-              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+              <div className="flex items-center gap-3 p-3 bg-gray-100 border border-gray-150 rounded-xl">
                 <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                   <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
