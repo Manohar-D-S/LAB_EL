@@ -4,3 +4,6 @@ server/server_logs.log
 server/server_logs.log
 server/cache
 server/.env
+server/data/*.png
+server/data/*.jpg
+server/data/*.jpeg
