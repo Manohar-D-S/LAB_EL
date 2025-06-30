@@ -13,6 +13,7 @@ interface UploadedVideo {
 
 const cameraAngles = ['north', 'south', 'east', 'west'] as const;
 const maxVideos = cameraAngles.length;
+const navigate = useNavigate();
 
 const Dashboard = () => {
   const [uploadedVideos, setUploadedVideos] = useState<UploadedVideo[]>([]);
@@ -21,23 +22,45 @@ const Dashboard = () => {
   const [isAnalysing, setIsAnalysing] = useState(false);
   const [analysisComplete, setAnalysisComplete] = useState(false);
   const [yoloResult, setYoloResult] = useState<any>(null);
-  const navigate = useNavigate();
+  const [shouldCache, setShouldCache] = useState(false);
 
-  // Load cached videos from localStorage on mount
+  // Load cached videos and analysis state from localStorage on mount
   useEffect(() => {
     const cached = localStorage.getItem('uploadedVideos');
+    const cachedAnalysis = localStorage.getItem('analysisComplete');
+    const cachedYolo = localStorage.getItem('yoloResult');
     if (cached) {
       const parsed: UploadedVideo[] = JSON.parse(cached);
       setUploadedVideos(parsed);
       setIsUploadComplete(parsed.length === maxVideos && parsed.every(v => v.file));
+      if (cachedAnalysis === 'true' && cachedYolo) {
+        setAnalysisComplete(true);
+        setShouldCache(true);
+        setYoloResult(JSON.parse(cachedYolo));
+      }
     }
   }, []);
 
-  // Cache videos in localStorage on change
+  // Cache videos and analysis state in localStorage only if analysis is complete
   useEffect(() => {
-    localStorage.setItem('uploadedVideos', JSON.stringify(uploadedVideos));
+    if (shouldCache && analysisComplete) {
+      localStorage.setItem('uploadedVideos', JSON.stringify(uploadedVideos));
+      localStorage.setItem('analysisComplete', 'true');
+      if (yoloResult) localStorage.setItem('yoloResult', JSON.stringify(yoloResult));
+    }
     setIsUploadComplete(uploadedVideos.length === maxVideos && uploadedVideos.every(v => v.file));
-  }, [uploadedVideos]);
+  }, [uploadedVideos, analysisComplete, shouldCache, yoloResult]);
+
+  // Remove cache if not analysed or videos are removed
+  useEffect(() => {
+    if (!analysisComplete || uploadedVideos.length !== maxVideos) {
+      localStorage.removeItem('uploadedVideos');
+      localStorage.removeItem('analysisComplete');
+      localStorage.removeItem('yoloResult');
+      setShouldCache(false);
+      setYoloResult(null);
+    }
+  }, [analysisComplete, uploadedVideos]);
 
   // Handle file upload for a specific direction
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>, angle: typeof cameraAngles[number]) => {
@@ -63,6 +86,9 @@ const Dashboard = () => {
   // Remove video for a direction
   const removeVideo = (angle: typeof cameraAngles[number]) => {
     setUploadedVideos(prev => prev.filter(v => v.cameraAngle !== angle));
+    setAnalysisComplete(false);
+    setShouldCache(false);
+    setYoloResult(null);
   };
 
   // Reset all uploads
@@ -70,7 +96,11 @@ const Dashboard = () => {
     setUploadedVideos([]);
     setIsUploadComplete(false);
     setAnalysisComplete(false);
+    setShouldCache(false);
+    setYoloResult(null);
     localStorage.removeItem('uploadedVideos');
+    localStorage.removeItem('analysisComplete');
+    localStorage.removeItem('yoloResult');
   };
 
   // Start analysis (simulate navigation with uploaded videos)
@@ -80,18 +110,26 @@ const Dashboard = () => {
     }
   };
 
+  // Simulate YOLOv8 backend call (continuous analysis if videos are present and not analysing)
+  useEffect(() => {
+    if (
+      uploadedVideos.length === maxVideos &&
+      uploadedVideos.every(v => v.file) &&
+      !isAnalysing &&
+      !analysisComplete
+    ) {
+      runYoloAnalysis();
+    }
+    // eslint-disable-next-line
+  }, [uploadedVideos]);
+
   // Simulate YOLOv8 backend call
   const runYoloAnalysis = async () => {
     setIsAnalysing(true);
     setAnalysisComplete(false);
     setYoloResult(null);
-    // Simulate API call delay
     try {
-      // Replace this with actual API call to your YOLO backend
-      // Example: const response = await fetch('/api/analyze', { ... });
-      // const result = await response.json();
       await new Promise(res => setTimeout(res, 2000));
-      // Simulated YOLO result
       const result = {
         phases: ['NS', 'EW'],
         phaseDirections: { NS: ['north', 'south'], EW: ['east', 'west'] },
@@ -104,9 +142,12 @@ const Dashboard = () => {
       };
       setYoloResult(result);
       setAnalysisComplete(true);
+      setShouldCache(true);
+      localStorage.setItem('yoloResult', JSON.stringify(result));
     } catch (err) {
-      // Handle error
       setAnalysisComplete(false);
+      setShouldCache(false);
+      setYoloResult(null);
     }
     setIsAnalysing(false);
   };
@@ -313,11 +354,11 @@ const Dashboard = () => {
             <button
               onClick={runYoloAnalysis}
               className={`px-6 py-3 rounded-lg flex items-center space-x-2 text-lg font-semibold transition-colors ${
-                isUploadComplete && !isAnalysing && !analysisComplete
+                isUploadComplete && !isAnalysing
                   ? 'bg-green-600 hover:bg-green-700 text-white'
                   : 'bg-gray-600 text-gray-400 cursor-not-allowed'
               }`}
-              disabled={!isUploadComplete || isAnalysing || analysisComplete}
+              disabled={!isUploadComplete || isAnalysing}
             >
               {isAnalysing ? (
                 <>
