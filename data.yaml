@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 2
+names: ['ambulance', 'siren']
+
+roboflow:
+  workspace: yoloambulance
+  project: ambulance-detection-yfiml-yqesl
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/yoloambulance/ambulance-detection-yfiml-yqesl/dataset/1
