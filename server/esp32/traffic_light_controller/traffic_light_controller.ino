@@ -27,6 +27,12 @@ const unsigned long greenDuration = 5000; // 5 sec green
 const unsigned long yellowDuration = 2000; // 2 sec yellow
 char lastPrintedDirection = '\0';
 
+// === CORS helper ===
+void sendCORSHeaders() {
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.sendHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  server.sendHeader("Access-Control-Allow-Headers", "*");
+}
 
 // === Setup ===
 void setup() {
@@ -147,7 +153,6 @@ void setGreen(char dir) {
   }
 }
 
-
 // === Set yellow ===
 void setYellow(char dir) {
   switch (dir) {
@@ -168,6 +173,8 @@ void setYellow(char dir) {
 
 // === Handle /proximity (setGreen) ===
 void handleProximity() {
+  sendCORSHeaders(); // Add CORS headers
+
   DynamicJsonDocument doc(512);
   DeserializationError error = deserializeJson(doc, server.arg("plain"));
 
@@ -189,6 +196,8 @@ void handleProximity() {
 
 // === Handle /setNormal ===
 void handleSetNormal() {
+  sendCORSHeaders(); // Add CORS headers
+
   overrideActive = false;
   Serial.println("Manual setNormal → Back to normal cycle");
   server.send(200, "application/json", "{\"status\":\"normal cycle\"}");
@@ -196,8 +205,6 @@ void handleSetNormal() {
 
 // === CORS support ===
 void handleOptions() {
-  server.sendHeader("Access-Control-Allow-Origin", "*");
-  server.sendHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  server.sendHeader("Access-Control-Allow-Headers", "*");
+  sendCORSHeaders();
   server.send(204);
 }
