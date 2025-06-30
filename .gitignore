@@ -1,6 +1,0 @@
-server/.venv/
-web/node_modules
-server/server_logs.log
-server/server_logs.log
-server/cache
-server/.env
