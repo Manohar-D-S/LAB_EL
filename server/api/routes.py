@@ -145,14 +145,14 @@ async def health_check():
     logger.info("Health check endpoint was called.")
     return {"status": "healthy", "service": "ambulance-routing"}
 
-# @router.post("/proximity")
-# async def handle_proximity(request: Request):
-#     data = await request.json()
-#     try:
-#         # Access iot_manager from app state
-#         iot_manager = request.app.state.iot_manager
-#         iot_manager.handle_proximity(data)
-#         return {"status": "received", "data": data}
-#     except Exception as e:
-#         logger.error(f"Error handling proximity data: {e}")
-#         return {"status": "error", "message": str(e)}
+@router.post("/proximity")
+async def handle_proximity(request: Request):
+    data = await request.json()
+    try:
+        # Access iot_manager from app state
+        iot_manager = request.app.state.iot_manager
+        iot_manager.handle_proximity(data)
+        return {"status": "received", "data": data}
+    except Exception as e:
+        logger.error(f"Error handling proximity data: {e}")
+        return {"status": "error", "message": str(e)}

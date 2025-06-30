@@ -197,12 +197,12 @@ const RouteDetails: React.FC<RouteDetailsProps> = ({
     ? (actualDistanceCovered / totalDistanceRef.current) * 100
     : 0;
 
-  console.log({
-    sliderValue,
-    actualDistanceCovered,
-    percentCovered,
-    totalDistance: totalDistanceRef.current
-  });
+  // console.log({
+  //   sliderValue,
+  //   actualDistanceCovered,
+  //   percentCovered,
+  //   totalDistance: totalDistanceRef.current
+  // });
 
   return (
     <div

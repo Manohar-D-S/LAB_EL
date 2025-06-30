@@ -10,6 +10,14 @@ import Sidebar from './Sidebar';
 import { AlgorithmResult } from '../types/route';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import { notifyEsp32Proximity } from '../services/routeApi';
+
+const esp32Ip = "192.168.43.53"; // Your ESP32 IP
+const TEST_SIGNAL_ID = "1"; // Only test with this signal
+const TEST_DIRECTION = "N"; // Use the direction you want to test
+
+const PROXIMITY_THRESHOLD = 200; // meters → when to set green
+const EXIT_THRESHOLD = 150;      // meters → when to reset normal
 
 const DefaultIcon = L.icon({
   iconUrl: icon,
@@ -144,20 +152,24 @@ const MapComponent: React.FC<MapProps> = ({
   const [signalsOnRoute, setSignalsOnRoute] = useState<string[]>([]);
   const [routeError, setRouteError] = useState<string | null>(null);
   const [calculatedRoute, setCalculatedRoute] = useState<[number, number][]>([]);
+  const [isSignalGreen, setIsSignalGreen] = useState(false);
 
 
   // Track which signal cluster is currently green/blinking
   const [greenSignalId, setGreenSignalId] = useState<string | null>(null);
-  const loggedSignalRef = useRef<string | null>(null);
+  const gedSignalRef = useRef<string | null>(null);
   const [clearedSignalIds, setClearedSignalIds] = useState<Set<string>>(new Set());
 
   // Source and destination states
   const [source, setSource] = useState<{ lat: number; lng: number } | null>(null);
   const [destination, setDestination] = useState<{ lat: number; lng: number } | null>(null);
   const [pickedPoints, setPickedPoints] = useState<{ source: { lat: number; lng: number } | null, destination: { lat: number; lng: number } | null }>({ source: null, destination: null });
-  // const [pickCount, setPickCount] = useState(0);
-  // const [tempSource, setTempSource] = useState<{ lat: number; lng: number } | null>(null);
-  // const [tempDestination, setTempDestination] = useState<{ lat: number; lng: number } | null>(null);
+
+  // Add this state near the top, after greenSignalId
+  const [lastNotifiedGreenSignalId, setLastNotifiedGreenSignalId] = useState<string | null>(null);
+
+  // Add this state near the top, after lastNotifiedGreenSignalId
+  const [lastNotifiedSetNormalSignalId, setLastNotifiedSetNormalSignalId] = useState<string | null>(null);
 
   useEffect(() => {
     if (selectedRoute?.startPoint && selectedRoute?.endPoint) {
@@ -214,53 +226,31 @@ const MapComponent: React.FC<MapProps> = ({
     }
   }, [selectedRoute]);
 
-  // Helper function to send proximity log to Python server
-  function sendProximityLog(signal: any, distance: number, routeDistance?: number) {
-    const payload = {
-      signalId: signal.id || signal.name || 'unknown',
-      name: signal.name || 'Unnamed Signal',
-      lat: signal.position[0],
-      lng: signal.position[1],
-      distance: Math.round(distance),
-      routeDistance: routeDistance ? Math.round(routeDistance) : undefined,
-      timestamp: new Date().toISOString(),
-      ambulancePosition: ambulancePosition ? {
-        lat: ambulancePosition.lat,
-        lng: ambulancePosition.lng
-      } : null
-    };
-
-    // Send to both endpoints for compatibility
-    fetch('http://localhost:8000/iot/proximity', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    }).catch(err => console.error('Failed to send IoT proximity log:', err));
-
-    fetch('http://localhost:8000/proximity', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    }).catch(err => console.error('Failed to send proximity log:', err));
-  }
-
+  // Only notify ESP32 for the test signal
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (ambulancePosition) {
-        trafficSignals.forEach((signal) => {
-          const distance = L.latLng(ambulancePosition.lat, ambulancePosition.lng).distanceTo(
-            L.latLng(signal.position[0], signal.position[1])
-          );
-          if (distance <= 150) {
-            sendProximityLog(signal, distance);
-          }
-        });
-      }
-    }, 4500);
+    if (!ambulancePosition) return;
 
-    return () => clearInterval(interval);
+    // Only use the test signal
+    const testSignal = trafficSignals.find(s => s.id === TEST_SIGNAL_ID);
+    if (!testSignal) return;
+
+    // Calculate distance from ambulance to test signal
+    const distance = L.latLng(ambulancePosition.lat, ambulancePosition.lng)
+      .distanceTo(L.latLng(testSignal.position[0], testSignal.position[1]));
+
+    // Only notify if ambulance is within 150m
+    if (distance <= 150) {
+      notifyEsp32Proximity(
+        testSignal.name,
+        esp32Ip,
+        TEST_DIRECTION
+      ).catch((err: unknown) => {
+        console.error('ESP32 notification failed:', err);
+      });
+    }
   }, [ambulancePosition, trafficSignals]);
 
+    
   useEffect(() => {
     if (selectedRoute?.distance && selectedRoute?.distance > 0) {
       setCalculatedDistance(selectedRoute.distance);
@@ -414,7 +404,7 @@ const MapComponent: React.FC<MapProps> = ({
     return filtered;
   }
 
-  // 4. Updated isSignalOnRoute function with better logging
+  // 4. Updated isSignalOnRoute function with better ging
   const isSignalOnRoute = (signalPosition: [number, number], route: RoutePoint[]): boolean => {
     if (!route || route.length < 2) {
       return false;
@@ -468,7 +458,7 @@ const MapComponent: React.FC<MapProps> = ({
     }
   }
 
-  // Proximity logic: green breathing effect and log
+  // Proximity ic: green breathing effect and 
   // Define filteredClusters at the top level of the component
   const filteredClusters = React.useMemo(
     () =>
@@ -496,7 +486,7 @@ const MapComponent: React.FC<MapProps> = ({
       signalsOnRoute.length === 0
     ) {
       setGreenSignalId(null);
-      loggedSignalRef.current = null;
+      gedSignalRef.current = null;
       return;
     }
 
@@ -516,13 +506,104 @@ const MapComponent: React.FC<MapProps> = ({
     if (closestCluster && closestDistance <= 200) {
       if (greenSignalId !== closestCluster.id) {
         setGreenSignalId(closestCluster.id);
-        loggedSignalRef.current = closestCluster.id;
+        gedSignalRef.current = closestCluster.id;
       }
     } else if ((!closestCluster || closestDistance > 250) && greenSignalId) {
       setGreenSignalId(null);
-      loggedSignalRef.current = null;
+      gedSignalRef.current = null;
     }
   }, [ambulancePosition, selectedRoute, filteredClusters, signalsOnRoute]);
+
+  // --- ESP32 Direction Notification ic (debounced, with error handling and debug ) ---
+  const [recentAmbulancePositions, setRecentAmbulancePositions] = useState<{lat: number, lng: number}[]>([]);
+  const esp32Ip = '192.168.43.53'; // Your ESP32 IP
+
+  // Track last 5 ambulance positions for direction calculation
+  useEffect(() => {
+    if (ambulancePosition) {
+      setRecentAmbulancePositions(prev => {
+        const updated = [...prev, ambulancePosition];
+        return updated.length > 5 ? updated.slice(updated.length - 5) : updated;
+      });
+    }
+  }, [ambulancePosition]);
+
+  // When the signal turns green, log and send proximity instantly (like backend)
+  useEffect(() => {
+    if (!greenSignalId || !ambulancePosition) return;
+    if (greenSignalId === lastNotifiedGreenSignalId) return; // Only notify/log if changed
+
+    const greenCluster = filteredClusters.find(c => c.id === greenSignalId);
+    if (!greenCluster) return;
+
+    // Calculate distance from ambulance to green signal
+    const distance = L.latLng(ambulancePosition.lat, ambulancePosition.lng)
+      .distanceTo(L.latLng(greenCluster.position[0], greenCluster.position[1]));
+
+    // Log to browser console (like backend print/log)
+    console.log(
+      `[SIM] Signal turned GREEN: ${greenCluster.name} (ID: ${greenCluster.id})`,
+      'Ambulance:', ambulancePosition,
+      'Distance:', Math.round(distance) + 'm'
+    );
+
+    // --- ESP32 Direction Notification (existing logic) ---
+    let direction: 'N' | 'E' | 'S' | 'W' = 'N';
+    if (recentAmbulancePositions.length >= 2) {
+      direction = bearingToDirection(
+        calculateBearing(
+          recentAmbulancePositions[recentAmbulancePositions.length - 2].lat,
+          recentAmbulancePositions[recentAmbulancePositions.length - 2].lng,
+          recentAmbulancePositions[recentAmbulancePositions.length - 1].lat,
+          recentAmbulancePositions[recentAmbulancePositions.length - 1].lng
+        )
+      );
+    }
+
+    console.debug(
+      '[ESP32 Notify - Signal Green]',
+      'Ambulance:', ambulancePosition,
+      'Junction:', greenCluster.name,
+      'Direction:', direction
+    );
+
+    notifyEsp32Proximity(
+      greenCluster.name,
+      esp32Ip,
+      direction
+    ).catch((err: unknown) => {
+      console.error('ESP32 notification failed:', err);
+    });
+
+    setLastNotifiedGreenSignalId(greenSignalId); // Update after notifying/logging
+
+  }, [greenSignalId, ambulancePosition, filteredClusters, recentAmbulancePositions, lastNotifiedGreenSignalId]);
+
+  // When the signal turns normal, log and send setNormal instantly (like backend)
+  useEffect(() => {
+    // If greenSignalId just became null, find the last cluster that was green
+    if (greenSignalId !== null) return;
+    if (!lastNotifiedGreenSignalId) return;
+    if (lastNotifiedSetNormalSignalId === lastNotifiedGreenSignalId) return; // Only notify/log if changed
+
+    const lastGreenCluster = filteredClusters.find(c => c.id === lastNotifiedGreenSignalId);
+    if (!lastGreenCluster) return;
+
+    // Log to browser console
+    console.log(
+      `[SIM] Signal set to NORMAL: ${lastGreenCluster.name} (ID: ${lastGreenCluster.id})`
+    );
+
+    notifyEsp32SetNormal(
+      lastGreenCluster.name,
+      esp32Ip
+    ).catch((err: unknown) => {
+      console.error('ESP32 setNormal notification failed:', err);
+    });
+
+    setLastNotifiedSetNormalSignalId(lastNotifiedGreenSignalId); // Update after notifying/logging
+
+  }, [greenSignalId, filteredClusters, lastNotifiedGreenSignalId, lastNotifiedSetNormalSignalId]);
 
   // Click handler component
   function ClickHandler({ onClick }: { onClick: (latlng: L.LatLng) => void }) {
@@ -590,6 +671,67 @@ const MapComponent: React.FC<MapProps> = ({
       setDestination(null);
     }
   }, [selectedRoute]);
+
+  // Add this helper for /setNormal (place near other helpers)
+  async function notifyEsp32SetNormal(jn_name: string, esp32_ip: string) {
+    await fetch(`http://${esp32_ip}/setNormal`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ jn_name })
+    });
+  }
+
+  // Clean proximity side-effect for ESP32 test signal
+  useEffect(() => {
+    if (!ambulancePosition) return;
+
+    const signal = trafficSignals.find(s => s.id === TEST_SIGNAL_ID);
+    if (!signal) return;
+
+    const distance = L.latLng(ambulancePosition.lat, ambulancePosition.lng)
+      .distanceTo(L.latLng(signal.position[0], signal.position[1]));
+
+    // Enter proximity zone → turn green if not already green
+    if (distance <= PROXIMITY_THRESHOLD && !isSignalGreen) {
+      console.log('Ambulance entered zone → setGreen');
+      notifyEsp32Proximity(signal.name, esp32Ip, TEST_DIRECTION);
+      setIsSignalGreen(true);
+    }
+
+    // Exit proximity zone → reset normal if it was green
+    if (distance > EXIT_THRESHOLD && isSignalGreen) {
+      console.log('Ambulance exited zone → setNormal');
+      notifyEsp32SetNormal(signal.name, esp32Ip);
+      setIsSignalGreen(false);
+    }
+  }, [ambulancePosition, trafficSignals, isSignalGreen]);
+
+  // --- ESP32 proximity state machine: keep this logic isolated ---
+  // Only listens to ambulancePosition, trafficSignals, isSignalGreen
+  useEffect(() => {
+    if (!ambulancePosition) return;
+
+    const signal = trafficSignals.find(s => s.id === TEST_SIGNAL_ID);
+    if (!signal) return;
+
+    const distance = L.latLng(ambulancePosition.lat, ambulancePosition.lng)
+      .distanceTo(L.latLng(signal.position[0], signal.position[1]));
+
+    // Enter proximity zone → turn green if not already green
+    if (distance <= PROXIMITY_THRESHOLD && !isSignalGreen) {
+      console.log('Ambulance entered zone → setGreen');
+      notifyEsp32Proximity(signal.name, esp32Ip, TEST_DIRECTION);
+      setIsSignalGreen(true);
+    }
+
+    // Exit proximity zone → reset normal if it was green
+    if (distance > EXIT_THRESHOLD && isSignalGreen) {
+      console.log('Ambulance exited zone → setNormal');
+      notifyEsp32SetNormal(signal.name, esp32Ip);
+      setIsSignalGreen(false);
+    }
+  }, [ambulancePosition, trafficSignals, isSignalGreen]);
+  // --- end ESP32 logic ---
 
   // Render
   return (
@@ -814,3 +956,33 @@ function calculateDistance(lat1: number, lng1: number, lat2: number, lng2: numbe
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 }
+
+function calculateBearing(lat1: number, lng1: number, lat2: number, lng2: number): number {
+  // Returns bearing in degrees from north (0-360)
+  const toRad = (deg: number) => deg * Math.PI / 180;
+  const toDeg = (rad: number) => rad * 180 / Math.PI;
+  const dLon = toRad(lng2 - lng1);
+  const y = Math.sin(dLon) * Math.cos(toRad(lat2));
+  const x =
+    Math.cos(toRad(lat1)) * Math.sin(toRad(lat2)) -
+    Math.sin(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.cos(dLon);
+  let brng = Math.atan2(y, x);
+  brng = toDeg(brng);
+  return (brng + 360) % 360;
+}
+
+function bearingToDirection(bearing: number): "N" | "E" | "S" | "W" {
+  // Map bearing (0-360) to cardinal direction
+  if ((bearing >= 315 && bearing < 360) || (bearing >= 0 && bearing < 45)) {
+    return "N";
+  } else if (bearing >= 45 && bearing < 135) {
+    return "E";
+  } else if (bearing >= 135 && bearing < 225) {
+    return "S";
+  } else {
+    return "W";
+  }
+}
+// function bearingToDirection(arg0: any): "N" | "E" | "S" | "W" {
+//   throw new Error('Function not implemented.');}
+//# sourceMappingURL=Map.js.map
