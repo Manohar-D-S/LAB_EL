@@ -57,6 +57,10 @@ const TrafficSimulation: React.FC<TrafficSimulationProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // --- System status from backend ---
+  const [detectorStats, setDetectorStats] = useState<any>(null);
+  const [statsLoading, setStatsLoading] = useState(false);
+
   // Fallback: show message for missing videos
   if (
     !yoloTrafficData ||
@@ -243,74 +247,211 @@ const TrafficSimulation: React.FC<TrafficSimulationProps> = ({
   };
 
   // Use the API base from integration summary
-  const API_BASE = 'http://localhost:5001'; // Update this if your backend runs on a different port
+  const API_BASE = 'http://localhost:5001'; // Update if backend runs elsewhere
 
-  // Handler for analysis button (4-way intersection analysis)
-  const handleAnalyze = async () => {
-    setLoading(true);
-    setError(null);
-    setAnalysisResult(null);
-    try {
-      const formData = new FormData();
-      formData.append('video_north', videoFiles.north as File);
-      formData.append('video_south', videoFiles.south as File);
-      formData.append('video_east', videoFiles.east as File);
-      formData.append('video_west', videoFiles.west as File);
-      formData.append('intersection_id', 'main_intersection');
-      const response = await fetch(`${API_BASE}/api/analyze/intersection`, {
-        method: 'POST',
-        body: formData,
-        credentials: 'omit'
-      });
-      if (!response.ok) throw new Error('Analysis failed');
-      const result = await response.json();
-      setAnalysisResult(result);
-      // Example: handle emergency override in your UI logic
-      // if (result.emergency_override) {
-      //   setEmergencyMode(true);
-      //   setPriorityDirection(result.priority_direction);
-      // }
-    } catch (err: any) {
-      setError(err.message || 'Error analyzing intersection');
-    } finally {
-      setLoading(false);
-    }
+  // --- API: GET /api/health ---
+  const getApiHealth = async (): Promise<any> => {
+    const res = await fetch(`${API_BASE}/api/health`);
+    if (!res.ok) throw new Error('API health check failed');
+    return res.json();
   };
 
-  // Example: image detection integration
-  const detectImage = async (file: File, onResult: (result: any) => void, onError: (err: string) => void) => {
+  // --- API: GET /api/detector/stats ---
+  const getDetectorStats = async (): Promise<any> => {
+    const res = await fetch(`${API_BASE}/api/detector/stats`);
+    if (!res.ok) throw new Error('Detector stats fetch failed');
+    return res.json();
+  };
+
+  // --- API: POST /api/detect/image ---
+  const detectImage = async (
+    file: File,
+    onResult: (result: any) => void,
+    onError: (err: string) => void
+  ) => {
     const formData = new FormData();
     formData.append('file', file);
     try {
-      const response = await fetch(`${API_BASE}/api/detect/image`, {
+      const res = await fetch(`${API_BASE}/api/detect/image`, {
         method: 'POST',
         body: formData,
         credentials: 'omit'
       });
-      if (!response.ok) throw new Error('Image detection failed');
-      const result = await response.json();
+      if (!res.ok) throw new Error('Image detection failed');
+      const result = await res.json();
       onResult(result);
     } catch (err: any) {
       onError(err.message || 'Image detection error');
     }
   };
 
-  // Example: video detection integration
-  const detectVideo = async (file: File, onResult: (result: any) => void, onError: (err: string) => void) => {
+  // --- API: POST /api/detect/video ---
+  const detectVideo = async (
+    file: File,
+    onResult: (result: any) => void,
+    onError: (err: string) => void
+  ) => {
     const formData = new FormData();
     formData.append('file', file);
     try {
-      const response = await fetch(`${API_BASE}/api/detect/video`, {
+      const res = await fetch(`${API_BASE}/api/detect/video`, {
         method: 'POST',
         body: formData,
         credentials: 'omit'
       });
-      if (!response.ok) throw new Error('Video detection failed');
-      const result = await response.json();
+      if (!res.ok) throw new Error('Video detection failed');
+      const result = await res.json();
       onResult(result);
     } catch (err: any) {
       onError(err.message || 'Video detection error');
     }
+  };
+
+  // --- API: POST /api/analyze/intersection ---
+  const analyzeIntersection = async (
+    videos: { north: File; south: File; east: File; west: File },
+    intersectionId: string,
+    onResult: (result: any) => void,
+    onError: (err: string) => void
+  ) => {
+    const formData = new FormData();
+    formData.append('video_north', videos.north);
+    formData.append('video_south', videos.south);
+    formData.append('video_east', videos.east);
+    formData.append('video_west', videos.west);
+    formData.append('intersection_id', intersectionId);
+    try {
+      const res = await fetch(`${API_BASE}/api/analyze/intersection`, {
+        method: 'POST',
+        body: formData,
+        credentials: 'omit'
+      });
+      if (!res.ok) throw new Error('Intersection analysis failed');
+      const result = await res.json();
+      onResult(result);
+    } catch (err: any) {
+      onError(err.message || 'Intersection analysis error');
+    }
+  };
+
+  // --- API: POST /api/signal-control ---
+  const signalControl = async (
+    data: { analysis_id: string; priority_direction: string; emergency_override: boolean },
+    onResult: (result: any) => void,
+    onError: (err: string) => void
+  ) => {
+    try {
+      const res = await fetch(`${API_BASE}/api/signal-control`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+        credentials: 'omit'
+      });
+      if (!res.ok) throw new Error('Signal control failed');
+      const result = await res.json();
+      onResult(result);
+    } catch (err: any) {
+      onError(err.message || 'Signal control error');
+    }
+  };
+
+  // --- API: POST /api/detector/settings ---
+  const updateDetectorSettings = async (
+    settings: { confidence?: number; nms?: number },
+    onResult: (result: any) => void,
+    onError: (err: string) => void
+  ) => {
+    try {
+      const res = await fetch(`${API_BASE}/api/detector/settings`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(settings),
+        credentials: 'omit'
+      });
+      if (!res.ok) throw new Error('Update settings failed');
+      const result = await res.json();
+      onResult(result);
+    } catch (err: any) {
+      onError(err.message || 'Update settings error');
+    }
+  };
+
+  // Example: image detection integration
+  const detectImageIntegration = (file: File) => {
+    detectImage(
+      file,
+      (result) => {
+        console.log('Image detection result:', result);
+        // Handle result (e.g., update UI, show alerts)
+      },
+      (err) => {
+        console.error('Image detection error:', err);
+        // Handle error (e.g., show notification)
+      }
+    );
+  };
+
+  // Example: video detection integration
+  const detectVideoIntegration = (file: File) => {
+    detectVideo(
+      file,
+      (result) => {
+        console.log('Video detection result:', result);
+        // Handle result (e.g., update UI, show alerts)
+      },
+      (err) => {
+        console.error('Video detection error:', err);
+        // Handle error (e.g., show notification)
+      }
+    );
+  };
+
+  // Example: intersection analysis integration
+  const analyzeIntersectionIntegration = () => {
+    if (Object.values(videoFiles).some(f => !f)) {
+      setError('Please upload all videos for analysis');
+      return;
+    }
+    setError(null);
+    setLoading(true);
+    analyzeIntersection(
+      {
+        north: videoFiles.north as File,
+        south: videoFiles.south as File,
+        east: videoFiles.east as File,
+        west: videoFiles.west as File,
+      },
+      'main_intersection',
+      (result) => {
+        setAnalysisResult(result);
+        setLoading(false);
+        // Example: auto-start simulation with new data
+        // startSimulationWithNewData(result.traffic_data, result.phases, result.phase_directions);
+      },
+      (err) => {
+        setError(err);
+        setLoading(false);
+      }
+    );
+  };
+
+  // Example: signal control integration (emergency mode)
+  const triggerEmergencyMode = (direction: string) => {
+    signalControl(
+      {
+        analysis_id: 'main_intersection',
+        priority_direction: direction,
+        emergency_override: true,
+      },
+      (result) => {
+        console.log('Signal control result:', result);
+        // Handle result (e.g., update UI, show alerts)
+      },
+      (err) => {
+        console.error('Signal control error:', err);
+        // Handle error (e.g., show notification)
+      }
+    );
   };
 
   // Helper for signal color
@@ -601,6 +742,32 @@ const TrafficSimulation: React.FC<TrafficSimulationProps> = ({
                     <span className="text-white">Total Vehicles</span>
                   </div>
                   <span className="text-yellow-500 font-medium">{totalVehicles}</span>
+                </div>
+                {/* --- Detector stats from backend --- */}
+                <div className="pt-4 border-t border-gray-700 mt-2">
+                  {statsLoading && <span className="text-gray-400 text-xs">Loading detector status...</span>}
+                  {detectorStats && (
+                    <div className="text-xs text-gray-300 space-y-1">
+                      <div>
+                        <span className="font-semibold">Model:</span> {detectorStats.model_name || 'N/A'}
+                      </div>
+                      <div>
+                        <span className="font-semibold">Device:</span> {detectorStats.device || 'N/A'}
+                      </div>
+                      <div>
+                        <span className="font-semibold">Uptime:</span> {detectorStats.uptime_seconds ? `${Math.floor(detectorStats.uptime_seconds/60)} min` : 'N/A'}
+                      </div>
+                      <div>
+                        <span className="font-semibold">Confidence:</span> {detectorStats.confidence_threshold}
+                      </div>
+                      <div>
+                        <span className="font-semibold">NMS:</span> {detectorStats.nms_threshold}
+                      </div>
+                    </div>
+                  )}
+                  {!statsLoading && !detectorStats && (
+                    <span className="text-red-400 text-xs">Unable to fetch detector status</span>
+                  )}
                 </div>
               </div>
             </div>
