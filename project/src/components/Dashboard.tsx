@@ -24,8 +24,8 @@ const Dashboard = () => {
   const [shouldCache, setShouldCache] = useState(false);
   const [mode, setMode] = useState<'none' | 'upload' | 'live'>('none');
 
-  // Load cached videos and analysis state from localStorage on mount
-  useEffect(() => {
+  // Only load cache when switching to upload mode
+  const loadCache = () => {
     const cached = localStorage.getItem('uploadedVideos');
     const cachedAnalysis = localStorage.getItem('analysisComplete');
     const cachedYolo = localStorage.getItem('yoloResult');
@@ -38,8 +38,22 @@ const Dashboard = () => {
         setShouldCache(true);
         setYoloResult(JSON.parse(cachedYolo));
       }
+    } else {
+      setUploadedVideos([]);
+      setIsUploadComplete(false);
+      setAnalysisComplete(false);
+      setShouldCache(false);
+      setYoloResult(null);
     }
-  }, []);
+  };
+
+  // When switching to upload mode, load cache
+  useEffect(() => {
+    if (mode === 'upload') {
+      loadCache();
+    }
+    // eslint-disable-next-line
+  }, [mode]);
 
   // Cache videos and analysis state in localStorage only if analysis is complete
   useEffect(() => {
@@ -194,24 +208,71 @@ const Dashboard = () => {
   // UI for landing selection
   if (mode === 'none') {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900">
-        <div className="bg-gray-800/70 rounded-xl shadow-lg p-10 flex flex-col items-center space-y-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Choose Mode</h1>
-          <div className="flex space-x-8">
-            <button
-              onClick={() => setMode('live')}
-              className="flex flex-col items-center px-8 py-6 bg-blue-700 hover:bg-blue-800 rounded-xl transition-colors shadow-lg"
-            >
-              <Video className="w-12 h-12 text-white mb-2" />
-              <span className="text-white font-semibold text-lg">Live Feed</span>
-            </button>
-            <button
-              onClick={() => setMode('upload')}
-              className="flex flex-col items-center px-8 py-6 bg-green-700 hover:bg-green-800 rounded-xl transition-colors shadow-lg"
-            >
-              <Upload className="w-12 h-12 text-white mb-2" />
-              <span className="text-white font-semibold text-lg">Upload Videos</span>
-            </button>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900">
+        {/* Navbar */}
+        <div className="bg-gray-800/50 flex items-center backdrop-blur-sm border-b border-gray-700">
+          <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg flex items-center justify-center">
+                <Settings className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-white">Traffic Signal Control System</h1>
+                <p className="text-gray-400 text-sm">AI-Powered Intersection Dashboard</p>
+              </div>
+            </div>
+            {/* <div className="flex items-center space-x-4">
+              <div className="px-4 py-2 bg-blue-500/20 border border-blue-500/30 rounded-lg">
+                <span className="text-blue-500 font-medium">Vite + React + Tailwind</span>
+              </div>
+              <div className="px-4 py-2 bg-green-500/20 border border-green-500/30 rounded-lg">
+                <span className="text-green-500 font-medium">YOLOv8n Model</span>
+              </div> */}
+            {/* </div> */}
+          </div>
+        </div>
+        {/* Main landing content */}
+        <div className="flex flex-col items-center justify-center py-24">
+          <div className="bg-gray-800/70 rounded-xl shadow-lg p-10 flex flex-col items-center space-y-8">
+            <h1 className="text-3xl font-bold text-white mb-2">Choose Mode</h1>
+            <div className="flex space-x-8">
+              <button
+                onClick={() => setMode('live')}
+                className="flex flex-col items-center px-8 py-6 bg-blue-700 hover:bg-blue-800 rounded-xl transition-colors shadow-lg"
+              >
+                <Video className="w-12 h-12 text-white mb-2" />
+                <span className="text-white font-semibold text-lg">Live Feed</span>
+                <span className="text-gray-300 text-xs mt-2 text-center max-w-[120px]">
+                  View real-time camera and detection
+                </span>
+              </button>
+              <button
+                onClick={() => setMode('upload')}
+                className="flex flex-col items-center px-8 py-6 bg-green-700 hover:bg-green-800 rounded-xl transition-colors shadow-lg"
+              >
+                <Upload className="w-12 h-12 text-white mb-2" />
+                <span className="text-white font-semibold text-lg">Upload Videos</span>
+                <span className="text-gray-300 text-xs mt-2 text-center max-w-[120px]">
+                  Analyze intersection from recorded videos
+                </span>
+              </button>
+            </div>
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="flex flex-col items-center">
+                <BarChart3 className="w-8 h-8 text-green-400 mb-2" />
+                <span className="text-white font-semibold">AI Analysis</span>
+                <span className="text-gray-400 text-xs text-center mt-1">
+                  YOLOv8n detects vehicles, congestion, and optimizes signals.
+                </span>
+              </div>
+              <div className="flex flex-col items-center">
+                <CheckCircle className="w-8 h-8 text-blue-400 mb-2" />
+                <span className="text-white font-semibold">Simulation</span>
+                <span className="text-gray-400 text-xs text-center mt-1">
+                  Adaptive signal control and live intersection simulation.
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -227,13 +288,19 @@ const Dashboard = () => {
             <Video className="w-10 h-10 text-blue-400 mr-3" />
             <h2 className="text-2xl font-bold text-white">Live Feed & Detection</h2>
           </div>
-          {/* Placeholder for live video stream */}
-          <div className="w-[480px] h-[270px] bg-black rounded-lg flex items-center justify-center mb-4 border-4 border-blue-700">
-            <span className="text-gray-400">Live video stream will appear here</span>
+          {/* Live video stream from backend */}
+          <div className="w-[480px] h-[270px] bg-black rounded-lg flex items-center justify-center mb-4 border-4 border-blue-700 overflow-hidden">
+            <img
+              src="http://<raspberry-pi-ip>:5001/video_feed"
+              alt="Live Feed"
+              className="w-full h-full object-contain"
+              style={{ background: "#000" }}
+            />
           </div>
-          {/* Placeholder for detection results */}
           <div className="bg-gray-700/60 rounded-lg p-4 w-full text-center mb-4">
-            <span className="text-gray-300">Detection results (YOLOv8n) will be shown here in real-time.</span>
+            <span className="text-gray-300">
+              YOLOv8n detection overlays are shown in real-time. Annotated video is saved on the server.
+            </span>
           </div>
           <button
             onClick={() => setMode('none')}
