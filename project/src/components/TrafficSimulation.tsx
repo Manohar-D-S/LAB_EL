@@ -46,6 +46,17 @@ const TrafficSimulation: React.FC<TrafficSimulationProps> = ({
 }) => {
   const navigate = useNavigate();
 
+  // --- New state for backend integration ---
+  const [videoFiles, setVideoFiles] = useState<{ [key: string]: File | null }>({
+    north: null,
+    south: null,
+    east: null,
+    west: null,
+  });
+  const [analysisResult, setAnalysisResult] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   // Fallback: show message for missing videos
   if (
     !yoloTrafficData ||
@@ -224,6 +235,82 @@ const TrafficSimulation: React.FC<TrafficSimulationProps> = ({
       nextPhase: yoloPhases[1 % yoloPhases.length],
       nextDuration: 60
     });
+  };
+
+  // Handler for file input
+  const handleFileChange = (direction: string, file: File | null) => {
+    setVideoFiles(prev => ({ ...prev, [direction]: file }));
+  };
+
+  // Use the API base from integration summary
+  const API_BASE = 'http://localhost:5001'; // Update this if your backend runs on a different port
+
+  // Handler for analysis button (4-way intersection analysis)
+  const handleAnalyze = async () => {
+    setLoading(true);
+    setError(null);
+    setAnalysisResult(null);
+    try {
+      const formData = new FormData();
+      formData.append('video_north', videoFiles.north as File);
+      formData.append('video_south', videoFiles.south as File);
+      formData.append('video_east', videoFiles.east as File);
+      formData.append('video_west', videoFiles.west as File);
+      formData.append('intersection_id', 'main_intersection');
+      const response = await fetch(`${API_BASE}/api/analyze/intersection`, {
+        method: 'POST',
+        body: formData,
+        credentials: 'omit'
+      });
+      if (!response.ok) throw new Error('Analysis failed');
+      const result = await response.json();
+      setAnalysisResult(result);
+      // Example: handle emergency override in your UI logic
+      // if (result.emergency_override) {
+      //   setEmergencyMode(true);
+      //   setPriorityDirection(result.priority_direction);
+      // }
+    } catch (err: any) {
+      setError(err.message || 'Error analyzing intersection');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Example: image detection integration
+  const detectImage = async (file: File, onResult: (result: any) => void, onError: (err: string) => void) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const response = await fetch(`${API_BASE}/api/detect/image`, {
+        method: 'POST',
+        body: formData,
+        credentials: 'omit'
+      });
+      if (!response.ok) throw new Error('Image detection failed');
+      const result = await response.json();
+      onResult(result);
+    } catch (err: any) {
+      onError(err.message || 'Image detection error');
+    }
+  };
+
+  // Example: video detection integration
+  const detectVideo = async (file: File, onResult: (result: any) => void, onError: (err: string) => void) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const response = await fetch(`${API_BASE}/api/detect/video`, {
+        method: 'POST',
+        body: formData,
+        credentials: 'omit'
+      });
+      if (!response.ok) throw new Error('Video detection failed');
+      const result = await response.json();
+      onResult(result);
+    } catch (err: any) {
+      onError(err.message || 'Video detection error');
+    }
   };
 
   // Helper for signal color
@@ -571,12 +658,89 @@ const TrafficSimulation: React.FC<TrafficSimulationProps> = ({
             </div>
           </div>
         </div>
+
+        {/* Video upload and analysis UI */}
+        <div className="max-w-2xl mx-auto my-8 bg-gray-800/70 rounded-xl p-6 shadow-lg">
+          <h2 className="text-xl font-bold text-white mb-4">Intersection Video Analysis</h2>
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            {['north', 'south', 'east', 'west'].map(dir => (
+              <div key={dir} className="flex flex-col">
+                <label className="text-gray-300 mb-1 capitalize">{dir} video</label>
+                <input
+                  type="file"
+                  accept="video/*"
+                  onChange={e => handleFileChange(dir, e.target.files?.[0] || null)}
+                  className="bg-gray-700 text-white rounded px-2 py-1"
+                />
+              </div>
+            ))}
+          </div>
+          <button
+            onClick={handleAnalyze}
+            disabled={loading || Object.values(videoFiles).some(f => !f)}
+            className={`px-6 py-2 rounded-lg font-bold transition-colors ${
+              loading || Object.values(videoFiles).some(f => !f)
+                ? 'bg-gray-600 text-gray-300 cursor-not-allowed'
+                : 'bg-blue-600 hover:bg-blue-700 text-white'
+            }`}
+          >
+            {loading ? 'Analyzing...' : 'Analyze Intersection'}
+          </button>
+          {error && <div className="mt-3 text-red-400">{error}</div>}
+        </div>
+
+        {/* Display analysis result */}
+        {analysisResult && (
+          <div className="max-w-3xl mx-auto my-8 bg-gray-900/80 rounded-xl p-6 shadow-lg">
+            <h3 className="text-lg font-bold text-white mb-2">Analysis Result</h3>
+            <div className="text-gray-300 mb-2">
+              <span className="font-semibold">Emergency Override:</span>{' '}
+              <span className={analysisResult.emergency_override ? 'text-red-400 font-bold' : 'text-green-400 font-bold'}>
+                {analysisResult.emergency_override ? 'YES' : 'NO'}
+              </span>
+            </div>
+            {analysisResult.priority_direction && (
+              <div className="text-gray-300 mb-2">
+                <span className="font-semibold">Priority Direction:</span>{' '}
+                <span className="text-yellow-400 font-bold">{analysisResult.priority_direction.toUpperCase()}</span>
+              </div>
+            )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+              {Object.entries(analysisResult.results).map(([dir, res]: any) => (
+                <div key={dir} className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+                  <div className="text-white font-bold capitalize mb-2">{dir}</div>
+                  <div className="text-gray-300 text-sm">
+                    Ambulance Detected: <span className={res.ambulance_detected ? 'text-blue-400 font-bold' : 'text-gray-400'}>{res.ambulance_detected ? 'Yes' : 'No'}</span>
+                  </div>
+                  <div className="text-gray-300 text-sm">
+                    Ambulance Count: <span className="font-bold">{res.ambulance_count}</span>
+                  </div>
+                  <div className="text-gray-300 text-sm">
+                    Frames Analyzed: <span className="font-bold">{res.frames_analyzed}</span>
+                  </div>
+                  {res.detection_frames && res.detection_frames.length > 0 && (
+                    <div className="text-gray-300 text-xs mt-2">
+                      <span className="font-semibold">Detection Frames:</span>
+                      <ul className="list-disc ml-6">
+                        {res.detection_frames.map((f: any) => (
+                          <li key={f.frame_number}>
+                            Frame {f.frame_number}: {f.ambulance_count} ambulance(s)
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-fetch('http://<backend-ip>:8000/api/analyze/intersection', { ... })
+// fetch('http://<backend-ip>:8000/api/analyze/intersection', { ... })
 export default TrafficSimulation;
 
 // Example: POST video for analysis
