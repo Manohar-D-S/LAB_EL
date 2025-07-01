@@ -1,0 +1,76 @@
+Live Detection Started: 2025-07-01 13:35:58.911549
+Frame | Time | AmbulanceDetected | VehicleCount | Congestion | Classes
+--------------------------------------------------------------------------------
+1 | 13:35:59 | True | 1 | Low | {'ambulance': 1}
+2 | 13:36:02 | True | 2 | Low | {'ambulance': 2}
+3 | 13:36:02 | True | 1 | Low | {'ambulance': 1}
+4 | 13:36:03 | True | 1 | Low | {'ambulance': 1}
+5 | 13:36:03 | True | 1 | Low | {'ambulance': 1}
+6 | 13:36:03 | True | 1 | Low | {'ambulance': 1}
+7 | 13:36:03 | True | 1 | Low | {'ambulance': 1}
+8 | 13:36:04 | True | 1 | Low | {'ambulance': 1}
+9 | 13:36:04 | True | 1 | Low | {'ambulance': 1}
+10 | 13:36:04 | True | 2 | Low | {'ambulance': 2}
+11 | 13:36:04 | True | 1 | Low | {'ambulance': 1}
+12 | 13:36:04 | True | 1 | Low | {'ambulance': 1}
+13 | 13:36:04 | True | 2 | Low | {'ambulance': 2}
+14 | 13:36:05 | False | 0 | Low | {}
+15 | 13:36:05 | False | 0 | Low | {}
+16 | 13:36:05 | True | 2 | Low | {'ambulance': 2}
+17 | 13:36:05 | False | 0 | Low | {}
+18 | 13:36:06 | False | 0 | Low | {}
+19 | 13:36:06 | False | 0 | Low | {}
+20 | 13:36:06 | False | 0 | Low | {}
+21 | 13:36:06 | False | 0 | Low | {}
+22 | 13:36:06 | False | 0 | Low | {}
+23 | 13:36:07 | False | 0 | Low | {}
+24 | 13:36:07 | False | 0 | Low | {}
+25 | 13:36:07 | False | 0 | Low | {}
+26 | 13:36:07 | False | 0 | Low | {}
+27 | 13:36:07 | False | 0 | Low | {}
+28 | 13:36:08 | False | 0 | Low | {}
+29 | 13:36:08 | False | 0 | Low | {}
+30 | 13:36:08 | True | 1 | Low | {'ambulance': 1}
+31 | 13:36:08 | True | 1 | Low | {'ambulance': 1}
+32 | 13:36:09 | True | 1 | Low | {'ambulance': 1}
+33 | 13:36:09 | True | 1 | Low | {'ambulance': 1}
+34 | 13:36:09 | True | 2 | Low | {'ambulance': 2}
+35 | 13:36:09 | False | 0 | Low | {}
+36 | 13:36:09 | True | 1 | Low | {'ambulance': 1}
+37 | 13:36:10 | True | 1 | Low | {'ambulance': 1}
+38 | 13:36:10 | True | 2 | Low | {'ambulance': 2}
+39 | 13:36:10 | True | 2 | Low | {'ambulance': 2}
+40 | 13:36:10 | True | 1 | Low | {'ambulance': 1}
+41 | 13:36:10 | True | 1 | Low | {'ambulance': 1}
+42 | 13:36:10 | True | 1 | Low | {'ambulance': 1}
+43 | 13:36:11 | True | 1 | Low | {'ambulance': 1}
+44 | 13:36:11 | True | 1 | Low | {'ambulance': 1}
+45 | 13:36:11 | True | 1 | Low | {'ambulance': 1}
+46 | 13:36:11 | True | 1 | Low | {'ambulance': 1}
+47 | 13:36:11 | True | 1 | Low | {'ambulance': 1}
+48 | 13:36:12 | True | 1 | Low | {'ambulance': 1}
+49 | 13:36:12 | True | 1 | Low | {'ambulance': 1}
+50 | 13:36:12 | True | 1 | Low | {'ambulance': 1}
+51 | 13:36:12 | True | 1 | Low | {'ambulance': 1}
+52 | 13:36:12 | True | 1 | Low | {'ambulance': 1}
+53 | 13:36:13 | True | 1 | Low | {'ambulance': 1}
+54 | 13:36:13 | True | 1 | Low | {'ambulance': 1}
+55 | 13:36:13 | True | 1 | Low | {'ambulance': 1}
+56 | 13:36:13 | True | 1 | Low | {'ambulance': 1}
+57 | 13:36:13 | True | 1 | Low | {'ambulance': 1}
+58 | 13:36:14 | True | 1 | Low | {'ambulance': 1}
+59 | 13:36:14 | True | 1 | Low | {'ambulance': 1}
+60 | 13:36:14 | True | 1 | Low | {'ambulance': 1}
+61 | 13:36:14 | False | 0 | Low | {}
+62 | 13:36:14 | False | 0 | Low | {}
+63 | 13:36:15 | True | 1 | Low | {'ambulance': 1}
+64 | 13:36:15 | True | 1 | Low | {'ambulance': 1}
+65 | 13:36:15 | True | 1 | Low | {'ambulance': 1}
+66 | 13:36:15 | True | 1 | Low | {'ambulance': 1}
+67 | 13:36:15 | True | 1 | Low | {'ambulance': 1}
+68 | 13:36:16 | True | 1 | Low | {'ambulance': 1}
+69 | 13:36:16 | True | 1 | Low | {'ambulance': 1}
+70 | 13:36:16 | True | 1 | Low | {'ambulance': 1}
+--------------------------------------------------------------------------------
+
+Final Congestion Score (0–100): 1

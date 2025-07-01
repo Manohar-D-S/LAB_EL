@@ -1,0 +1,1645 @@
+Log for WhatsApp Video 2025-07-01 at 13.48.14_3ac9df01.mp4 - 2025-07-01 13:50:27.610398
+Frame | Time | AmbulanceDetected | VehicleCount | Congestion | Classes
+--------------------------------------------------------------------------------
+1 | 13:50:27 | False | 0 | Low | {}
+2 | 13:50:28 | False | 0 | Low | {}
+3 | 13:50:29 | False | 0 | Low | {}
+4 | 13:50:29 | False | 0 | Low | {}
+5 | 13:50:29 | False | 0 | Low | {}
+6 | 13:50:29 | False | 0 | Low | {}
+7 | 13:50:29 | False | 0 | Low | {}
+8 | 13:50:29 | False | 0 | Low | {}
+9 | 13:50:29 | False | 0 | Low | {}
+10 | 13:50:29 | False | 0 | Low | {}
+11 | 13:50:29 | False | 0 | Low | {}
+12 | 13:50:29 | False | 0 | Low | {}
+13 | 13:50:29 | False | 0 | Low | {}
+14 | 13:50:29 | False | 0 | Low | {}
+15 | 13:50:29 | False | 0 | Low | {}
+16 | 13:50:29 | False | 0 | Low | {}
+17 | 13:50:30 | False | 0 | Low | {}
+18 | 13:50:30 | False | 0 | Low | {}
+19 | 13:50:30 | False | 0 | Low | {}
+20 | 13:50:30 | False | 0 | Low | {}
+21 | 13:50:30 | False | 0 | Low | {}
+22 | 13:50:30 | False | 0 | Low | {}
+23 | 13:50:30 | False | 0 | Low | {}
+24 | 13:50:30 | False | 0 | Low | {}
+25 | 13:50:30 | False | 0 | Low | {}
+26 | 13:50:30 | False | 0 | Low | {}
+27 | 13:50:30 | True | 1 | Low | {'ambulance': 1}
+28 | 13:50:31 | False | 0 | Low | {}
+29 | 13:50:31 | False | 0 | Low | {}
+30 | 13:50:31 | False | 0 | Low | {}
+31 | 13:50:31 | False | 0 | Low | {}
+32 | 13:50:31 | False | 0 | Low | {}
+33 | 13:50:31 | True | 1 | Low | {'ambulance': 1}
+34 | 13:50:31 | False | 0 | Low | {}
+35 | 13:50:31 | False | 0 | Low | {}
+36 | 13:50:31 | False | 0 | Low | {}
+37 | 13:50:32 | False | 0 | Low | {}
+38 | 13:50:32 | False | 0 | Low | {}
+39 | 13:50:32 | False | 0 | Low | {}
+40 | 13:50:32 | False | 0 | Low | {}
+41 | 13:50:32 | False | 0 | Low | {}
+42 | 13:50:32 | False | 0 | Low | {}
+43 | 13:50:32 | False | 0 | Low | {}
+44 | 13:50:32 | False | 0 | Low | {}
+45 | 13:50:32 | False | 0 | Low | {}
+46 | 13:50:32 | True | 1 | Low | {'ambulance': 1}
+47 | 13:50:32 | False | 0 | Low | {}
+48 | 13:50:32 | False | 0 | Low | {}
+49 | 13:50:32 | False | 0 | Low | {}
+50 | 13:50:32 | False | 0 | Low | {}
+51 | 13:50:32 | False | 0 | Low | {}
+52 | 13:50:33 | False | 0 | Low | {}
+53 | 13:50:33 | False | 0 | Low | {}
+54 | 13:50:33 | False | 0 | Low | {}
+55 | 13:50:33 | False | 0 | Low | {}
+56 | 13:50:33 | False | 0 | Low | {}
+57 | 13:50:33 | False | 0 | Low | {}
+58 | 13:50:33 | False | 0 | Low | {}
+59 | 13:50:33 | False | 0 | Low | {}
+60 | 13:50:33 | False | 0 | Low | {}
+61 | 13:50:33 | False | 0 | Low | {}
+62 | 13:50:33 | False | 0 | Low | {}
+63 | 13:50:33 | False | 0 | Low | {}
+64 | 13:50:33 | False | 0 | Low | {}
+65 | 13:50:33 | True | 1 | Low | {'ambulance': 1}
+66 | 13:50:33 | True | 1 | Low | {'ambulance': 1}
+67 | 13:50:33 | True | 1 | Low | {'ambulance': 1}
+68 | 13:50:34 | False | 0 | Low | {}
+69 | 13:50:34 | False | 0 | Low | {}
+70 | 13:50:34 | False | 0 | Low | {}
+71 | 13:50:34 | False | 0 | Low | {}
+72 | 13:50:34 | False | 0 | Low | {}
+73 | 13:50:34 | False | 0 | Low | {}
+74 | 13:50:34 | False | 0 | Low | {}
+75 | 13:50:34 | True | 1 | Low | {'ambulance': 1}
+76 | 13:50:34 | False | 0 | Low | {}
+77 | 13:50:34 | True | 1 | Low | {'ambulance': 1}
+78 | 13:50:34 | True | 1 | Low | {'ambulance': 1}
+79 | 13:50:34 | False | 0 | Low | {}
+80 | 13:50:34 | False | 0 | Low | {}
+81 | 13:50:34 | False | 0 | Low | {}
+82 | 13:50:35 | False | 0 | Low | {}
+83 | 13:50:35 | False | 0 | Low | {}
+84 | 13:50:35 | False | 0 | Low | {}
+85 | 13:50:35 | True | 1 | Low | {'ambulance': 1}
+86 | 13:50:35 | False | 0 | Low | {}
+87 | 13:50:35 | False | 0 | Low | {}
+88 | 13:50:35 | False | 0 | Low | {}
+89 | 13:50:35 | False | 0 | Low | {}
+90 | 13:50:36 | False | 0 | Low | {}
+91 | 13:50:36 | False | 0 | Low | {}
+92 | 13:50:36 | False | 0 | Low | {}
+93 | 13:50:36 | False | 0 | Low | {}
+94 | 13:50:36 | False | 0 | Low | {}
+95 | 13:50:36 | False | 0 | Low | {}
+96 | 13:50:36 | False | 0 | Low | {}
+97 | 13:50:36 | False | 0 | Low | {}
+98 | 13:50:36 | False | 0 | Low | {}
+99 | 13:50:36 | False | 0 | Low | {}
+100 | 13:50:36 | False | 0 | Low | {}
+101 | 13:50:36 | False | 0 | Low | {}
+102 | 13:50:36 | False | 0 | Low | {}
+103 | 13:50:36 | False | 0 | Low | {}
+104 | 13:50:36 | False | 0 | Low | {}
+105 | 13:50:37 | False | 0 | Low | {}
+106 | 13:50:37 | False | 0 | Low | {}
+107 | 13:50:37 | False | 0 | Low | {}
+108 | 13:50:37 | False | 0 | Low | {}
+109 | 13:50:37 | False | 0 | Low | {}
+110 | 13:50:37 | False | 0 | Low | {}
+111 | 13:50:37 | False | 0 | Low | {}
+112 | 13:50:37 | False | 0 | Low | {}
+113 | 13:50:37 | False | 0 | Low | {}
+114 | 13:50:37 | False | 0 | Low | {}
+115 | 13:50:37 | False | 0 | Low | {}
+116 | 13:50:37 | False | 0 | Low | {}
+117 | 13:50:37 | False | 0 | Low | {}
+118 | 13:50:37 | False | 0 | Low | {}
+119 | 13:50:37 | False | 0 | Low | {}
+120 | 13:50:38 | False | 0 | Low | {}
+121 | 13:50:38 | False | 0 | Low | {}
+122 | 13:50:38 | False | 0 | Low | {}
+123 | 13:50:38 | False | 0 | Low | {}
+124 | 13:50:38 | False | 0 | Low | {}
+125 | 13:50:38 | False | 0 | Low | {}
+126 | 13:50:38 | False | 0 | Low | {}
+127 | 13:50:38 | False | 0 | Low | {}
+128 | 13:50:38 | True | 1 | Low | {'ambulance': 1}
+129 | 13:50:38 | False | 0 | Low | {}
+130 | 13:50:38 | False | 0 | Low | {}
+131 | 13:50:38 | False | 0 | Low | {}
+132 | 13:50:39 | False | 0 | Low | {}
+133 | 13:50:39 | False | 0 | Low | {}
+134 | 13:50:39 | False | 0 | Low | {}
+135 | 13:50:39 | False | 0 | Low | {}
+136 | 13:50:39 | False | 0 | Low | {}
+137 | 13:50:39 | False | 0 | Low | {}
+138 | 13:50:39 | False | 0 | Low | {}
+139 | 13:50:39 | False | 0 | Low | {}
+140 | 13:50:39 | False | 0 | Low | {}
+141 | 13:50:39 | False | 0 | Low | {}
+142 | 13:50:39 | False | 0 | Low | {}
+143 | 13:50:39 | False | 0 | Low | {}
+144 | 13:50:39 | False | 0 | Low | {}
+145 | 13:50:39 | False | 0 | Low | {}
+146 | 13:50:39 | False | 0 | Low | {}
+147 | 13:50:40 | False | 0 | Low | {}
+148 | 13:50:40 | False | 0 | Low | {}
+149 | 13:50:40 | False | 0 | Low | {}
+150 | 13:50:40 | False | 0 | Low | {}
+151 | 13:50:40 | False | 0 | Low | {}
+152 | 13:50:40 | False | 0 | Low | {}
+153 | 13:50:40 | False | 0 | Low | {}
+154 | 13:50:40 | False | 0 | Low | {}
+155 | 13:50:40 | False | 0 | Low | {}
+156 | 13:50:40 | False | 0 | Low | {}
+157 | 13:50:40 | False | 0 | Low | {}
+158 | 13:50:40 | False | 0 | Low | {}
+159 | 13:50:40 | False | 0 | Low | {}
+160 | 13:50:40 | False | 0 | Low | {}
+161 | 13:50:40 | False | 0 | Low | {}
+162 | 13:50:41 | False | 0 | Low | {}
+163 | 13:50:41 | False | 0 | Low | {}
+164 | 13:50:41 | False | 0 | Low | {}
+165 | 13:50:41 | False | 0 | Low | {}
+166 | 13:50:41 | False | 0 | Low | {}
+167 | 13:50:41 | False | 0 | Low | {}
+168 | 13:50:41 | True | 2 | Low | {'ambulance': 2}
+169 | 13:50:41 | False | 0 | Low | {}
+170 | 13:50:41 | False | 0 | Low | {}
+171 | 13:50:41 | True | 1 | Low | {'ambulance': 1}
+172 | 13:50:41 | True | 1 | Low | {'ambulance': 1}
+173 | 13:50:41 | False | 0 | Low | {}
+174 | 13:50:41 | False | 0 | Low | {}
+175 | 13:50:41 | False | 0 | Low | {}
+176 | 13:50:41 | False | 0 | Low | {}
+177 | 13:50:42 | False | 0 | Low | {}
+178 | 13:50:42 | False | 0 | Low | {}
+179 | 13:50:42 | False | 0 | Low | {}
+180 | 13:50:42 | True | 1 | Low | {'ambulance': 1}
+181 | 13:50:42 | True | 1 | Low | {'ambulance': 1}
+182 | 13:50:42 | True | 1 | Low | {'ambulance': 1}
+183 | 13:50:42 | True | 1 | Low | {'ambulance': 1}
+184 | 13:50:42 | True | 1 | Low | {'ambulance': 1}
+185 | 13:50:42 | True | 1 | Low | {'ambulance': 1}
+186 | 13:50:42 | False | 0 | Low | {}
+187 | 13:50:42 | False | 0 | Low | {}
+188 | 13:50:42 | False | 0 | Low | {}
+189 | 13:50:42 | True | 1 | Low | {'ambulance': 1}
+190 | 13:50:42 | True | 1 | Low | {'ambulance': 1}
+191 | 13:50:42 | True | 1 | Low | {'ambulance': 1}
+192 | 13:50:43 | False | 0 | Low | {}
+193 | 13:50:43 | True | 1 | Low | {'ambulance': 1}
+194 | 13:50:43 | True | 1 | Low | {'ambulance': 1}
+195 | 13:50:43 | False | 0 | Low | {}
+196 | 13:50:43 | True | 1 | Low | {'ambulance': 1}
+197 | 13:50:43 | True | 1 | Low | {'ambulance': 1}
+198 | 13:50:43 | True | 2 | Low | {'ambulance': 2}
+199 | 13:50:43 | True | 1 | Low | {'ambulance': 1}
+200 | 13:50:43 | True | 1 | Low | {'ambulance': 1}
+201 | 13:50:43 | True | 1 | Low | {'ambulance': 1}
+202 | 13:50:43 | True | 2 | Low | {'ambulance': 2}
+203 | 13:50:43 | True | 1 | Low | {'ambulance': 1}
+204 | 13:50:43 | True | 1 | Low | {'ambulance': 1}
+205 | 13:50:43 | True | 1 | Low | {'ambulance': 1}
+206 | 13:50:43 | True | 1 | Low | {'ambulance': 1}
+207 | 13:50:44 | True | 1 | Low | {'ambulance': 1}
+208 | 13:50:44 | True | 1 | Low | {'ambulance': 1}
+209 | 13:50:44 | True | 1 | Low | {'ambulance': 1}
+210 | 13:50:44 | True | 1 | Low | {'ambulance': 1}
+211 | 13:50:44 | True | 1 | Low | {'ambulance': 1}
+212 | 13:50:44 | True | 1 | Low | {'ambulance': 1}
+213 | 13:50:44 | True | 1 | Low | {'ambulance': 1}
+214 | 13:50:44 | True | 1 | Low | {'ambulance': 1}
+215 | 13:50:44 | True | 1 | Low | {'ambulance': 1}
+216 | 13:50:44 | False | 0 | Low | {}
+217 | 13:50:44 | False | 0 | Low | {}
+218 | 13:50:44 | False | 0 | Low | {}
+219 | 13:50:44 | False | 0 | Low | {}
+220 | 13:50:44 | False | 0 | Low | {}
+221 | 13:50:45 | False | 0 | Low | {}
+222 | 13:50:45 | False | 0 | Low | {}
+223 | 13:50:45 | False | 0 | Low | {}
+224 | 13:50:45 | False | 0 | Low | {}
+225 | 13:50:45 | False | 0 | Low | {}
+226 | 13:50:45 | False | 0 | Low | {}
+227 | 13:50:45 | True | 1 | Low | {'ambulance': 1}
+228 | 13:50:45 | True | 1 | Low | {'ambulance': 1}
+229 | 13:50:46 | True | 1 | Low | {'ambulance': 1}
+230 | 13:50:46 | True | 1 | Low | {'ambulance': 1}
+231 | 13:50:46 | False | 0 | Low | {}
+232 | 13:50:46 | False | 0 | Low | {}
+233 | 13:50:46 | False | 0 | Low | {}
+234 | 13:50:46 | False | 0 | Low | {}
+235 | 13:50:46 | False | 0 | Low | {}
+236 | 13:50:46 | False | 0 | Low | {}
+237 | 13:50:46 | True | 1 | Low | {'ambulance': 1}
+238 | 13:50:46 | True | 1 | Low | {'ambulance': 1}
+239 | 13:50:46 | False | 0 | Low | {}
+240 | 13:50:46 | True | 1 | Low | {'ambulance': 1}
+241 | 13:50:46 | False | 0 | Low | {}
+242 | 13:50:47 | False | 0 | Low | {}
+243 | 13:50:47 | False | 0 | Low | {}
+244 | 13:50:47 | False | 0 | Low | {}
+245 | 13:50:47 | False | 0 | Low | {}
+246 | 13:50:47 | True | 1 | Low | {'ambulance': 1}
+247 | 13:50:47 | False | 0 | Low | {}
+248 | 13:50:47 | False | 0 | Low | {}
+249 | 13:50:47 | False | 0 | Low | {}
+250 | 13:50:47 | False | 0 | Low | {}
+251 | 13:50:47 | False | 0 | Low | {}
+252 | 13:50:47 | False | 0 | Low | {}
+253 | 13:50:47 | False | 0 | Low | {}
+254 | 13:50:47 | False | 0 | Low | {}
+255 | 13:50:47 | False | 0 | Low | {}
+256 | 13:50:47 | False | 0 | Low | {}
+257 | 13:50:48 | True | 1 | Low | {'ambulance': 1}
+258 | 13:50:48 | True | 1 | Low | {'ambulance': 1}
+259 | 13:50:48 | False | 0 | Low | {}
+260 | 13:50:48 | False | 0 | Low | {}
+261 | 13:50:48 | False | 0 | Low | {}
+262 | 13:50:48 | False | 0 | Low | {}
+263 | 13:50:48 | False | 0 | Low | {}
+264 | 13:50:48 | False | 0 | Low | {}
+265 | 13:50:48 | False | 0 | Low | {}
+266 | 13:50:48 | True | 1 | Low | {'ambulance': 1}
+267 | 13:50:48 | False | 0 | Low | {}
+268 | 13:50:48 | False | 0 | Low | {}
+269 | 13:50:48 | True | 1 | Low | {'ambulance': 1}
+270 | 13:50:48 | False | 0 | Low | {}
+271 | 13:50:48 | False | 0 | Low | {}
+272 | 13:50:49 | False | 0 | Low | {}
+273 | 13:50:49 | False | 0 | Low | {}
+274 | 13:50:49 | False | 0 | Low | {}
+275 | 13:50:49 | False | 0 | Low | {}
+276 | 13:50:49 | True | 1 | Low | {'ambulance': 1}
+277 | 13:50:49 | True | 1 | Low | {'ambulance': 1}
+278 | 13:50:49 | True | 1 | Low | {'ambulance': 1}
+279 | 13:50:49 | True | 1 | Low | {'ambulance': 1}
+280 | 13:50:49 | False | 0 | Low | {}
+281 | 13:50:49 | False | 0 | Low | {}
+282 | 13:50:49 | False | 0 | Low | {}
+283 | 13:50:49 | False | 0 | Low | {}
+284 | 13:50:49 | False | 0 | Low | {}
+285 | 13:50:49 | False | 0 | Low | {}
+286 | 13:50:50 | False | 0 | Low | {}
+287 | 13:50:50 | False | 0 | Low | {}
+288 | 13:50:50 | False | 0 | Low | {}
+289 | 13:50:50 | False | 0 | Low | {}
+290 | 13:50:50 | False | 0 | Low | {}
+291 | 13:50:50 | False | 0 | Low | {}
+292 | 13:50:50 | False | 0 | Low | {}
+293 | 13:50:50 | False | 0 | Low | {}
+294 | 13:50:51 | False | 0 | Low | {}
+295 | 13:50:51 | False | 0 | Low | {}
+296 | 13:50:51 | True | 1 | Low | {'ambulance': 1}
+297 | 13:50:51 | True | 1 | Low | {'ambulance': 1}
+298 | 13:50:51 | True | 1 | Low | {'ambulance': 1}
+299 | 13:50:51 | True | 1 | Low | {'ambulance': 1}
+300 | 13:50:51 | True | 1 | Low | {'ambulance': 1}
+301 | 13:50:51 | True | 1 | Low | {'ambulance': 1}
+302 | 13:50:51 | False | 0 | Low | {}
+303 | 13:50:51 | False | 0 | Low | {}
+304 | 13:50:51 | False | 0 | Low | {}
+305 | 13:50:51 | False | 0 | Low | {}
+306 | 13:50:51 | False | 0 | Low | {}
+307 | 13:50:51 | False | 0 | Low | {}
+308 | 13:50:52 | False | 0 | Low | {}
+309 | 13:50:52 | True | 1 | Low | {'ambulance': 1}
+310 | 13:50:52 | True | 1 | Low | {'ambulance': 1}
+311 | 13:50:52 | False | 0 | Low | {}
+312 | 13:50:52 | False | 0 | Low | {}
+313 | 13:50:52 | False | 0 | Low | {}
+314 | 13:50:52 | False | 0 | Low | {}
+315 | 13:50:52 | False | 0 | Low | {}
+316 | 13:50:52 | False | 0 | Low | {}
+317 | 13:50:52 | False | 0 | Low | {}
+318 | 13:50:52 | False | 0 | Low | {}
+319 | 13:50:52 | False | 0 | Low | {}
+320 | 13:50:52 | False | 0 | Low | {}
+321 | 13:50:52 | False | 0 | Low | {}
+322 | 13:50:52 | False | 0 | Low | {}
+323 | 13:50:53 | False | 0 | Low | {}
+324 | 13:50:53 | False | 0 | Low | {}
+325 | 13:50:53 | False | 0 | Low | {}
+326 | 13:50:53 | False | 0 | Low | {}
+327 | 13:50:53 | False | 0 | Low | {}
+328 | 13:50:53 | False | 0 | Low | {}
+329 | 13:50:53 | False | 0 | Low | {}
+330 | 13:50:53 | False | 0 | Low | {}
+331 | 13:50:53 | True | 1 | Low | {'ambulance': 1}
+332 | 13:50:54 | False | 0 | Low | {}
+333 | 13:50:54 | False | 0 | Low | {}
+334 | 13:50:54 | False | 0 | Low | {}
+335 | 13:50:54 | False | 0 | Low | {}
+336 | 13:50:54 | False | 0 | Low | {}
+337 | 13:50:54 | False | 0 | Low | {}
+338 | 13:50:54 | False | 0 | Low | {}
+339 | 13:50:54 | False | 0 | Low | {}
+340 | 13:50:54 | False | 0 | Low | {}
+341 | 13:50:54 | False | 0 | Low | {}
+342 | 13:50:54 | False | 0 | Low | {}
+343 | 13:50:54 | False | 0 | Low | {}
+344 | 13:50:54 | False | 0 | Low | {}
+345 | 13:50:55 | False | 0 | Low | {}
+346 | 13:50:55 | False | 0 | Low | {}
+347 | 13:50:55 | False | 0 | Low | {}
+348 | 13:50:55 | False | 0 | Low | {}
+349 | 13:50:55 | False | 0 | Low | {}
+350 | 13:50:55 | False | 0 | Low | {}
+351 | 13:50:55 | False | 0 | Low | {}
+352 | 13:50:55 | False | 0 | Low | {}
+353 | 13:50:55 | False | 0 | Low | {}
+354 | 13:50:55 | False | 0 | Low | {}
+355 | 13:50:55 | False | 0 | Low | {}
+356 | 13:50:55 | False | 0 | Low | {}
+357 | 13:50:55 | False | 0 | Low | {}
+358 | 13:50:55 | False | 0 | Low | {}
+359 | 13:50:55 | False | 0 | Low | {}
+360 | 13:50:56 | False | 0 | Low | {}
+361 | 13:50:56 | False | 0 | Low | {}
+362 | 13:50:56 | False | 0 | Low | {}
+363 | 13:50:56 | False | 0 | Low | {}
+364 | 13:50:56 | False | 0 | Low | {}
+365 | 13:50:56 | False | 0 | Low | {}
+366 | 13:50:56 | False | 0 | Low | {}
+367 | 13:50:56 | False | 0 | Low | {}
+368 | 13:50:56 | False | 0 | Low | {}
+369 | 13:50:56 | False | 0 | Low | {}
+370 | 13:50:56 | False | 0 | Low | {}
+371 | 13:50:56 | False | 0 | Low | {}
+372 | 13:50:56 | False | 0 | Low | {}
+373 | 13:50:56 | False | 0 | Low | {}
+374 | 13:50:56 | False | 0 | Low | {}
+375 | 13:50:57 | False | 0 | Low | {}
+376 | 13:50:57 | False | 0 | Low | {}
+377 | 13:50:57 | False | 0 | Low | {}
+378 | 13:50:57 | False | 0 | Low | {}
+379 | 13:50:57 | False | 0 | Low | {}
+380 | 13:50:57 | False | 0 | Low | {}
+381 | 13:50:57 | False | 0 | Low | {}
+382 | 13:50:57 | False | 0 | Low | {}
+383 | 13:50:57 | True | 2 | Low | {'ambulance': 2}
+384 | 13:50:57 | False | 0 | Low | {}
+385 | 13:50:57 | False | 0 | Low | {}
+386 | 13:50:57 | False | 0 | Low | {}
+387 | 13:50:57 | False | 0 | Low | {}
+388 | 13:50:57 | False | 0 | Low | {}
+389 | 13:50:57 | False | 0 | Low | {}
+390 | 13:50:58 | False | 0 | Low | {}
+391 | 13:50:58 | False | 0 | Low | {}
+392 | 13:50:58 | False | 0 | Low | {}
+393 | 13:50:58 | False | 0 | Low | {}
+394 | 13:50:58 | True | 1 | Low | {'ambulance': 1}
+395 | 13:50:58 | True | 1 | Low | {'ambulance': 1}
+396 | 13:50:58 | True | 1 | Low | {'ambulance': 1}
+397 | 13:50:58 | True | 1 | Low | {'ambulance': 1}
+398 | 13:50:58 | True | 1 | Low | {'ambulance': 1}
+399 | 13:50:58 | True | 1 | Low | {'ambulance': 1}
+400 | 13:50:58 | True | 1 | Low | {'ambulance': 1}
+401 | 13:50:58 | True | 1 | Low | {'ambulance': 1}
+402 | 13:50:58 | True | 1 | Low | {'ambulance': 1}
+403 | 13:50:58 | True | 1 | Low | {'ambulance': 1}
+404 | 13:50:58 | True | 1 | Low | {'ambulance': 1}
+405 | 13:50:59 | True | 2 | Low | {'ambulance': 2}
+406 | 13:50:59 | True | 1 | Low | {'ambulance': 1}
+407 | 13:50:59 | False | 0 | Low | {}
+408 | 13:50:59 | False | 0 | Low | {}
+409 | 13:50:59 | True | 1 | Low | {'ambulance': 1}
+410 | 13:50:59 | True | 2 | Low | {'ambulance': 2}
+411 | 13:50:59 | True | 2 | Low | {'ambulance': 2}
+412 | 13:50:59 | True | 2 | Low | {'ambulance': 2}
+413 | 13:50:59 | True | 2 | Low | {'ambulance': 2}
+414 | 13:50:59 | True | 2 | Low | {'ambulance': 2}
+415 | 13:50:59 | True | 2 | Low | {'ambulance': 2}
+416 | 13:50:59 | True | 1 | Low | {'ambulance': 1}
+417 | 13:50:59 | True | 1 | Low | {'ambulance': 1}
+418 | 13:50:59 | True | 1 | Low | {'ambulance': 1}
+419 | 13:51:00 | True | 1 | Low | {'ambulance': 1}
+420 | 13:51:00 | True | 1 | Low | {'ambulance': 1}
+421 | 13:51:00 | True | 1 | Low | {'ambulance': 1}
+422 | 13:51:00 | True | 2 | Low | {'ambulance': 2}
+423 | 13:51:00 | True | 1 | Low | {'ambulance': 1}
+424 | 13:51:00 | True | 1 | Low | {'ambulance': 1}
+425 | 13:51:00 | True | 1 | Low | {'ambulance': 1}
+426 | 13:51:00 | True | 1 | Low | {'ambulance': 1}
+427 | 13:51:00 | True | 1 | Low | {'ambulance': 1}
+428 | 13:51:00 | True | 1 | Low | {'ambulance': 1}
+429 | 13:51:00 | True | 2 | Low | {'ambulance': 2}
+430 | 13:51:00 | True | 1 | Low | {'ambulance': 1}
+431 | 13:51:00 | False | 0 | Low | {}
+432 | 13:51:00 | False | 0 | Low | {}
+433 | 13:51:00 | False | 0 | Low | {}
+434 | 13:51:01 | False | 0 | Low | {}
+435 | 13:51:01 | False | 0 | Low | {}
+436 | 13:51:01 | False | 0 | Low | {}
+437 | 13:51:01 | False | 0 | Low | {}
+438 | 13:51:01 | False | 0 | Low | {}
+439 | 13:51:01 | False | 0 | Low | {}
+440 | 13:51:01 | False | 0 | Low | {}
+441 | 13:51:01 | False | 0 | Low | {}
+442 | 13:51:01 | False | 0 | Low | {}
+443 | 13:51:01 | False | 0 | Low | {}
+444 | 13:51:01 | False | 0 | Low | {}
+445 | 13:51:01 | False | 0 | Low | {}
+446 | 13:51:01 | False | 0 | Low | {}
+447 | 13:51:01 | False | 0 | Low | {}
+448 | 13:51:01 | False | 0 | Low | {}
+449 | 13:51:02 | False | 0 | Low | {}
+450 | 13:51:02 | False | 0 | Low | {}
+451 | 13:51:02 | False | 0 | Low | {}
+452 | 13:51:02 | False | 0 | Low | {}
+453 | 13:51:02 | False | 0 | Low | {}
+454 | 13:51:02 | False | 0 | Low | {}
+455 | 13:51:02 | False | 0 | Low | {}
+456 | 13:51:02 | False | 0 | Low | {}
+457 | 13:51:02 | False | 0 | Low | {}
+458 | 13:51:02 | False | 0 | Low | {}
+459 | 13:51:02 | False | 0 | Low | {}
+460 | 13:51:02 | False | 0 | Low | {}
+461 | 13:51:02 | False | 0 | Low | {}
+462 | 13:51:02 | False | 0 | Low | {}
+463 | 13:51:03 | False | 0 | Low | {}
+464 | 13:51:03 | False | 0 | Low | {}
+465 | 13:51:03 | False | 0 | Low | {}
+466 | 13:51:03 | False | 0 | Low | {}
+467 | 13:51:03 | False | 0 | Low | {}
+468 | 13:51:03 | False | 0 | Low | {}
+469 | 13:51:03 | False | 0 | Low | {}
+470 | 13:51:03 | False | 0 | Low | {}
+471 | 13:51:03 | False | 0 | Low | {}
+472 | 13:51:03 | False | 0 | Low | {}
+473 | 13:51:03 | False | 0 | Low | {}
+474 | 13:51:03 | False | 0 | Low | {}
+475 | 13:51:03 | False | 0 | Low | {}
+476 | 13:51:03 | False | 0 | Low | {}
+477 | 13:51:03 | False | 0 | Low | {}
+478 | 13:51:04 | False | 0 | Low | {}
+479 | 13:51:04 | False | 0 | Low | {}
+480 | 13:51:04 | False | 0 | Low | {}
+481 | 13:51:04 | False | 0 | Low | {}
+482 | 13:51:04 | False | 0 | Low | {}
+483 | 13:51:04 | False | 0 | Low | {}
+484 | 13:51:04 | False | 0 | Low | {}
+485 | 13:51:04 | False | 0 | Low | {}
+486 | 13:51:04 | False | 0 | Low | {}
+487 | 13:51:04 | False | 0 | Low | {}
+488 | 13:51:04 | False | 0 | Low | {}
+489 | 13:51:04 | False | 0 | Low | {}
+490 | 13:51:04 | False | 0 | Low | {}
+491 | 13:51:04 | False | 0 | Low | {}
+492 | 13:51:05 | False | 0 | Low | {}
+493 | 13:51:05 | False | 0 | Low | {}
+494 | 13:51:05 | False | 0 | Low | {}
+495 | 13:51:05 | False | 0 | Low | {}
+496 | 13:51:05 | False | 0 | Low | {}
+497 | 13:51:05 | False | 0 | Low | {}
+498 | 13:51:05 | False | 0 | Low | {}
+499 | 13:51:05 | False | 0 | Low | {}
+500 | 13:51:05 | False | 0 | Low | {}
+501 | 13:51:06 | False | 0 | Low | {}
+502 | 13:51:06 | False | 0 | Low | {}
+503 | 13:51:06 | False | 0 | Low | {}
+504 | 13:51:06 | False | 0 | Low | {}
+505 | 13:51:06 | False | 0 | Low | {}
+506 | 13:51:06 | False | 0 | Low | {}
+507 | 13:51:06 | False | 0 | Low | {}
+508 | 13:51:06 | False | 0 | Low | {}
+509 | 13:51:06 | False | 0 | Low | {}
+510 | 13:51:06 | False | 0 | Low | {}
+511 | 13:51:06 | False | 0 | Low | {}
+512 | 13:51:06 | False | 0 | Low | {}
+513 | 13:51:06 | False | 0 | Low | {}
+514 | 13:51:06 | False | 0 | Low | {}
+515 | 13:51:07 | False | 0 | Low | {}
+516 | 13:51:07 | False | 0 | Low | {}
+517 | 13:51:07 | False | 0 | Low | {}
+518 | 13:51:07 | False | 0 | Low | {}
+519 | 13:51:07 | False | 0 | Low | {}
+520 | 13:51:07 | False | 0 | Low | {}
+521 | 13:51:07 | False | 0 | Low | {}
+522 | 13:51:07 | False | 0 | Low | {}
+523 | 13:51:07 | False | 0 | Low | {}
+524 | 13:51:07 | False | 0 | Low | {}
+525 | 13:51:07 | False | 0 | Low | {}
+526 | 13:51:07 | False | 0 | Low | {}
+527 | 13:51:07 | False | 0 | Low | {}
+528 | 13:51:07 | False | 0 | Low | {}
+529 | 13:51:07 | False | 0 | Low | {}
+530 | 13:51:07 | True | 1 | Low | {'ambulance': 1}
+531 | 13:51:08 | True | 1 | Low | {'ambulance': 1}
+532 | 13:51:08 | False | 0 | Low | {}
+533 | 13:51:08 | False | 0 | Low | {}
+534 | 13:51:08 | False | 0 | Low | {}
+535 | 13:51:08 | True | 1 | Low | {'ambulance': 1}
+536 | 13:51:08 | False | 0 | Low | {}
+537 | 13:51:08 | False | 0 | Low | {}
+538 | 13:51:08 | False | 0 | Low | {}
+539 | 13:51:08 | False | 0 | Low | {}
+540 | 13:51:08 | False | 0 | Low | {}
+541 | 13:51:08 | False | 0 | Low | {}
+542 | 13:51:08 | False | 0 | Low | {}
+543 | 13:51:08 | False | 0 | Low | {}
+544 | 13:51:08 | False | 0 | Low | {}
+545 | 13:51:09 | False | 0 | Low | {}
+546 | 13:51:09 | False | 0 | Low | {}
+547 | 13:51:09 | False | 0 | Low | {}
+548 | 13:51:09 | False | 0 | Low | {}
+549 | 13:51:09 | False | 0 | Low | {}
+550 | 13:51:09 | False | 0 | Low | {}
+551 | 13:51:09 | False | 0 | Low | {}
+552 | 13:51:09 | False | 0 | Low | {}
+553 | 13:51:09 | False | 0 | Low | {}
+554 | 13:51:09 | False | 0 | Low | {}
+555 | 13:51:09 | False | 0 | Low | {}
+556 | 13:51:09 | False | 0 | Low | {}
+557 | 13:51:09 | False | 0 | Low | {}
+558 | 13:51:09 | False | 0 | Low | {}
+559 | 13:51:09 | False | 0 | Low | {}
+560 | 13:51:10 | False | 0 | Low | {}
+561 | 13:51:10 | False | 0 | Low | {}
+562 | 13:51:10 | False | 0 | Low | {}
+563 | 13:51:10 | False | 0 | Low | {}
+564 | 13:51:10 | False | 0 | Low | {}
+565 | 13:51:10 | False | 0 | Low | {}
+566 | 13:51:10 | False | 0 | Low | {}
+567 | 13:51:10 | False | 0 | Low | {}
+568 | 13:51:10 | False | 0 | Low | {}
+569 | 13:51:10 | False | 0 | Low | {}
+570 | 13:51:10 | False | 0 | Low | {}
+571 | 13:51:10 | False | 0 | Low | {}
+572 | 13:51:10 | False | 0 | Low | {}
+573 | 13:51:10 | False | 0 | Low | {}
+574 | 13:51:10 | False | 0 | Low | {}
+575 | 13:51:11 | False | 0 | Low | {}
+576 | 13:51:11 | False | 0 | Low | {}
+577 | 13:51:11 | False | 0 | Low | {}
+578 | 13:51:11 | False | 0 | Low | {}
+579 | 13:51:11 | False | 0 | Low | {}
+580 | 13:51:11 | False | 0 | Low | {}
+581 | 13:51:11 | False | 0 | Low | {}
+582 | 13:51:11 | False | 0 | Low | {}
+583 | 13:51:11 | False | 0 | Low | {}
+584 | 13:51:11 | False | 0 | Low | {}
+585 | 13:51:11 | False | 0 | Low | {}
+586 | 13:51:11 | False | 0 | Low | {}
+587 | 13:51:11 | False | 0 | Low | {}
+588 | 13:51:11 | False | 0 | Low | {}
+589 | 13:51:11 | False | 0 | Low | {}
+590 | 13:51:11 | False | 0 | Low | {}
+591 | 13:51:12 | False | 0 | Low | {}
+592 | 13:51:12 | False | 0 | Low | {}
+593 | 13:51:12 | False | 0 | Low | {}
+594 | 13:51:12 | False | 0 | Low | {}
+595 | 13:51:12 | False | 0 | Low | {}
+596 | 13:51:12 | False | 0 | Low | {}
+597 | 13:51:12 | True | 1 | Low | {'ambulance': 1}
+598 | 13:51:12 | True | 1 | Low | {'ambulance': 1}
+599 | 13:51:12 | True | 2 | Low | {'ambulance': 2}
+600 | 13:51:12 | True | 1 | Low | {'ambulance': 1}
+601 | 13:51:12 | True | 1 | Low | {'ambulance': 1}
+602 | 13:51:12 | False | 0 | Low | {}
+603 | 13:51:12 | False | 0 | Low | {}
+604 | 13:51:12 | False | 0 | Low | {}
+605 | 13:51:13 | False | 0 | Low | {}
+606 | 13:51:13 | True | 1 | Low | {'ambulance': 1}
+607 | 13:51:13 | True | 1 | Low | {'ambulance': 1}
+608 | 13:51:13 | True | 2 | Low | {'ambulance': 2}
+609 | 13:51:13 | False | 0 | Low | {}
+610 | 13:51:13 | True | 1 | Low | {'ambulance': 1}
+611 | 13:51:13 | True | 1 | Low | {'ambulance': 1}
+612 | 13:51:13 | True | 1 | Low | {'ambulance': 1}
+613 | 13:51:13 | True | 1 | Low | {'ambulance': 1}
+614 | 13:51:13 | False | 0 | Low | {}
+615 | 13:51:13 | True | 1 | Low | {'ambulance': 1}
+616 | 13:51:13 | True | 1 | Low | {'ambulance': 1}
+617 | 13:51:13 | True | 1 | Low | {'ambulance': 1}
+618 | 13:51:13 | True | 1 | Low | {'ambulance': 1}
+619 | 13:51:13 | True | 1 | Low | {'ambulance': 1}
+620 | 13:51:13 | True | 1 | Low | {'ambulance': 1}
+621 | 13:51:14 | True | 1 | Low | {'ambulance': 1}
+622 | 13:51:14 | True | 1 | Low | {'ambulance': 1}
+623 | 13:51:14 | True | 1 | Low | {'ambulance': 1}
+624 | 13:51:14 | False | 0 | Low | {}
+625 | 13:51:14 | False | 0 | Low | {}
+626 | 13:51:14 | False | 0 | Low | {}
+627 | 13:51:14 | False | 0 | Low | {}
+628 | 13:51:14 | False | 0 | Low | {}
+629 | 13:51:14 | False | 0 | Low | {}
+630 | 13:51:14 | False | 0 | Low | {}
+631 | 13:51:14 | False | 0 | Low | {}
+632 | 13:51:14 | False | 0 | Low | {}
+633 | 13:51:14 | False | 0 | Low | {}
+634 | 13:51:14 | False | 0 | Low | {}
+635 | 13:51:14 | False | 0 | Low | {}
+636 | 13:51:14 | False | 0 | Low | {}
+637 | 13:51:14 | True | 1 | Low | {'ambulance': 1}
+638 | 13:51:15 | False | 0 | Low | {}
+639 | 13:51:15 | False | 0 | Low | {}
+640 | 13:51:15 | False | 0 | Low | {}
+641 | 13:51:15 | False | 0 | Low | {}
+642 | 13:51:15 | False | 0 | Low | {}
+643 | 13:51:15 | False | 0 | Low | {}
+644 | 13:51:15 | False | 0 | Low | {}
+645 | 13:51:15 | False | 0 | Low | {}
+646 | 13:51:15 | False | 0 | Low | {}
+647 | 13:51:15 | False | 0 | Low | {}
+648 | 13:51:15 | False | 0 | Low | {}
+649 | 13:51:15 | False | 0 | Low | {}
+650 | 13:51:16 | False | 0 | Low | {}
+651 | 13:51:16 | False | 0 | Low | {}
+652 | 13:51:16 | False | 0 | Low | {}
+653 | 13:51:16 | False | 0 | Low | {}
+654 | 13:51:16 | False | 0 | Low | {}
+655 | 13:51:16 | False | 0 | Low | {}
+656 | 13:51:16 | False | 0 | Low | {}
+657 | 13:51:16 | False | 0 | Low | {}
+658 | 13:51:16 | True | 1 | Low | {'ambulance': 1}
+659 | 13:51:16 | True | 1 | Low | {'ambulance': 1}
+660 | 13:51:16 | True | 1 | Low | {'ambulance': 1}
+661 | 13:51:16 | True | 1 | Low | {'ambulance': 1}
+662 | 13:51:16 | False | 0 | Low | {}
+663 | 13:51:16 | False | 0 | Low | {}
+664 | 13:51:16 | False | 0 | Low | {}
+665 | 13:51:16 | False | 0 | Low | {}
+666 | 13:51:16 | False | 0 | Low | {}
+667 | 13:51:17 | False | 0 | Low | {}
+668 | 13:51:17 | False | 0 | Low | {}
+669 | 13:51:17 | False | 0 | Low | {}
+670 | 13:51:17 | False | 0 | Low | {}
+671 | 13:51:17 | False | 0 | Low | {}
+672 | 13:51:17 | False | 0 | Low | {}
+673 | 13:51:17 | False | 0 | Low | {}
+674 | 13:51:17 | False | 0 | Low | {}
+675 | 13:51:17 | False | 0 | Low | {}
+676 | 13:51:17 | True | 1 | Low | {'ambulance': 1}
+677 | 13:51:17 | True | 1 | Low | {'ambulance': 1}
+678 | 13:51:17 | True | 1 | Low | {'ambulance': 1}
+679 | 13:51:17 | True | 1 | Low | {'ambulance': 1}
+680 | 13:51:17 | True | 1 | Low | {'ambulance': 1}
+681 | 13:51:17 | True | 1 | Low | {'ambulance': 1}
+682 | 13:51:17 | True | 1 | Low | {'ambulance': 1}
+683 | 13:51:17 | True | 1 | Low | {'ambulance': 1}
+684 | 13:51:18 | True | 1 | Low | {'ambulance': 1}
+685 | 13:51:18 | True | 1 | Low | {'ambulance': 1}
+686 | 13:51:18 | True | 1 | Low | {'ambulance': 1}
+687 | 13:51:18 | True | 1 | Low | {'ambulance': 1}
+688 | 13:51:18 | True | 1 | Low | {'ambulance': 1}
+689 | 13:51:18 | True | 1 | Low | {'ambulance': 1}
+690 | 13:51:18 | True | 1 | Low | {'ambulance': 1}
+691 | 13:51:18 | True | 1 | Low | {'ambulance': 1}
+692 | 13:51:18 | True | 1 | Low | {'ambulance': 1}
+693 | 13:51:18 | True | 1 | Low | {'ambulance': 1}
+694 | 13:51:18 | True | 1 | Low | {'ambulance': 1}
+695 | 13:51:18 | True | 1 | Low | {'ambulance': 1}
+696 | 13:51:18 | True | 1 | Low | {'ambulance': 1}
+697 | 13:51:18 | True | 1 | Low | {'ambulance': 1}
+698 | 13:51:18 | True | 1 | Low | {'ambulance': 1}
+699 | 13:51:18 | True | 1 | Low | {'ambulance': 1}
+700 | 13:51:19 | True | 1 | Low | {'ambulance': 1}
+701 | 13:51:19 | True | 1 | Low | {'ambulance': 1}
+702 | 13:51:19 | True | 1 | Low | {'ambulance': 1}
+703 | 13:51:19 | True | 1 | Low | {'ambulance': 1}
+704 | 13:51:19 | True | 1 | Low | {'ambulance': 1}
+705 | 13:51:19 | True | 1 | Low | {'ambulance': 1}
+706 | 13:51:19 | True | 1 | Low | {'ambulance': 1}
+707 | 13:51:19 | True | 1 | Low | {'ambulance': 1}
+708 | 13:51:19 | True | 1 | Low | {'ambulance': 1}
+709 | 13:51:19 | True | 1 | Low | {'ambulance': 1}
+710 | 13:51:19 | True | 1 | Low | {'ambulance': 1}
+711 | 13:51:19 | True | 1 | Low | {'ambulance': 1}
+712 | 13:51:19 | True | 1 | Low | {'ambulance': 1}
+713 | 13:51:19 | True | 1 | Low | {'ambulance': 1}
+714 | 13:51:19 | True | 1 | Low | {'ambulance': 1}
+715 | 13:51:19 | True | 1 | Low | {'ambulance': 1}
+716 | 13:51:20 | True | 1 | Low | {'ambulance': 1}
+717 | 13:51:20 | True | 1 | Low | {'ambulance': 1}
+718 | 13:51:20 | True | 1 | Low | {'ambulance': 1}
+719 | 13:51:20 | True | 1 | Low | {'ambulance': 1}
+720 | 13:51:20 | True | 1 | Low | {'ambulance': 1}
+721 | 13:51:20 | True | 1 | Low | {'ambulance': 1}
+722 | 13:51:20 | True | 1 | Low | {'ambulance': 1}
+723 | 13:51:20 | True | 1 | Low | {'ambulance': 1}
+724 | 13:51:20 | True | 1 | Low | {'ambulance': 1}
+725 | 13:51:20 | True | 1 | Low | {'ambulance': 1}
+726 | 13:51:20 | True | 1 | Low | {'ambulance': 1}
+727 | 13:51:21 | False | 0 | Low | {}
+728 | 13:51:21 | False | 0 | Low | {}
+729 | 13:51:21 | False | 0 | Low | {}
+730 | 13:51:21 | False | 0 | Low | {}
+731 | 13:51:21 | False | 0 | Low | {}
+732 | 13:51:21 | False | 0 | Low | {}
+733 | 13:51:21 | False | 0 | Low | {}
+734 | 13:51:21 | False | 0 | Low | {}
+735 | 13:51:21 | False | 0 | Low | {}
+736 | 13:51:21 | False | 0 | Low | {}
+737 | 13:51:21 | False | 0 | Low | {}
+738 | 13:51:21 | False | 0 | Low | {}
+739 | 13:51:21 | False | 0 | Low | {}
+740 | 13:51:21 | False | 0 | Low | {}
+741 | 13:51:21 | True | 2 | Low | {'ambulance': 2}
+742 | 13:51:21 | True | 1 | Low | {'ambulance': 1}
+743 | 13:51:22 | True | 1 | Low | {'ambulance': 1}
+744 | 13:51:22 | True | 1 | Low | {'ambulance': 1}
+745 | 13:51:22 | True | 1 | Low | {'ambulance': 1}
+746 | 13:51:22 | True | 1 | Low | {'ambulance': 1}
+747 | 13:51:22 | True | 1 | Low | {'ambulance': 1}
+748 | 13:51:22 | True | 1 | Low | {'ambulance': 1}
+749 | 13:51:22 | True | 1 | Low | {'ambulance': 1}
+750 | 13:51:22 | True | 1 | Low | {'ambulance': 1}
+751 | 13:51:22 | True | 1 | Low | {'ambulance': 1}
+752 | 13:51:22 | True | 1 | Low | {'ambulance': 1}
+753 | 13:51:22 | True | 1 | Low | {'ambulance': 1}
+754 | 13:51:22 | False | 0 | Low | {}
+755 | 13:51:22 | False | 0 | Low | {}
+756 | 13:51:22 | False | 0 | Low | {}
+757 | 13:51:22 | False | 0 | Low | {}
+758 | 13:51:22 | False | 0 | Low | {}
+759 | 13:51:23 | False | 0 | Low | {}
+760 | 13:51:23 | False | 0 | Low | {}
+761 | 13:51:23 | False | 0 | Low | {}
+762 | 13:51:23 | True | 1 | Low | {'ambulance': 1}
+763 | 13:51:23 | True | 1 | Low | {'ambulance': 1}
+764 | 13:51:23 | True | 1 | Low | {'ambulance': 1}
+765 | 13:51:23 | True | 1 | Low | {'ambulance': 1}
+766 | 13:51:23 | True | 1 | Low | {'ambulance': 1}
+767 | 13:51:23 | True | 1 | Low | {'ambulance': 1}
+768 | 13:51:23 | False | 0 | Low | {}
+769 | 13:51:23 | False | 0 | Low | {}
+770 | 13:51:23 | False | 0 | Low | {}
+771 | 13:51:23 | False | 0 | Low | {}
+772 | 13:51:23 | False | 0 | Low | {}
+773 | 13:51:23 | False | 0 | Low | {}
+774 | 13:51:23 | False | 0 | Low | {}
+775 | 13:51:23 | False | 0 | Low | {}
+776 | 13:51:24 | False | 0 | Low | {}
+777 | 13:51:24 | False | 0 | Low | {}
+778 | 13:51:24 | False | 0 | Low | {}
+779 | 13:51:24 | False | 0 | Low | {}
+780 | 13:51:24 | False | 0 | Low | {}
+781 | 13:51:24 | False | 0 | Low | {}
+782 | 13:51:24 | True | 1 | Low | {'ambulance': 1}
+783 | 13:51:24 | True | 1 | Low | {'ambulance': 1}
+784 | 13:51:24 | True | 1 | Low | {'ambulance': 1}
+785 | 13:51:24 | False | 0 | Low | {}
+786 | 13:51:24 | False | 0 | Low | {}
+787 | 13:51:24 | False | 0 | Low | {}
+788 | 13:51:24 | False | 0 | Low | {}
+789 | 13:51:24 | False | 0 | Low | {}
+790 | 13:51:24 | False | 0 | Low | {}
+791 | 13:51:24 | False | 0 | Low | {}
+792 | 13:51:25 | False | 0 | Low | {}
+793 | 13:51:25 | False | 0 | Low | {}
+794 | 13:51:25 | False | 0 | Low | {}
+795 | 13:51:25 | False | 0 | Low | {}
+796 | 13:51:25 | False | 0 | Low | {}
+797 | 13:51:25 | False | 0 | Low | {}
+798 | 13:51:25 | False | 0 | Low | {}
+799 | 13:51:25 | False | 0 | Low | {}
+800 | 13:51:25 | False | 0 | Low | {}
+801 | 13:51:25 | False | 0 | Low | {}
+802 | 13:51:25 | False | 0 | Low | {}
+803 | 13:51:25 | False | 0 | Low | {}
+804 | 13:51:25 | False | 0 | Low | {}
+805 | 13:51:25 | False | 0 | Low | {}
+806 | 13:51:25 | False | 0 | Low | {}
+807 | 13:51:25 | False | 0 | Low | {}
+808 | 13:51:25 | False | 0 | Low | {}
+809 | 13:51:26 | False | 0 | Low | {}
+810 | 13:51:26 | False | 0 | Low | {}
+811 | 13:51:26 | False | 0 | Low | {}
+812 | 13:51:26 | False | 0 | Low | {}
+813 | 13:51:26 | True | 1 | Low | {'ambulance': 1}
+814 | 13:51:26 | True | 1 | Low | {'ambulance': 1}
+815 | 13:51:26 | True | 1 | Low | {'ambulance': 1}
+816 | 13:51:26 | False | 0 | Low | {}
+817 | 13:51:26 | False | 0 | Low | {}
+818 | 13:51:26 | False | 0 | Low | {}
+819 | 13:51:26 | False | 0 | Low | {}
+820 | 13:51:26 | False | 0 | Low | {}
+821 | 13:51:26 | False | 0 | Low | {}
+822 | 13:51:26 | False | 0 | Low | {}
+823 | 13:51:26 | False | 0 | Low | {}
+824 | 13:51:26 | False | 0 | Low | {}
+825 | 13:51:26 | True | 1 | Low | {'ambulance': 1}
+826 | 13:51:26 | False | 0 | Low | {}
+827 | 13:51:27 | False | 0 | Low | {}
+828 | 13:51:27 | True | 1 | Low | {'ambulance': 1}
+829 | 13:51:27 | True | 1 | Low | {'ambulance': 1}
+830 | 13:51:27 | True | 1 | Low | {'ambulance': 1}
+831 | 13:51:27 | True | 1 | Low | {'ambulance': 1}
+832 | 13:51:27 | True | 1 | Low | {'ambulance': 1}
+833 | 13:51:27 | True | 2 | Low | {'ambulance': 2}
+834 | 13:51:27 | True | 1 | Low | {'ambulance': 1}
+835 | 13:51:27 | True | 1 | Low | {'ambulance': 1}
+836 | 13:51:27 | True | 2 | Low | {'ambulance': 2}
+837 | 13:51:27 | True | 1 | Low | {'ambulance': 1}
+838 | 13:51:27 | True | 1 | Low | {'ambulance': 1}
+839 | 13:51:27 | True | 1 | Low | {'ambulance': 1}
+840 | 13:51:27 | True | 1 | Low | {'ambulance': 1}
+841 | 13:51:27 | True | 1 | Low | {'ambulance': 1}
+842 | 13:51:28 | True | 2 | Low | {'ambulance': 2}
+843 | 13:51:28 | True | 2 | Low | {'ambulance': 2}
+844 | 13:51:28 | True | 1 | Low | {'ambulance': 1}
+845 | 13:51:28 | True | 1 | Low | {'ambulance': 1}
+846 | 13:51:28 | True | 2 | Low | {'ambulance': 2}
+847 | 13:51:28 | True | 2 | Low | {'ambulance': 2}
+848 | 13:51:28 | True | 2 | Low | {'ambulance': 2}
+849 | 13:51:28 | True | 2 | Low | {'ambulance': 2}
+850 | 13:51:28 | True | 2 | Low | {'ambulance': 2}
+851 | 13:51:28 | True | 3 | Low | {'ambulance': 3}
+852 | 13:51:28 | True | 3 | Low | {'ambulance': 3}
+853 | 13:51:28 | True | 3 | Low | {'ambulance': 3}
+854 | 13:51:28 | True | 2 | Low | {'ambulance': 2}
+855 | 13:51:28 | True | 2 | Low | {'ambulance': 2}
+856 | 13:51:29 | True | 2 | Low | {'ambulance': 2}
+857 | 13:51:29 | True | 2 | Low | {'ambulance': 2}
+858 | 13:51:29 | True | 2 | Low | {'ambulance': 2}
+859 | 13:51:29 | True | 2 | Low | {'ambulance': 2}
+860 | 13:51:29 | True | 2 | Low | {'ambulance': 2}
+861 | 13:51:29 | True | 2 | Low | {'ambulance': 2}
+862 | 13:51:29 | True | 1 | Low | {'ambulance': 1}
+863 | 13:51:29 | True | 2 | Low | {'ambulance': 2}
+864 | 13:51:29 | True | 2 | Low | {'ambulance': 2}
+865 | 13:51:29 | True | 2 | Low | {'ambulance': 2}
+866 | 13:51:29 | True | 2 | Low | {'ambulance': 2}
+867 | 13:51:29 | True | 2 | Low | {'ambulance': 2}
+868 | 13:51:29 | True | 2 | Low | {'ambulance': 2}
+869 | 13:51:29 | True | 1 | Low | {'ambulance': 1}
+870 | 13:51:29 | True | 1 | Low | {'ambulance': 1}
+871 | 13:51:29 | True | 1 | Low | {'ambulance': 1}
+872 | 13:51:29 | True | 1 | Low | {'ambulance': 1}
+873 | 13:51:30 | True | 1 | Low | {'ambulance': 1}
+874 | 13:51:30 | True | 1 | Low | {'ambulance': 1}
+875 | 13:51:30 | True | 1 | Low | {'ambulance': 1}
+876 | 13:51:30 | True | 1 | Low | {'ambulance': 1}
+877 | 13:51:30 | True | 1 | Low | {'ambulance': 1}
+878 | 13:51:30 | True | 1 | Low | {'ambulance': 1}
+879 | 13:51:30 | True | 1 | Low | {'ambulance': 1}
+880 | 13:51:30 | True | 1 | Low | {'ambulance': 1}
+881 | 13:51:30 | True | 1 | Low | {'ambulance': 1}
+882 | 13:51:30 | True | 1 | Low | {'ambulance': 1}
+883 | 13:51:30 | True | 1 | Low | {'ambulance': 1}
+884 | 13:51:30 | True | 1 | Low | {'ambulance': 1}
+885 | 13:51:30 | True | 1 | Low | {'ambulance': 1}
+886 | 13:51:30 | True | 1 | Low | {'ambulance': 1}
+887 | 13:51:30 | True | 2 | Low | {'ambulance': 2}
+888 | 13:51:30 | True | 2 | Low | {'ambulance': 2}
+889 | 13:51:30 | True | 2 | Low | {'ambulance': 2}
+890 | 13:51:30 | True | 1 | Low | {'ambulance': 1}
+891 | 13:51:31 | True | 1 | Low | {'ambulance': 1}
+892 | 13:51:31 | True | 1 | Low | {'ambulance': 1}
+893 | 13:51:31 | True | 1 | Low | {'ambulance': 1}
+894 | 13:51:31 | True | 1 | Low | {'ambulance': 1}
+895 | 13:51:31 | True | 1 | Low | {'ambulance': 1}
+896 | 13:51:31 | True | 1 | Low | {'ambulance': 1}
+897 | 13:51:31 | True | 1 | Low | {'ambulance': 1}
+898 | 13:51:31 | True | 1 | Low | {'ambulance': 1}
+899 | 13:51:31 | True | 1 | Low | {'ambulance': 1}
+900 | 13:51:31 | True | 1 | Low | {'ambulance': 1}
+901 | 13:51:31 | True | 1 | Low | {'ambulance': 1}
+902 | 13:51:31 | True | 1 | Low | {'ambulance': 1}
+903 | 13:51:31 | True | 1 | Low | {'ambulance': 1}
+904 | 13:51:31 | True | 1 | Low | {'ambulance': 1}
+905 | 13:51:31 | True | 1 | Low | {'ambulance': 1}
+906 | 13:51:31 | True | 1 | Low | {'ambulance': 1}
+907 | 13:51:31 | True | 1 | Low | {'ambulance': 1}
+908 | 13:51:32 | True | 1 | Low | {'ambulance': 1}
+909 | 13:51:32 | True | 1 | Low | {'ambulance': 1}
+910 | 13:51:32 | True | 1 | Low | {'ambulance': 1}
+911 | 13:51:32 | True | 1 | Low | {'ambulance': 1}
+912 | 13:51:32 | True | 1 | Low | {'ambulance': 1}
+913 | 13:51:32 | True | 1 | Low | {'ambulance': 1}
+914 | 13:51:32 | True | 1 | Low | {'ambulance': 1}
+915 | 13:51:32 | True | 1 | Low | {'ambulance': 1}
+916 | 13:51:32 | True | 1 | Low | {'ambulance': 1}
+917 | 13:51:32 | True | 1 | Low | {'ambulance': 1}
+918 | 13:51:32 | True | 1 | Low | {'ambulance': 1}
+919 | 13:51:32 | True | 1 | Low | {'ambulance': 1}
+920 | 13:51:32 | True | 1 | Low | {'ambulance': 1}
+921 | 13:51:32 | True | 1 | Low | {'ambulance': 1}
+922 | 13:51:32 | True | 1 | Low | {'ambulance': 1}
+923 | 13:51:32 | True | 1 | Low | {'ambulance': 1}
+924 | 13:51:32 | True | 1 | Low | {'ambulance': 1}
+925 | 13:51:33 | True | 1 | Low | {'ambulance': 1}
+926 | 13:51:33 | True | 1 | Low | {'ambulance': 1}
+927 | 13:51:33 | True | 1 | Low | {'ambulance': 1}
+928 | 13:51:33 | True | 1 | Low | {'ambulance': 1}
+929 | 13:51:33 | True | 1 | Low | {'ambulance': 1}
+930 | 13:51:33 | True | 1 | Low | {'ambulance': 1}
+931 | 13:51:33 | True | 1 | Low | {'ambulance': 1}
+932 | 13:51:33 | True | 1 | Low | {'ambulance': 1}
+933 | 13:51:33 | True | 1 | Low | {'ambulance': 1}
+934 | 13:51:33 | True | 1 | Low | {'ambulance': 1}
+935 | 13:51:33 | True | 1 | Low | {'ambulance': 1}
+936 | 13:51:33 | True | 1 | Low | {'ambulance': 1}
+937 | 13:51:33 | True | 1 | Low | {'ambulance': 1}
+938 | 13:51:33 | True | 1 | Low | {'ambulance': 1}
+939 | 13:51:33 | True | 1 | Low | {'ambulance': 1}
+940 | 13:51:33 | True | 1 | Low | {'ambulance': 1}
+941 | 13:51:33 | True | 1 | Low | {'ambulance': 1}
+942 | 13:51:34 | True | 1 | Low | {'ambulance': 1}
+943 | 13:51:34 | True | 1 | Low | {'ambulance': 1}
+944 | 13:51:34 | True | 1 | Low | {'ambulance': 1}
+945 | 13:51:34 | True | 1 | Low | {'ambulance': 1}
+946 | 13:51:34 | True | 1 | Low | {'ambulance': 1}
+947 | 13:51:34 | True | 1 | Low | {'ambulance': 1}
+948 | 13:51:34 | True | 1 | Low | {'ambulance': 1}
+949 | 13:51:34 | True | 1 | Low | {'ambulance': 1}
+950 | 13:51:35 | True | 1 | Low | {'ambulance': 1}
+951 | 13:51:35 | True | 1 | Low | {'ambulance': 1}
+952 | 13:51:35 | True | 1 | Low | {'ambulance': 1}
+953 | 13:51:35 | True | 1 | Low | {'ambulance': 1}
+954 | 13:51:35 | True | 2 | Low | {'ambulance': 2}
+955 | 13:51:35 | True | 1 | Low | {'ambulance': 1}
+956 | 13:51:35 | True | 1 | Low | {'ambulance': 1}
+957 | 13:51:35 | True | 1 | Low | {'ambulance': 1}
+958 | 13:51:35 | True | 1 | Low | {'ambulance': 1}
+959 | 13:51:35 | True | 1 | Low | {'ambulance': 1}
+960 | 13:51:36 | True | 2 | Low | {'ambulance': 2}
+961 | 13:51:36 | True | 1 | Low | {'ambulance': 1}
+962 | 13:51:36 | True | 1 | Low | {'ambulance': 1}
+963 | 13:51:36 | True | 1 | Low | {'ambulance': 1}
+964 | 13:51:36 | True | 1 | Low | {'ambulance': 1}
+965 | 13:51:36 | True | 1 | Low | {'ambulance': 1}
+966 | 13:51:36 | True | 1 | Low | {'ambulance': 1}
+967 | 13:51:36 | True | 1 | Low | {'ambulance': 1}
+968 | 13:51:36 | True | 1 | Low | {'ambulance': 1}
+969 | 13:51:36 | True | 2 | Low | {'ambulance': 2}
+970 | 13:51:36 | True | 1 | Low | {'ambulance': 1}
+971 | 13:51:36 | True | 1 | Low | {'ambulance': 1}
+972 | 13:51:36 | True | 1 | Low | {'ambulance': 1}
+973 | 13:51:36 | True | 1 | Low | {'ambulance': 1}
+974 | 13:51:36 | True | 1 | Low | {'ambulance': 1}
+975 | 13:51:36 | True | 1 | Low | {'ambulance': 1}
+976 | 13:51:37 | True | 1 | Low | {'ambulance': 1}
+977 | 13:51:37 | False | 0 | Low | {}
+978 | 13:51:37 | True | 1 | Low | {'ambulance': 1}
+979 | 13:51:37 | True | 1 | Low | {'ambulance': 1}
+980 | 13:51:37 | True | 1 | Low | {'ambulance': 1}
+981 | 13:51:37 | True | 1 | Low | {'ambulance': 1}
+982 | 13:51:37 | True | 1 | Low | {'ambulance': 1}
+983 | 13:51:37 | True | 1 | Low | {'ambulance': 1}
+984 | 13:51:37 | True | 1 | Low | {'ambulance': 1}
+985 | 13:51:37 | True | 1 | Low | {'ambulance': 1}
+986 | 13:51:37 | True | 1 | Low | {'ambulance': 1}
+987 | 13:51:37 | True | 1 | Low | {'ambulance': 1}
+988 | 13:51:37 | True | 1 | Low | {'ambulance': 1}
+989 | 13:51:37 | True | 1 | Low | {'ambulance': 1}
+990 | 13:51:37 | True | 1 | Low | {'ambulance': 1}
+991 | 13:51:37 | True | 1 | Low | {'ambulance': 1}
+992 | 13:51:37 | False | 0 | Low | {}
+993 | 13:51:38 | True | 1 | Low | {'ambulance': 1}
+994 | 13:51:38 | False | 0 | Low | {}
+995 | 13:51:38 | False | 0 | Low | {}
+996 | 13:51:38 | False | 0 | Low | {}
+997 | 13:51:38 | True | 1 | Low | {'ambulance': 1}
+998 | 13:51:38 | True | 2 | Low | {'ambulance': 2}
+999 | 13:51:38 | True | 1 | Low | {'ambulance': 1}
+1000 | 13:51:38 | True | 2 | Low | {'ambulance': 2}
+1001 | 13:51:38 | True | 1 | Low | {'ambulance': 1}
+1002 | 13:51:38 | True | 1 | Low | {'ambulance': 1}
+1003 | 13:51:38 | True | 1 | Low | {'ambulance': 1}
+1004 | 13:51:38 | True | 1 | Low | {'ambulance': 1}
+1005 | 13:51:38 | True | 1 | Low | {'ambulance': 1}
+1006 | 13:51:38 | True | 1 | Low | {'ambulance': 1}
+1007 | 13:51:38 | True | 1 | Low | {'ambulance': 1}
+1008 | 13:51:38 | True | 1 | Low | {'ambulance': 1}
+1009 | 13:51:39 | True | 1 | Low | {'ambulance': 1}
+1010 | 13:51:39 | True | 1 | Low | {'ambulance': 1}
+1011 | 13:51:39 | True | 1 | Low | {'ambulance': 1}
+1012 | 13:51:39 | True | 1 | Low | {'ambulance': 1}
+1013 | 13:51:39 | True | 1 | Low | {'ambulance': 1}
+1014 | 13:51:39 | True | 1 | Low | {'ambulance': 1}
+1015 | 13:51:39 | True | 1 | Low | {'ambulance': 1}
+1016 | 13:51:39 | True | 1 | Low | {'ambulance': 1}
+1017 | 13:51:39 | True | 1 | Low | {'ambulance': 1}
+1018 | 13:51:39 | True | 1 | Low | {'ambulance': 1}
+1019 | 13:51:39 | True | 1 | Low | {'ambulance': 1}
+1020 | 13:51:39 | True | 1 | Low | {'ambulance': 1}
+1021 | 13:51:39 | False | 0 | Low | {}
+1022 | 13:51:39 | True | 1 | Low | {'ambulance': 1}
+1023 | 13:51:39 | False | 0 | Low | {}
+1024 | 13:51:39 | False | 0 | Low | {}
+1025 | 13:51:39 | True | 1 | Low | {'ambulance': 1}
+1026 | 13:51:40 | True | 1 | Low | {'ambulance': 1}
+1027 | 13:51:40 | True | 1 | Low | {'ambulance': 1}
+1028 | 13:51:40 | True | 1 | Low | {'ambulance': 1}
+1029 | 13:51:40 | False | 0 | Low | {}
+1030 | 13:51:40 | True | 1 | Low | {'ambulance': 1}
+1031 | 13:51:40 | True | 1 | Low | {'ambulance': 1}
+1032 | 13:51:40 | True | 1 | Low | {'ambulance': 1}
+1033 | 13:51:40 | False | 0 | Low | {}
+1034 | 13:51:40 | False | 0 | Low | {}
+1035 | 13:51:40 | False | 0 | Low | {}
+1036 | 13:51:40 | False | 0 | Low | {}
+1037 | 13:51:40 | False | 0 | Low | {}
+1038 | 13:51:40 | False | 0 | Low | {}
+1039 | 13:51:40 | False | 0 | Low | {}
+1040 | 13:51:40 | False | 0 | Low | {}
+1041 | 13:51:41 | False | 0 | Low | {}
+1042 | 13:51:41 | False | 0 | Low | {}
+1043 | 13:51:41 | True | 1 | Low | {'ambulance': 1}
+1044 | 13:51:41 | False | 0 | Low | {}
+1045 | 13:51:41 | False | 0 | Low | {}
+1046 | 13:51:41 | False | 0 | Low | {}
+1047 | 13:51:41 | True | 1 | Low | {'ambulance': 1}
+1048 | 13:51:41 | True | 1 | Low | {'ambulance': 1}
+1049 | 13:51:41 | True | 1 | Low | {'ambulance': 1}
+1050 | 13:51:41 | False | 0 | Low | {}
+1051 | 13:51:41 | True | 1 | Low | {'ambulance': 1}
+1052 | 13:51:41 | False | 0 | Low | {}
+1053 | 13:51:41 | False | 0 | Low | {}
+1054 | 13:51:42 | False | 0 | Low | {}
+1055 | 13:51:42 | False | 0 | Low | {}
+1056 | 13:51:42 | False | 0 | Low | {}
+1057 | 13:51:42 | False | 0 | Low | {}
+1058 | 13:51:42 | False | 0 | Low | {}
+1059 | 13:51:42 | False | 0 | Low | {}
+1060 | 13:51:42 | False | 0 | Low | {}
+1061 | 13:51:42 | False | 0 | Low | {}
+1062 | 13:51:42 | False | 0 | Low | {}
+1063 | 13:51:42 | False | 0 | Low | {}
+1064 | 13:51:42 | False | 0 | Low | {}
+1065 | 13:51:42 | False | 0 | Low | {}
+1066 | 13:51:42 | False | 0 | Low | {}
+1067 | 13:51:42 | False | 0 | Low | {}
+1068 | 13:51:42 | False | 0 | Low | {}
+1069 | 13:51:43 | False | 0 | Low | {}
+1070 | 13:51:43 | False | 0 | Low | {}
+1071 | 13:51:43 | False | 0 | Low | {}
+1072 | 13:51:43 | False | 0 | Low | {}
+1073 | 13:51:43 | False | 0 | Low | {}
+1074 | 13:51:43 | False | 0 | Low | {}
+1075 | 13:51:43 | False | 0 | Low | {}
+1076 | 13:51:43 | False | 0 | Low | {}
+1077 | 13:51:43 | False | 0 | Low | {}
+1078 | 13:51:43 | False | 0 | Low | {}
+1079 | 13:51:43 | False | 0 | Low | {}
+1080 | 13:51:43 | False | 0 | Low | {}
+1081 | 13:51:43 | False | 0 | Low | {}
+1082 | 13:51:43 | False | 0 | Low | {}
+1083 | 13:51:43 | False | 0 | Low | {}
+1084 | 13:51:43 | False | 0 | Low | {}
+1085 | 13:51:44 | False | 0 | Low | {}
+1086 | 13:51:44 | False | 0 | Low | {}
+1087 | 13:51:44 | False | 0 | Low | {}
+1088 | 13:51:44 | True | 1 | Low | {'ambulance': 1}
+1089 | 13:51:44 | False | 0 | Low | {}
+1090 | 13:51:44 | False | 0 | Low | {}
+1091 | 13:51:44 | False | 0 | Low | {}
+1092 | 13:51:44 | False | 0 | Low | {}
+1093 | 13:51:44 | False | 0 | Low | {}
+1094 | 13:51:44 | False | 0 | Low | {}
+1095 | 13:51:44 | False | 0 | Low | {}
+1096 | 13:51:44 | False | 0 | Low | {}
+1097 | 13:51:44 | False | 0 | Low | {}
+1098 | 13:51:44 | False | 0 | Low | {}
+1099 | 13:51:45 | False | 0 | Low | {}
+1100 | 13:51:45 | False | 0 | Low | {}
+1101 | 13:51:45 | False | 0 | Low | {}
+1102 | 13:51:45 | False | 0 | Low | {}
+1103 | 13:51:45 | False | 0 | Low | {}
+1104 | 13:51:45 | False | 0 | Low | {}
+1105 | 13:51:45 | False | 0 | Low | {}
+1106 | 13:51:45 | True | 1 | Low | {'ambulance': 1}
+1107 | 13:51:45 | False | 0 | Low | {}
+1108 | 13:51:45 | False | 0 | Low | {}
+1109 | 13:51:45 | True | 1 | Low | {'ambulance': 1}
+1110 | 13:51:45 | True | 1 | Low | {'ambulance': 1}
+1111 | 13:51:45 | True | 1 | Low | {'ambulance': 1}
+1112 | 13:51:45 | True | 1 | Low | {'ambulance': 1}
+1113 | 13:51:45 | True | 1 | Low | {'ambulance': 1}
+1114 | 13:51:46 | False | 0 | Low | {}
+1115 | 13:51:46 | False | 0 | Low | {}
+1116 | 13:51:46 | False | 0 | Low | {}
+1117 | 13:51:46 | False | 0 | Low | {}
+1118 | 13:51:46 | False | 0 | Low | {}
+1119 | 13:51:46 | False | 0 | Low | {}
+1120 | 13:51:46 | False | 0 | Low | {}
+1121 | 13:51:46 | False | 0 | Low | {}
+1122 | 13:51:46 | False | 0 | Low | {}
+1123 | 13:51:46 | False | 0 | Low | {}
+1124 | 13:51:46 | False | 0 | Low | {}
+1125 | 13:51:46 | False | 0 | Low | {}
+1126 | 13:51:46 | False | 0 | Low | {}
+1127 | 13:51:46 | False | 0 | Low | {}
+1128 | 13:51:46 | False | 0 | Low | {}
+1129 | 13:51:46 | False | 0 | Low | {}
+1130 | 13:51:47 | False | 0 | Low | {}
+1131 | 13:51:47 | False | 0 | Low | {}
+1132 | 13:51:47 | False | 0 | Low | {}
+1133 | 13:51:47 | False | 0 | Low | {}
+1134 | 13:51:47 | False | 0 | Low | {}
+1135 | 13:51:47 | False | 0 | Low | {}
+1136 | 13:51:47 | False | 0 | Low | {}
+1137 | 13:51:47 | False | 0 | Low | {}
+1138 | 13:51:47 | False | 0 | Low | {}
+1139 | 13:51:47 | False | 0 | Low | {}
+1140 | 13:51:47 | False | 0 | Low | {}
+1141 | 13:51:47 | False | 0 | Low | {}
+1142 | 13:51:47 | False | 0 | Low | {}
+1143 | 13:51:47 | True | 1 | Low | {'ambulance': 1}
+1144 | 13:51:48 | False | 0 | Low | {}
+1145 | 13:51:48 | False | 0 | Low | {}
+1146 | 13:51:48 | False | 0 | Low | {}
+1147 | 13:51:49 | False | 0 | Low | {}
+1148 | 13:51:49 | False | 0 | Low | {}
+1149 | 13:51:49 | False | 0 | Low | {}
+1150 | 13:51:49 | False | 0 | Low | {}
+1151 | 13:51:49 | False | 0 | Low | {}
+1152 | 13:51:49 | False | 0 | Low | {}
+1153 | 13:51:49 | False | 0 | Low | {}
+1154 | 13:51:49 | True | 1 | Low | {'ambulance': 1}
+1155 | 13:51:49 | True | 1 | Low | {'ambulance': 1}
+1156 | 13:51:49 | False | 0 | Low | {}
+1157 | 13:51:49 | True | 1 | Low | {'ambulance': 1}
+1158 | 13:51:49 | True | 1 | Low | {'ambulance': 1}
+1159 | 13:51:49 | True | 1 | Low | {'ambulance': 1}
+1160 | 13:51:49 | True | 1 | Low | {'ambulance': 1}
+1161 | 13:51:49 | True | 1 | Low | {'ambulance': 1}
+1162 | 13:51:49 | True | 1 | Low | {'ambulance': 1}
+1163 | 13:51:49 | True | 1 | Low | {'ambulance': 1}
+1164 | 13:51:49 | True | 1 | Low | {'ambulance': 1}
+1165 | 13:51:50 | True | 1 | Low | {'ambulance': 1}
+1166 | 13:51:50 | True | 1 | Low | {'ambulance': 1}
+1167 | 13:51:50 | True | 1 | Low | {'ambulance': 1}
+1168 | 13:51:50 | True | 1 | Low | {'ambulance': 1}
+1169 | 13:51:50 | True | 1 | Low | {'ambulance': 1}
+1170 | 13:51:50 | True | 1 | Low | {'ambulance': 1}
+1171 | 13:51:50 | False | 0 | Low | {}
+1172 | 13:51:50 | False | 0 | Low | {}
+1173 | 13:51:50 | False | 0 | Low | {}
+1174 | 13:51:50 | True | 1 | Low | {'ambulance': 1}
+1175 | 13:51:51 | False | 0 | Low | {}
+1176 | 13:51:51 | False | 0 | Low | {}
+1177 | 13:51:51 | False | 0 | Low | {}
+1178 | 13:51:51 | False | 0 | Low | {}
+1179 | 13:51:51 | False | 0 | Low | {}
+1180 | 13:51:51 | False | 0 | Low | {}
+1181 | 13:51:51 | False | 0 | Low | {}
+1182 | 13:51:51 | False | 0 | Low | {}
+1183 | 13:51:51 | False | 0 | Low | {}
+1184 | 13:51:51 | False | 0 | Low | {}
+1185 | 13:51:51 | False | 0 | Low | {}
+1186 | 13:51:51 | False | 0 | Low | {}
+1187 | 13:51:51 | False | 0 | Low | {}
+1188 | 13:51:51 | False | 0 | Low | {}
+1189 | 13:51:51 | True | 1 | Low | {'ambulance': 1}
+1190 | 13:51:52 | False | 0 | Low | {}
+1191 | 13:51:52 | True | 1 | Low | {'ambulance': 1}
+1192 | 13:51:52 | True | 1 | Low | {'ambulance': 1}
+1193 | 13:51:52 | True | 1 | Low | {'ambulance': 1}
+1194 | 13:51:52 | True | 1 | Low | {'ambulance': 1}
+1195 | 13:51:52 | True | 1 | Low | {'ambulance': 1}
+1196 | 13:51:52 | True | 1 | Low | {'ambulance': 1}
+1197 | 13:51:52 | True | 1 | Low | {'ambulance': 1}
+1198 | 13:51:52 | True | 1 | Low | {'ambulance': 1}
+1199 | 13:51:52 | True | 1 | Low | {'ambulance': 1}
+1200 | 13:51:52 | False | 0 | Low | {}
+1201 | 13:51:52 | False | 0 | Low | {}
+1202 | 13:51:52 | False | 0 | Low | {}
+1203 | 13:51:52 | False | 0 | Low | {}
+1204 | 13:51:52 | False | 0 | Low | {}
+1205 | 13:51:53 | False | 0 | Low | {}
+1206 | 13:51:53 | False | 0 | Low | {}
+1207 | 13:51:53 | False | 0 | Low | {}
+1208 | 13:51:53 | False | 0 | Low | {}
+1209 | 13:51:53 | False | 0 | Low | {}
+1210 | 13:51:53 | False | 0 | Low | {}
+1211 | 13:51:53 | False | 0 | Low | {}
+1212 | 13:51:53 | False | 0 | Low | {}
+1213 | 13:51:53 | False | 0 | Low | {}
+1214 | 13:51:53 | False | 0 | Low | {}
+1215 | 13:51:53 | False | 0 | Low | {}
+1216 | 13:51:53 | False | 0 | Low | {}
+1217 | 13:51:53 | False | 0 | Low | {}
+1218 | 13:51:53 | False | 0 | Low | {}
+1219 | 13:51:53 | False | 0 | Low | {}
+1220 | 13:51:53 | False | 0 | Low | {}
+1221 | 13:51:53 | False | 0 | Low | {}
+1222 | 13:51:54 | True | 1 | Low | {'ambulance': 1}
+1223 | 13:51:54 | False | 0 | Low | {}
+1224 | 13:51:54 | True | 1 | Low | {'ambulance': 1}
+1225 | 13:51:54 | True | 1 | Low | {'ambulance': 1}
+1226 | 13:51:54 | False | 0 | Low | {}
+1227 | 13:51:54 | False | 0 | Low | {}
+1228 | 13:51:54 | False | 0 | Low | {}
+1229 | 13:51:54 | False | 0 | Low | {}
+1230 | 13:51:54 | False | 0 | Low | {}
+1231 | 13:51:54 | False | 0 | Low | {}
+1232 | 13:51:54 | False | 0 | Low | {}
+1233 | 13:51:54 | False | 0 | Low | {}
+1234 | 13:51:54 | False | 0 | Low | {}
+1235 | 13:51:54 | False | 0 | Low | {}
+1236 | 13:51:54 | False | 0 | Low | {}
+1237 | 13:51:54 | False | 0 | Low | {}
+1238 | 13:51:55 | False | 0 | Low | {}
+1239 | 13:51:55 | False | 0 | Low | {}
+1240 | 13:51:55 | False | 0 | Low | {}
+1241 | 13:51:55 | False | 0 | Low | {}
+1242 | 13:51:55 | False | 0 | Low | {}
+1243 | 13:51:55 | False | 0 | Low | {}
+1244 | 13:51:55 | False | 0 | Low | {}
+1245 | 13:51:55 | False | 0 | Low | {}
+1246 | 13:51:55 | False | 0 | Low | {}
+1247 | 13:51:55 | False | 0 | Low | {}
+1248 | 13:51:55 | False | 0 | Low | {}
+1249 | 13:51:55 | False | 0 | Low | {}
+1250 | 13:51:55 | False | 0 | Low | {}
+1251 | 13:51:55 | False | 0 | Low | {}
+1252 | 13:51:55 | False | 0 | Low | {}
+1253 | 13:51:56 | False | 0 | Low | {}
+1254 | 13:51:56 | False | 0 | Low | {}
+1255 | 13:51:56 | False | 0 | Low | {}
+1256 | 13:51:56 | False | 0 | Low | {}
+1257 | 13:51:56 | False | 0 | Low | {}
+1258 | 13:51:56 | False | 0 | Low | {}
+1259 | 13:51:56 | False | 0 | Low | {}
+1260 | 13:51:56 | False | 0 | Low | {}
+1261 | 13:51:56 | False | 0 | Low | {}
+1262 | 13:51:56 | False | 0 | Low | {}
+1263 | 13:51:56 | False | 0 | Low | {}
+1264 | 13:51:56 | False | 0 | Low | {}
+1265 | 13:51:56 | False | 0 | Low | {}
+1266 | 13:51:56 | False | 0 | Low | {}
+1267 | 13:51:56 | False | 0 | Low | {}
+1268 | 13:51:56 | False | 0 | Low | {}
+1269 | 13:51:57 | False | 0 | Low | {}
+1270 | 13:51:57 | False | 0 | Low | {}
+1271 | 13:51:57 | False | 0 | Low | {}
+1272 | 13:51:57 | False | 0 | Low | {}
+1273 | 13:51:57 | False | 0 | Low | {}
+1274 | 13:51:57 | False | 0 | Low | {}
+1275 | 13:51:57 | False | 0 | Low | {}
+1276 | 13:51:57 | False | 0 | Low | {}
+1277 | 13:51:57 | True | 1 | Low | {'ambulance': 1}
+1278 | 13:51:57 | True | 1 | Low | {'ambulance': 1}
+1279 | 13:51:57 | True | 1 | Low | {'ambulance': 1}
+1280 | 13:51:57 | True | 1 | Low | {'ambulance': 1}
+1281 | 13:51:57 | True | 1 | Low | {'ambulance': 1}
+1282 | 13:51:57 | True | 1 | Low | {'ambulance': 1}
+1283 | 13:51:57 | True | 1 | Low | {'ambulance': 1}
+1284 | 13:51:58 | False | 0 | Low | {}
+1285 | 13:51:58 | False | 0 | Low | {}
+1286 | 13:51:58 | False | 0 | Low | {}
+1287 | 13:51:58 | False | 0 | Low | {}
+1288 | 13:51:58 | False | 0 | Low | {}
+1289 | 13:51:58 | False | 0 | Low | {}
+1290 | 13:51:58 | False | 0 | Low | {}
+1291 | 13:51:58 | False | 0 | Low | {}
+1292 | 13:51:58 | False | 0 | Low | {}
+1293 | 13:51:58 | False | 0 | Low | {}
+1294 | 13:51:58 | False | 0 | Low | {}
+1295 | 13:51:58 | False | 0 | Low | {}
+1296 | 13:51:58 | False | 0 | Low | {}
+1297 | 13:51:58 | False | 0 | Low | {}
+1298 | 13:51:58 | False | 0 | Low | {}
+1299 | 13:51:58 | False | 0 | Low | {}
+1300 | 13:51:59 | False | 0 | Low | {}
+1301 | 13:51:59 | False | 0 | Low | {}
+1302 | 13:51:59 | False | 0 | Low | {}
+1303 | 13:51:59 | False | 0 | Low | {}
+1304 | 13:51:59 | False | 0 | Low | {}
+1305 | 13:51:59 | False | 0 | Low | {}
+1306 | 13:51:59 | False | 0 | Low | {}
+1307 | 13:51:59 | False | 0 | Low | {}
+1308 | 13:51:59 | False | 0 | Low | {}
+1309 | 13:51:59 | False | 0 | Low | {}
+1310 | 13:51:59 | False | 0 | Low | {}
+1311 | 13:51:59 | False | 0 | Low | {}
+1312 | 13:51:59 | False | 0 | Low | {}
+1313 | 13:51:59 | False | 0 | Low | {}
+1314 | 13:51:59 | False | 0 | Low | {}
+1315 | 13:51:59 | False | 0 | Low | {}
+1316 | 13:52:00 | False | 0 | Low | {}
+1317 | 13:52:00 | False | 0 | Low | {}
+1318 | 13:52:00 | False | 0 | Low | {}
+1319 | 13:52:00 | False | 0 | Low | {}
+1320 | 13:52:00 | False | 0 | Low | {}
+1321 | 13:52:00 | False | 0 | Low | {}
+1322 | 13:52:00 | False | 0 | Low | {}
+1323 | 13:52:00 | False | 0 | Low | {}
+1324 | 13:52:00 | False | 0 | Low | {}
+1325 | 13:52:00 | False | 0 | Low | {}
+1326 | 13:52:00 | False | 0 | Low | {}
+1327 | 13:52:00 | False | 0 | Low | {}
+1328 | 13:52:00 | False | 0 | Low | {}
+1329 | 13:52:00 | False | 0 | Low | {}
+1330 | 13:52:00 | False | 0 | Low | {}
+1331 | 13:52:00 | False | 0 | Low | {}
+1332 | 13:52:01 | False | 0 | Low | {}
+1333 | 13:52:01 | False | 0 | Low | {}
+1334 | 13:52:01 | False | 0 | Low | {}
+1335 | 13:52:01 | False | 0 | Low | {}
+1336 | 13:52:01 | False | 0 | Low | {}
+1337 | 13:52:01 | False | 0 | Low | {}
+1338 | 13:52:01 | False | 0 | Low | {}
+1339 | 13:52:01 | False | 0 | Low | {}
+1340 | 13:52:01 | False | 0 | Low | {}
+1341 | 13:52:01 | False | 0 | Low | {}
+1342 | 13:52:01 | True | 1 | Low | {'ambulance': 1}
+1343 | 13:52:01 | False | 0 | Low | {}
+1344 | 13:52:01 | False | 0 | Low | {}
+1345 | 13:52:01 | False | 0 | Low | {}
+1346 | 13:52:01 | False | 0 | Low | {}
+1347 | 13:52:01 | False | 0 | Low | {}
+1348 | 13:52:01 | False | 0 | Low | {}
+1349 | 13:52:02 | False | 0 | Low | {}
+1350 | 13:52:02 | False | 0 | Low | {}
+1351 | 13:52:02 | False | 0 | Low | {}
+1352 | 13:52:02 | False | 0 | Low | {}
+1353 | 13:52:02 | False | 0 | Low | {}
+1354 | 13:52:02 | False | 0 | Low | {}
+1355 | 13:52:02 | False | 0 | Low | {}
+1356 | 13:52:02 | False | 0 | Low | {}
+1357 | 13:52:02 | False | 0 | Low | {}
+1358 | 13:52:02 | False | 0 | Low | {}
+1359 | 13:52:02 | False | 0 | Low | {}
+1360 | 13:52:02 | False | 0 | Low | {}
+1361 | 13:52:02 | False | 0 | Low | {}
+1362 | 13:52:02 | False | 0 | Low | {}
+1363 | 13:52:02 | False | 0 | Low | {}
+1364 | 13:52:02 | False | 0 | Low | {}
+1365 | 13:52:03 | False | 0 | Low | {}
+1366 | 13:52:03 | False | 0 | Low | {}
+1367 | 13:52:03 | False | 0 | Low | {}
+1368 | 13:52:03 | False | 0 | Low | {}
+1369 | 13:52:03 | False | 0 | Low | {}
+1370 | 13:52:03 | False | 0 | Low | {}
+1371 | 13:52:03 | False | 0 | Low | {}
+1372 | 13:52:03 | False | 0 | Low | {}
+1373 | 13:52:03 | False | 0 | Low | {}
+1374 | 13:52:03 | False | 0 | Low | {}
+1375 | 13:52:03 | False | 0 | Low | {}
+1376 | 13:52:03 | False | 0 | Low | {}
+1377 | 13:52:03 | False | 0 | Low | {}
+1378 | 13:52:03 | False | 0 | Low | {}
+1379 | 13:52:03 | False | 0 | Low | {}
+1380 | 13:52:03 | False | 0 | Low | {}
+1381 | 13:52:03 | False | 0 | Low | {}
+1382 | 13:52:04 | True | 1 | Low | {'ambulance': 1}
+1383 | 13:52:04 | False | 0 | Low | {}
+1384 | 13:52:04 | False | 0 | Low | {}
+1385 | 13:52:04 | False | 0 | Low | {}
+1386 | 13:52:04 | False | 0 | Low | {}
+1387 | 13:52:04 | False | 0 | Low | {}
+1388 | 13:52:04 | False | 0 | Low | {}
+1389 | 13:52:04 | False | 0 | Low | {}
+1390 | 13:52:05 | False | 0 | Low | {}
+1391 | 13:52:05 | False | 0 | Low | {}
+1392 | 13:52:05 | False | 0 | Low | {}
+1393 | 13:52:05 | False | 0 | Low | {}
+1394 | 13:52:05 | False | 0 | Low | {}
+1395 | 13:52:05 | False | 0 | Low | {}
+1396 | 13:52:05 | False | 0 | Low | {}
+1397 | 13:52:05 | False | 0 | Low | {}
+1398 | 13:52:05 | False | 0 | Low | {}
+1399 | 13:52:05 | False | 0 | Low | {}
+1400 | 13:52:06 | False | 0 | Low | {}
+1401 | 13:52:06 | False | 0 | Low | {}
+1402 | 13:52:06 | False | 0 | Low | {}
+1403 | 13:52:06 | False | 0 | Low | {}
+1404 | 13:52:06 | False | 0 | Low | {}
+1405 | 13:52:06 | False | 0 | Low | {}
+1406 | 13:52:06 | False | 0 | Low | {}
+1407 | 13:52:06 | False | 0 | Low | {}
+1408 | 13:52:06 | False | 0 | Low | {}
+1409 | 13:52:06 | False | 0 | Low | {}
+1410 | 13:52:06 | False | 0 | Low | {}
+1411 | 13:52:06 | False | 0 | Low | {}
+1412 | 13:52:06 | False | 0 | Low | {}
+1413 | 13:52:06 | False | 0 | Low | {}
+1414 | 13:52:06 | False | 0 | Low | {}
+1415 | 13:52:06 | False | 0 | Low | {}
+1416 | 13:52:07 | False | 0 | Low | {}
+1417 | 13:52:07 | False | 0 | Low | {}
+1418 | 13:52:07 | False | 0 | Low | {}
+1419 | 13:52:07 | False | 0 | Low | {}
+1420 | 13:52:07 | False | 0 | Low | {}
+1421 | 13:52:07 | False | 0 | Low | {}
+1422 | 13:52:07 | False | 0 | Low | {}
+1423 | 13:52:07 | False | 0 | Low | {}
+1424 | 13:52:07 | False | 0 | Low | {}
+1425 | 13:52:07 | False | 0 | Low | {}
+1426 | 13:52:07 | False | 0 | Low | {}
+1427 | 13:52:07 | False | 0 | Low | {}
+1428 | 13:52:07 | False | 0 | Low | {}
+1429 | 13:52:07 | False | 0 | Low | {}
+1430 | 13:52:07 | False | 0 | Low | {}
+1431 | 13:52:07 | False | 0 | Low | {}
+1432 | 13:52:08 | False | 0 | Low | {}
+1433 | 13:52:08 | False | 0 | Low | {}
+1434 | 13:52:08 | False | 0 | Low | {}
+1435 | 13:52:08 | False | 0 | Low | {}
+1436 | 13:52:08 | False | 0 | Low | {}
+1437 | 13:52:08 | False | 0 | Low | {}
+1438 | 13:52:08 | False | 0 | Low | {}
+1439 | 13:52:08 | False | 0 | Low | {}
+1440 | 13:52:08 | False | 0 | Low | {}
+1441 | 13:52:08 | False | 0 | Low | {}
+1442 | 13:52:08 | False | 0 | Low | {}
+1443 | 13:52:08 | False | 0 | Low | {}
+1444 | 13:52:08 | False | 0 | Low | {}
+1445 | 13:52:08 | False | 0 | Low | {}
+1446 | 13:52:08 | False | 0 | Low | {}
+1447 | 13:52:08 | False | 0 | Low | {}
+1448 | 13:52:09 | False | 0 | Low | {}
+1449 | 13:52:09 | False | 0 | Low | {}
+1450 | 13:52:09 | False | 0 | Low | {}
+1451 | 13:52:09 | False | 0 | Low | {}
+1452 | 13:52:09 | False | 0 | Low | {}
+1453 | 13:52:09 | False | 0 | Low | {}
+1454 | 13:52:09 | False | 0 | Low | {}
+1455 | 13:52:09 | False | 0 | Low | {}
+1456 | 13:52:09 | False | 0 | Low | {}
+1457 | 13:52:09 | False | 0 | Low | {}
+1458 | 13:52:09 | False | 0 | Low | {}
+1459 | 13:52:09 | False | 0 | Low | {}
+1460 | 13:52:09 | False | 0 | Low | {}
+1461 | 13:52:09 | False | 0 | Low | {}
+1462 | 13:52:09 | False | 0 | Low | {}
+1463 | 13:52:09 | False | 0 | Low | {}
+1464 | 13:52:10 | False | 0 | Low | {}
+1465 | 13:52:10 | False | 0 | Low | {}
+1466 | 13:52:10 | False | 0 | Low | {}
+1467 | 13:52:10 | True | 1 | Low | {'ambulance': 1}
+1468 | 13:52:10 | False | 0 | Low | {}
+1469 | 13:52:10 | True | 1 | Low | {'ambulance': 1}
+1470 | 13:52:10 | False | 0 | Low | {}
+1471 | 13:52:10 | False | 0 | Low | {}
+1472 | 13:52:10 | False | 0 | Low | {}
+1473 | 13:52:10 | True | 1 | Low | {'ambulance': 1}
+1474 | 13:52:10 | False | 0 | Low | {}
+1475 | 13:52:10 | False | 0 | Low | {}
+1476 | 13:52:10 | False | 0 | Low | {}
+1477 | 13:52:10 | False | 0 | Low | {}
+1478 | 13:52:10 | False | 0 | Low | {}
+1479 | 13:52:10 | False | 0 | Low | {}
+1480 | 13:52:10 | False | 0 | Low | {}
+1481 | 13:52:11 | False | 0 | Low | {}
+1482 | 13:52:11 | False | 0 | Low | {}
+1483 | 13:52:11 | False | 0 | Low | {}
+1484 | 13:52:11 | False | 0 | Low | {}
+1485 | 13:52:11 | False | 0 | Low | {}
+1486 | 13:52:11 | False | 0 | Low | {}
+1487 | 13:52:11 | False | 0 | Low | {}
+1488 | 13:52:11 | False | 0 | Low | {}
+1489 | 13:52:11 | False | 0 | Low | {}
+1490 | 13:52:11 | False | 0 | Low | {}
+1491 | 13:52:11 | False | 0 | Low | {}
+1492 | 13:52:11 | False | 0 | Low | {}
+1493 | 13:52:11 | False | 0 | Low | {}
+1494 | 13:52:11 | False | 0 | Low | {}
+1495 | 13:52:11 | False | 0 | Low | {}
+1496 | 13:52:11 | False | 0 | Low | {}
+1497 | 13:52:12 | False | 0 | Low | {}
+1498 | 13:52:12 | False | 0 | Low | {}
+1499 | 13:52:12 | False | 0 | Low | {}
+1500 | 13:52:12 | False | 0 | Low | {}
+1501 | 13:52:12 | False | 0 | Low | {}
+1502 | 13:52:12 | False | 0 | Low | {}
+1503 | 13:52:12 | False | 0 | Low | {}
+1504 | 13:52:12 | False | 0 | Low | {}
+1505 | 13:52:12 | False | 0 | Low | {}
+1506 | 13:52:12 | False | 0 | Low | {}
+1507 | 13:52:12 | False | 0 | Low | {}
+1508 | 13:52:12 | False | 0 | Low | {}
+1509 | 13:52:12 | False | 0 | Low | {}
+1510 | 13:52:12 | False | 0 | Low | {}
+1511 | 13:52:12 | False | 0 | Low | {}
+1512 | 13:52:12 | False | 0 | Low | {}
+1513 | 13:52:13 | False | 0 | Low | {}
+1514 | 13:52:13 | False | 0 | Low | {}
+1515 | 13:52:13 | False | 0 | Low | {}
+1516 | 13:52:13 | False | 0 | Low | {}
+1517 | 13:52:13 | False | 0 | Low | {}
+1518 | 13:52:13 | False | 0 | Low | {}
+1519 | 13:52:13 | False | 0 | Low | {}
+1520 | 13:52:13 | False | 0 | Low | {}
+1521 | 13:52:13 | False | 0 | Low | {}
+1522 | 13:52:13 | False | 0 | Low | {}
+1523 | 13:52:13 | False | 0 | Low | {}
+1524 | 13:52:13 | False | 0 | Low | {}
+1525 | 13:52:13 | False | 0 | Low | {}
+1526 | 13:52:13 | False | 0 | Low | {}
+1527 | 13:52:13 | False | 0 | Low | {}
+1528 | 13:52:13 | False | 0 | Low | {}
+1529 | 13:52:14 | False | 0 | Low | {}
+1530 | 13:52:14 | False | 0 | Low | {}
+1531 | 13:52:14 | False | 0 | Low | {}
+1532 | 13:52:14 | False | 0 | Low | {}
+1533 | 13:52:14 | False | 0 | Low | {}
+1534 | 13:52:14 | False | 0 | Low | {}
+1535 | 13:52:14 | False | 0 | Low | {}
+1536 | 13:52:14 | False | 0 | Low | {}
+1537 | 13:52:14 | False | 0 | Low | {}
+1538 | 13:52:14 | False | 0 | Low | {}
+1539 | 13:52:14 | False | 0 | Low | {}
+1540 | 13:52:14 | False | 0 | Low | {}
+1541 | 13:52:14 | False | 0 | Low | {}
+1542 | 13:52:14 | False | 0 | Low | {}
+1543 | 13:52:14 | False | 0 | Low | {}
+1544 | 13:52:14 | False | 0 | Low | {}
+1545 | 13:52:14 | False | 0 | Low | {}
+1546 | 13:52:15 | False | 0 | Low | {}
+1547 | 13:52:15 | False | 0 | Low | {}
+1548 | 13:52:15 | False | 0 | Low | {}
+1549 | 13:52:15 | False | 0 | Low | {}
+1550 | 13:52:15 | False | 0 | Low | {}
+1551 | 13:52:15 | False | 0 | Low | {}
+1552 | 13:52:15 | False | 0 | Low | {}
+1553 | 13:52:15 | False | 0 | Low | {}
+1554 | 13:52:15 | False | 0 | Low | {}
+1555 | 13:52:15 | False | 0 | Low | {}
+1556 | 13:52:15 | False | 0 | Low | {}
+1557 | 13:52:15 | False | 0 | Low | {}
+1558 | 13:52:15 | False | 0 | Low | {}
+1559 | 13:52:15 | False | 0 | Low | {}
+1560 | 13:52:15 | False | 0 | Low | {}
+1561 | 13:52:15 | False | 0 | Low | {}
+1562 | 13:52:16 | False | 0 | Low | {}
+1563 | 13:52:16 | False | 0 | Low | {}
+1564 | 13:52:16 | False | 0 | Low | {}
+1565 | 13:52:16 | False | 0 | Low | {}
+1566 | 13:52:16 | False | 0 | Low | {}
+1567 | 13:52:16 | False | 0 | Low | {}
+1568 | 13:52:16 | False | 0 | Low | {}
+1569 | 13:52:16 | False | 0 | Low | {}
+1570 | 13:52:16 | False | 0 | Low | {}
+1571 | 13:52:16 | False | 0 | Low | {}
+1572 | 13:52:16 | False | 0 | Low | {}
+1573 | 13:52:16 | False | 0 | Low | {}
+1574 | 13:52:16 | False | 0 | Low | {}
+1575 | 13:52:16 | False | 0 | Low | {}
+1576 | 13:52:16 | False | 0 | Low | {}
+1577 | 13:52:16 | True | 1 | Low | {'ambulance': 1}
+1578 | 13:52:17 | True | 1 | Low | {'ambulance': 1}
+1579 | 13:52:17 | True | 1 | Low | {'ambulance': 1}
+1580 | 13:52:17 | False | 0 | Low | {}
+1581 | 13:52:17 | True | 1 | Low | {'ambulance': 1}
+1582 | 13:52:17 | False | 0 | Low | {}
+1583 | 13:52:17 | True | 1 | Low | {'ambulance': 1}
+1584 | 13:52:17 | True | 1 | Low | {'ambulance': 1}
+1585 | 13:52:17 | False | 0 | Low | {}
+1586 | 13:52:17 | True | 1 | Low | {'ambulance': 1}
+1587 | 13:52:18 | True | 1 | Low | {'ambulance': 1}
+1588 | 13:52:18 | True | 1 | Low | {'ambulance': 1}
+1589 | 13:52:18 | True | 1 | Low | {'ambulance': 1}
+1590 | 13:52:18 | True | 1 | Low | {'ambulance': 1}
+1591 | 13:52:18 | False | 0 | Low | {}
+1592 | 13:52:18 | False | 0 | Low | {}
+1593 | 13:52:18 | True | 1 | Low | {'ambulance': 1}
+1594 | 13:52:18 | False | 0 | Low | {}
+1595 | 13:52:18 | True | 1 | Low | {'ambulance': 1}
+1596 | 13:52:18 | True | 1 | Low | {'ambulance': 1}
+1597 | 13:52:18 | True | 1 | Low | {'ambulance': 1}
+1598 | 13:52:18 | False | 0 | Low | {}
+1599 | 13:52:18 | True | 1 | Low | {'ambulance': 1}
+1600 | 13:52:18 | True | 1 | Low | {'ambulance': 1}
+1601 | 13:52:18 | True | 1 | Low | {'ambulance': 1}
+1602 | 13:52:18 | True | 1 | Low | {'ambulance': 1}
+1603 | 13:52:18 | False | 0 | Low | {}
+1604 | 13:52:19 | True | 1 | Low | {'ambulance': 1}
+1605 | 13:52:19 | False | 0 | Low | {}
+1606 | 13:52:19 | True | 1 | Low | {'ambulance': 1}
+1607 | 13:52:19 | True | 1 | Low | {'ambulance': 1}
+1608 | 13:52:19 | False | 0 | Low | {}
+1609 | 13:52:19 | False | 0 | Low | {}
+1610 | 13:52:19 | True | 1 | Low | {'ambulance': 1}
+1611 | 13:52:19 | False | 0 | Low | {}
+1612 | 13:52:19 | True | 1 | Low | {'ambulance': 1}
+1613 | 13:52:19 | True | 1 | Low | {'ambulance': 1}
+1614 | 13:52:19 | True | 1 | Low | {'ambulance': 1}
+1615 | 13:52:19 | True | 1 | Low | {'ambulance': 1}
+1616 | 13:52:19 | True | 1 | Low | {'ambulance': 1}
+1617 | 13:52:19 | True | 1 | Low | {'ambulance': 1}
+1618 | 13:52:19 | True | 1 | Low | {'ambulance': 1}
+1619 | 13:52:19 | False | 0 | Low | {}
+1620 | 13:52:20 | True | 1 | Low | {'ambulance': 1}
+1621 | 13:52:20 | True | 1 | Low | {'ambulance': 1}
+1622 | 13:52:20 | False | 0 | Low | {}
+1623 | 13:52:20 | True | 1 | Low | {'ambulance': 1}
+1624 | 13:52:20 | True | 1 | Low | {'ambulance': 1}
+1625 | 13:52:20 | False | 0 | Low | {}
+1626 | 13:52:20 | False | 0 | Low | {}
+1627 | 13:52:20 | False | 0 | Low | {}
+1628 | 13:52:20 | False | 0 | Low | {}
+1629 | 13:52:20 | False | 0 | Low | {}
+1630 | 13:52:21 | False | 0 | Low | {}
+1631 | 13:52:21 | False | 0 | Low | {}
+1632 | 13:52:21 | False | 0 | Low | {}
+1633 | 13:52:21 | False | 0 | Low | {}
+1634 | 13:52:21 | False | 0 | Low | {}
+1635 | 13:52:21 | False | 0 | Low | {}
+1636 | 13:52:21 | False | 0 | Low | {}
+1637 | 13:52:21 | False | 0 | Low | {}
+1638 | 13:52:21 | False | 0 | Low | {}
+1639 | 13:52:21 | False | 0 | Low | {}
+--------------------------------------------------------------------------------
+
+Final Congestion Score (0–100): 0

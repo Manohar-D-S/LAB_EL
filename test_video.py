@@ -4,6 +4,7 @@ import os
 
 # Load trained model
 model = YOLO("runs/detect/train/weights/best.pt")  # Adjust path if needed
+print("model fetched")
 
 # Path to input video
 video_path = "vdo.mp4"  # Replace with your video file
