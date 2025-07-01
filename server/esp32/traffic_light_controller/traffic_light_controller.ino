@@ -6,10 +6,9 @@
 const char* ssid = "Hi";
 const char* password = "Baka_Baka";
 
-// === Blynk credentials ===
-#define BLYNK_TEMPLATE_ID "TMPL35L99kGM"
-#define BLYNK_TEMPLATE_NAME "Ambulance Navigation System"
-#define BLYNK_AUTH_TOKEN "TTNz6UBBXwRK4czQtssa6mxLntHZ"  // <- replace this
+#define BLYNK_TEMPLATE_ID "TMPL3R_uLLvUO"
+#define BLYNK_TEMPLATE_NAME "Ambulance Navigation System Node"
+#define BLYNK_AUTH_TOKEN "m8fmk8CuWNcnFJN8qwn0YKeAv9taWVjY"
 
 #include <BlynkSimpleEsp32.h>
 // === Traffic light pins ===
@@ -32,7 +31,7 @@ const unsigned long yellowDuration = 2000;
 char lastPrintedDirection = '\0';
 
 // === Signals Cleared counter ===
-int signalsCleared = 0;
+int signalsCleared;
 
 // === CORS helper ===
 void sendCORSHeaders() {
@@ -43,22 +42,25 @@ void sendCORSHeaders() {
 
 // === Setup ===
 void setup() {
+  signalsCleared = 0;
   Serial.begin(115200);
-
   setupPins();
+  setAllRed(); // Start with red lights immediately
   
   connectWiFi();
-  Blynk.begin(BLYNK_AUTH_TOKEN, ssid, password);
-  Blynk.virtualWrite(V1, signalsCleared);
-
-  setAllRed(); // Start with all red lights
   
-  delay(2000);
+  // Start the web server first (so ESP32 can respond to API calls)
   setupServer();
   lastSwitchTime = millis();
-  currentDirection = 'N'; // Start with North
-
-  Serial.println("System ready.");
+  currentDirection = 'N';
+  
+  Serial.println("Traffic system ready - starting Blynk...");
+  
+  // Initialize Blynk (this may take time)
+  Blynk.begin(BLYNK_AUTH_TOKEN, ssid, password);
+  Blynk.virtualWrite(V0, signalsCleared);
+  
+  Serial.println("Blynk connected. System fully ready.");
 }
 
 // === Main loop ===
@@ -197,10 +199,10 @@ void handleProximity() {
 
       // === Increment Signals Cleared ===
       signalsCleared++;
-      Blynk.virtualWrite(V1, signalsCleared);  // Write to Blynk V1
+      Blynk.virtualWrite(V0, signalsCleared);  // Write to Blynk V0
 
       server.send(200, "application/json", "{\"status\":\"green set\"}");
-      Serial.println("Proximity → Override GREEN + SignalsCleared++");
+      Serial.printf("Proximity → Override GREEN + %d\n", signalsCleared);
     } else {
       server.send(400, "application/json", "{\"status\":\"bad direction\"}");
     }
@@ -228,7 +230,7 @@ void handleReset() {
   
   overrideActive = false;
   signalsCleared = 0;
-  Blynk.virtualWrite(V1, signalsCleared);
+  Blynk.virtualWrite(V0, signalsCleared);
   Serial.println("Route reset → Signals cleared: 0, Back to normal cycle"); // More detailed
   
   server.send(200, "application/json", "{\"status\":\"reset complete\"}");

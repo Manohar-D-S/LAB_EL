@@ -91,23 +91,23 @@ async def calculate_route(request: Request, route_request: RouteRequest):
         dijkstra_result = dijkstra_router.find_route(start_node, end_node)
 
         # Generate two images: Dijkstra only, and A* with route
-        img_dijkstra = visualize_dijkstra_points(
-            subgraph,
-            dijkstra_result.get("visited_nodes", []),
-            dijkstra_result.get("route", []),
-            start_node,
-            end_node,
-            data_folder
-        )
-        img_astar = visualize_astar_points(
-            subgraph,
-            astar_result.get("visited_nodes", []),
-            astar_result.get("route", []),
-            start_node,
-            end_node,
-            data_folder
-        )
-        logger.info(f"Dijkstra image: {img_dijkstra}, A* image: {img_astar}")
+        # img_dijkstra = visualize_dijkstra_points(
+        #     subgraph,
+        #     dijkstra_result.get("visited_nodes", []),
+        #     dijkstra_result.get("route", []),
+        #     start_node,
+        #     end_node,
+        #     data_folder
+        # )
+        # img_astar = visualize_astar_points(
+        #     subgraph,
+        #     astar_result.get("visited_nodes", []),
+        #     astar_result.get("route", []),
+        #     start_node,
+        #     end_node,
+        #     data_folder
+        # )
+        # logger.info(f"Dijkstra image: {img_dijkstra}, A* image: {img_astar}")
 
         def filter_result(res):
             return {
