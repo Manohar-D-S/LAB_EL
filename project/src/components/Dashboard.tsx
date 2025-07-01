@@ -13,9 +13,9 @@ interface UploadedVideo {
 
 const cameraAngles = ['north', 'south', 'east', 'west'] as const;
 const maxVideos = cameraAngles.length;
-const navigate = useNavigate();
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [uploadedVideos, setUploadedVideos] = useState<UploadedVideo[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [isUploadComplete, setIsUploadComplete] = useState(false);
