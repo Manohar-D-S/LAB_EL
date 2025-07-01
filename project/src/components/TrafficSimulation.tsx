@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Play, Pause, RotateCcw, Settings, Activity, Clock, Zap, TrendingUp, Siren } from 'lucide-react';
+import { ArrowLeft, Play, Pause, RotateCcw, Settings, Activity, Clock, Zap, TrendingUp, Siren, AlertTriangle, Download } from 'lucide-react';
 
 // Dynamic direction type
 type Direction = string; // e.g., 'north', 'south', 'east', 'west', etc.
@@ -264,8 +264,30 @@ const TrafficSimulation: React.FC<TrafficSimulationProps> = ({
   const intersectionDirections = directions.length > 0 ? directions : ['north', 'south', 'east', 'west'];
   const angleStep = 360 / intersectionDirections.length;
 
+  // Ambulance alert state
+  const [showAmbulanceAlert, setShowAmbulanceAlert] = useState(false);
+
+  // Show ambulance alert if any direction detects ambulance
+  useEffect(() => {
+    if (trafficData.some(t => t.ambulanceDetected)) {
+      setShowAmbulanceAlert(true);
+      const timeout = setTimeout(() => setShowAmbulanceAlert(false), 5000);
+      return () => clearTimeout(timeout);
+    }
+  }, [trafficData]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900">
+      {/* Ambulance Alert Banner */}
+      {showAmbulanceAlert && (
+        <div className="fixed top-0 left-0 w-full z-50 flex justify-center">
+          <div className="bg-blue-700 text-white px-6 py-3 rounded-b-lg flex items-center space-x-3 shadow-lg animate-pulse">
+            <Siren className="w-6 h-6 text-white animate-pulse" />
+            <span className="font-bold">Ambulance Detected! Giving Priority...</span>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="bg-gray-800/50 backdrop-blur-sm border-b border-gray-700">
         <div className="max-w-7xl mx-auto px-6 py-4">
@@ -305,6 +327,14 @@ const TrafficSimulation: React.FC<TrafficSimulationProps> = ({
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Live Video Stream */}
+        <div className="mb-8 flex justify-center">
+          <img
+            src="http://localhost:5001/video_feed"
+            alt="Live Feed"
+            className="rounded-lg border-4 border-blue-700 w-[480px] h-[270px] object-contain"
+          />
+        </div>
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
           {/* Realistic Intersection Visualization */}
           <div className="xl:col-span-2 flex flex-col items-center">
@@ -428,14 +458,23 @@ const TrafficSimulation: React.FC<TrafficSimulationProps> = ({
                       </div>
                     </div>
                     {traffic.annotatedVideoUrl && (
-                      <div className="mt-2">
+                      <div className="mt-2 flex items-center space-x-2">
                         <a
                           href={`http://localhost:5001${traffic.annotatedVideoUrl}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-blue-400 underline text-xs"
+                          className="text-blue-400 underline text-xs flex items-center"
                         >
-                          Download Annotated Video
+                          <Download className="w-4 h-4 mr-1" /> Download Annotated Video
+                        </a>
+                        {/* Download log button, assuming backend exposes /logs/<filename> */}
+                        <a
+                          href={`http://localhost:5001/logs/${traffic.direction}_log.txt`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-green-400 underline text-xs flex items-center"
+                        >
+                          <Download className="w-4 h-4 mr-1" /> Download Log
                         </a>
                       </div>
                     )}
