@@ -6,6 +6,12 @@
 const char* ssid = "Hi";
 const char* password = "Baka_Baka";
 
+// === Blynk credentials ===
+#define BLYNK_TEMPLATE_ID "TMPL35L99kGM"
+#define BLYNK_TEMPLATE_NAME "Ambulance Navigation System"
+#define BLYNK_AUTH_TOKEN "TTNz6UBBXwRK4czQtssa6mxLntHZ"  // <- replace this
+
+#include <BlynkSimpleEsp32.h>
 // === Traffic light pins ===
 const int northRed = 13, northYellow = 12, northGreen = 14;
 const int eastRed  = 27, eastYellow  = 26, eastGreen  = 25;
@@ -19,13 +25,14 @@ WebServer server(80);
 volatile bool overrideActive = false;
 volatile char overrideDirection = 'N'; // 'N', 'E', 'S', 'W'
 unsigned long overrideStart = 0;
-
-// Normal cycle state
 char currentDirection = 'N';
 unsigned long lastSwitchTime = 0;
-const unsigned long greenDuration = 5000; // 5 sec green
-const unsigned long yellowDuration = 2000; // 2 sec yellow
+const unsigned long greenDuration = 5000;
+const unsigned long yellowDuration = 2000;
 char lastPrintedDirection = '\0';
+
+// === Signals Cleared counter ===
+int signalsCleared = 0;
 
 // === CORS helper ===
 void sendCORSHeaders() {
@@ -39,9 +46,17 @@ void setup() {
   Serial.begin(115200);
 
   setupPins();
+  
   connectWiFi();
-  delay(5000);
+  Blynk.begin(BLYNK_AUTH_TOKEN, ssid, password);
+  Blynk.virtualWrite(V1, signalsCleared);
+
+  setAllRed(); // Start with all red lights
+  
+  delay(2000);
   setupServer();
+  lastSwitchTime = millis();
+  currentDirection = 'N'; // Start with North
 
   Serial.println("System ready.");
 }
@@ -49,6 +64,7 @@ void setup() {
 // === Main loop ===
 void loop() {
   server.handleClient();
+  Blynk.run();
 
   if (overrideActive) {
     handleOverride();
@@ -81,6 +97,8 @@ void setupServer() {
   server.on("/setNormal", HTTP_POST, handleSetNormal);
   server.on("/proximity", HTTP_OPTIONS, handleOptions);
   server.on("/setNormal", HTTP_OPTIONS, handleOptions);
+  server.on("/reset", HTTP_POST, handleReset);
+  server.on("/reset", HTTP_OPTIONS, handleOptions);
 
   server.begin();
   Serial.println("HTTP server started");
@@ -156,18 +174,10 @@ void setGreen(char dir) {
 // === Set yellow ===
 void setYellow(char dir) {
   switch (dir) {
-    case 'N':
-      digitalWrite(northGreen, LOW); digitalWrite(northYellow, HIGH);
-      break;
-    case 'E':
-      digitalWrite(eastGreen, LOW); digitalWrite(eastYellow, HIGH);
-      break;
-    case 'S':
-      digitalWrite(southGreen, LOW); digitalWrite(southYellow, HIGH);
-      break;
-    case 'W':
-      digitalWrite(westGreen, LOW); digitalWrite(westYellow, HIGH);
-      break;
+    case 'N': digitalWrite(northGreen, LOW); digitalWrite(northYellow, HIGH); break;
+    case 'E': digitalWrite(eastGreen, LOW); digitalWrite(eastYellow, HIGH); break;
+    case 'S': digitalWrite(southGreen, LOW); digitalWrite(southYellow, HIGH); break;
+    case 'W': digitalWrite(westGreen, LOW); digitalWrite(westYellow, HIGH); break;
   }
 }
 
@@ -184,8 +194,13 @@ void handleProximity() {
       overrideDirection = dir.charAt(0);
       overrideActive = true;
       overrideStart = millis();
+
+      // === Increment Signals Cleared ===
+      signalsCleared++;
+      Blynk.virtualWrite(V1, signalsCleared);  // Write to Blynk V1
+
       server.send(200, "application/json", "{\"status\":\"green set\"}");
-      Serial.println("Proximity → Override GREEN ()");
+      Serial.println("Proximity → Override GREEN + SignalsCleared++");
     } else {
       server.send(400, "application/json", "{\"status\":\"bad direction\"}");
     }
@@ -196,8 +211,7 @@ void handleProximity() {
 
 // === Handle /setNormal ===
 void handleSetNormal() {
-  sendCORSHeaders(); // Add CORS headers
-
+  sendCORSHeaders();
   overrideActive = false;
   Serial.println("Manual setNormal → Back to normal cycle");
   server.send(200, "application/json", "{\"status\":\"normal cycle\"}");
@@ -207,4 +221,15 @@ void handleSetNormal() {
 void handleOptions() {
   sendCORSHeaders();
   server.send(204);
+}
+
+void handleReset() {
+  sendCORSHeaders();
+  
+  overrideActive = false;
+  signalsCleared = 0;
+  Blynk.virtualWrite(V1, signalsCleared);
+  Serial.println("Route reset → Signals cleared: 0, Back to normal cycle"); // More detailed
+  
+  server.send(200, "application/json", "{\"status\":\"reset complete\"}");
 }

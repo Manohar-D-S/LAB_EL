@@ -13,7 +13,7 @@ import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import { notifyEsp32Proximity } from '../services/routeApi';
 
 
-const esp32_ip = "192.168.43.53"; // Your ESP32 IP
+const esp32_ip = "192.168.43.53"; // Your ESP32 IP   
 const TEST_SIGNAL_ID = "1"; // Only test with this signal
 const TEST_DIRECTION = "N"; // Use the direction you want to test
 
@@ -252,6 +252,18 @@ const MapComponent: React.FC<MapProps> = ({
     }
   }, [ambulancePosition, trafficSignals]);
 
+  useEffect(() => {
+  if (selectedRoute) {
+    console.log('New route selected → sending reset to ESP32');
+    notifyEsp32Reset()
+      .then(() => {
+        console.log('ESP32 reset notification sent successfully');
+      })
+      .catch((err: unknown) => {
+        console.error('ESP32 reset notification failed:', err);
+      });
+    }
+  }, [selectedRoute]);
     
   useEffect(() => {
     if (selectedRoute?.distance && selectedRoute?.distance > 0) {
@@ -676,13 +688,22 @@ const MapComponent: React.FC<MapProps> = ({
       setDestination(null);
     }
   }, [selectedRoute]);
-
+   
   // Add this helper for /setNormal (place near other helpers)
   async function notifyEsp32SetNormal(jn_name: string) {
     await fetch(`http://${esp32_ip}/setNormal`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ jn_name })
+    });
+  }
+
+  // Add this helper for /reset near other ESP32 helpers (move this up before the useEffect)
+  async function notifyEsp32Reset() {
+    await fetch(`http://${esp32_ip}/reset`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: "new route loaded" })
     });
   }
 
