@@ -165,7 +165,7 @@ const Dashboard = () => {
       });
 
       // Call backend API
-      const response = await fetch('http://<raspberry-pi-ip>:5001/api/analyze', {
+      const response = await fetch('http://localhost:5001/api/analyze', {
         method: 'POST',
         body: formData,
       });

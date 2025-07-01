@@ -3,14 +3,13 @@ import cv2
 import os
 import threading
 import time
-from ultralytics import YOLO
 from collections import Counter
 from datetime import datetime
 
-app = Flask(__name__)
-model = YOLO("run/detect/train/weights/best.pt")
+# Import run_detection from manju.py
+from manju import run_detection, OUTPUT_DIR, FRAME_SAVE_DIR, VEHICLE_CLASSES, MAX_VEHICLE_COUNT, CAMERA_INDEX
 
-OUTPUT_DIR = "output"
+app = Flask(__name__)
 ANNOTATED_DIR = os.path.join(OUTPUT_DIR, "annotated")
 os.makedirs(ANNOTATED_DIR, exist_ok=True)
 
@@ -24,11 +23,12 @@ live_stats = {
     "queueLength": 0,
     "priority": 1
 }
-VEHICLE_CLASSES = ["car", "bus", "truck", "motorbike", "bicycle", "ambulance"]
-MAX_VEHICLE_COUNT = 50
 
 def gen_frames():
-    cap = cv2.VideoCapture(0)
+    # Use run_detection for live feed (camera index)
+    cap = cv2.VideoCapture(CAMERA_INDEX)
+    from ultralytics import YOLO
+    model = YOLO("run/detect/train/weights/best.pt")
     while True:
         success, frame = cap.read()
         if not success:
@@ -74,6 +74,17 @@ def get_live_stats():
 def download_output(filename):
     return send_from_directory(ANNOTATED_DIR, filename, as_attachment=True)
 
+def parse_ambulance_detected(log_path):
+    # Parse the log file to check if ambulance was detected in any frame
+    try:
+        with open(log_path, "r") as f:
+            for line in f:
+                if "| True |" in line:
+                    return True
+    except Exception:
+        pass
+    return False
+
 @app.route('/api/analyze', methods=['POST'])
 def analyze_videos():
     # Accept up to 4 videos: north, south, east, west
@@ -85,40 +96,24 @@ def analyze_videos():
             # Save uploaded file
             input_path = os.path.join(OUTPUT_DIR, f"{direction}_{int(time.time())}.mp4")
             file.save(input_path)
-            # Annotated output path
-            annotated_path = os.path.join(ANNOTATED_DIR, f"annotated_{direction}_{int(time.time())}.mp4")
-            # Run YOLOv8 detection and save annotated video
-            cap = cv2.VideoCapture(input_path)
-            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-            fps = cap.get(cv2.CAP_PROP_FPS) or 20.0
-            width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-            height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-            out = cv2.VideoWriter(annotated_path, fourcc, fps, (width, height))
-            vehicle_count = 0
-            ambulance_detected = False
-            frame_count = 0
-            for _ in range(int(cap.get(cv2.CAP_PROP_FRAME_COUNT))):
-                ret, frame = cap.read()
-                if not ret:
-                    break
-                frame_count += 1
-                yolo_results = model.predict(source=frame, conf=0.3, save=False, imgsz=640)
-                annotated_frame = yolo_results[0].plot()
-                out.write(annotated_frame)
-                class_ids = yolo_results[0].boxes.cls.cpu().numpy().astype(int)
-                class_names = [yolo_results[0].names[c] for c in class_ids]
-                class_counter = Counter(class_names)
-                vehicle_count += sum(class_counter.get(c, 0) for c in VEHICLE_CLASSES)
-                if "ambulance" in class_counter:
-                    ambulance_detected = True
-            cap.release()
-            out.release()
-            avg_vehicle_count = vehicle_count // frame_count if frame_count else 0
+            # Use run_detection for file-based detection (not live)
+            detection_result = run_detection(
+                source=input_path,
+                output_dir=OUTPUT_DIR,
+                frame_save_dir=FRAME_SAVE_DIR,
+                log_prefix=direction,
+                is_live=False
+            )
+            # Prepare response for frontend
+            avg_vehicle_count = detection_result.get("congestion_score", 0) * MAX_VEHICLE_COUNT // 100
             congestion_level = min(1.0, avg_vehicle_count / MAX_VEHICLE_COUNT)
+            log_path = detection_result.get("log_path", "")
+            ambulance_detected = parse_ambulance_detected(log_path)
             avg_speed = 30  # Placeholder
             queue_length = avg_vehicle_count // 2  # Placeholder
             wait_time = int(congestion_level * 90 + 15)
             priority = 4 if ambulance_detected else 1
+            annotated_video_path = detection_result.get("video_path", "")
             results.append({
                 "direction": direction,
                 "vehicleCount": avg_vehicle_count,
@@ -128,7 +123,7 @@ def analyze_videos():
                 "queueLength": queue_length,
                 "waitTime": wait_time,
                 "priority": priority,
-                "annotatedVideoUrl": f"/output/{os.path.basename(annotated_path)}"
+                "annotatedVideoUrl": f"/output/{os.path.basename(annotated_video_path)}" if annotated_video_path else ""
             })
     return jsonify({"results": results})
 

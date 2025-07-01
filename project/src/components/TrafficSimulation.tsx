@@ -20,6 +20,7 @@ interface TrafficData {
   avgSpeed: number;
   queueLength: number;
   ambulanceDetected?: boolean; // YOLO model detection
+  annotatedVideoUrl?: string; // Optional property for annotated video URL
 }
 
 // Dynamic signal timing interface
@@ -426,6 +427,18 @@ const TrafficSimulation: React.FC<TrafficSimulationProps> = ({
                         ></div>
                       </div>
                     </div>
+                    {traffic.annotatedVideoUrl && (
+                      <div className="mt-2">
+                        <a
+                          href={`http://localhost:5001${traffic.annotatedVideoUrl}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-400 underline text-xs"
+                        >
+                          Download Annotated Video
+                        </a>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
