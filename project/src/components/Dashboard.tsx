@@ -1,6 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Upload, Play, Settings, BarChart3, Camera, ArrowRight, CheckCircle, X, Video } from 'lucide-react';
+import { notifyEsp32Proximity } from './simulationUtils'; // adjust path as needed
+
+const ESP32_IP = '192.168.x.x'; // set your ESP32 IP here
+const LIVE_FEED_DIRECTION = 'north'; // or whichever direction is constant for live feed
+const LIVE_FEED_JUNCTION = 'A'; // set your constant junction for live feed
 
 interface UploadedVideo {
   id: string;
@@ -169,7 +174,6 @@ const Dashboard = () => {
       const data = await response.json();
 
       // Transform backend response to match dashboard expectations
-      // (Assume: data.results is an array with direction, vehicleCount, waitTime, etc.)
       const phases = ['NS', 'EW'];
       const phaseDirections = { NS: ['north', 'south'], EW: ['east', 'west'] };
       const trafficStats = data.results.map((stat: any) => ({
@@ -189,6 +193,15 @@ const Dashboard = () => {
       setShouldCache(true);
       setModelStatus('ready');
       localStorage.setItem('yoloResult', JSON.stringify({ phases, phaseDirections, trafficStats }));
+
+      // Notify ESP32 for each direction
+      // You must provide a value for 'junction' for each upload.
+      // For example, prompt the user, or use a variable.
+      // Here, we use a placeholder 'junction' variable.
+      const junction = window.prompt('Enter junction name for this upload:', 'A') || 'A';
+      for (const stat of trafficStats) {
+        await notifyEsp32Proximity(junction, stat.direction, ESP32_IP);
+      }
     } catch (err) {
       setAnalysisComplete(false);
       setShouldCache(false);
