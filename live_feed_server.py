@@ -8,7 +8,7 @@ from collections import Counter
 from datetime import datetime
 
 app = Flask(__name__)
-model = YOLO("runs/detect/train/weights/best.pt")
+model = YOLO("run/detect/train/weights/best.pt")
 
 OUTPUT_DIR = "output"
 ANNOTATED_DIR = os.path.join(OUTPUT_DIR, "annotated")
