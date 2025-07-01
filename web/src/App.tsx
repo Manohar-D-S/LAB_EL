@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Map from './components/Map';
 import RouteDetails from './components/RouteDetails';
-import Sidebar from './components/Sidebar';
 import { getRoutes } from './services/api';
 import { Route } from './types/route';
 import AlgorithmComparisonModal from './components/AlgorithmComparisonModal';

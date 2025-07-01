@@ -12,7 +12,8 @@ import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import { notifyEsp32Proximity } from '../services/routeApi';
 
-const esp32Ip = "192.168.43.53"; // Your ESP32 IP
+
+const esp32_ip = "192.168.43.53"; // Your ESP32 IP
 const TEST_SIGNAL_ID = "1"; // Only test with this signal
 const TEST_DIRECTION = "N"; // Use the direction you want to test
 
@@ -171,6 +172,8 @@ const MapComponent: React.FC<MapProps> = ({
   // Add this state near the top, after lastNotifiedGreenSignalId
   const [lastNotifiedSetNormalSignalId, setLastNotifiedSetNormalSignalId] = useState<string | null>(null);
 
+  const [popupMessage, setPopupMessage] = useState<string | null>(null);
+
   useEffect(() => {
     if (selectedRoute?.startPoint && selectedRoute?.endPoint) {
       const newCenter: [number, number] = [
@@ -242,7 +245,6 @@ const MapComponent: React.FC<MapProps> = ({
     if (distance <= 150) {
       notifyEsp32Proximity(
         testSignal.name,
-        esp32Ip,
         TEST_DIRECTION
       ).catch((err: unknown) => {
         console.error('ESP32 notification failed:', err);
@@ -569,11 +571,15 @@ const MapComponent: React.FC<MapProps> = ({
 
     notifyEsp32Proximity(
       greenCluster.name,
-      esp32Ip,
       direction
-    ).catch((err: unknown) => {
-      console.error('ESP32 notification failed:', err);
-    });
+    )
+      .then(() => {
+        setPopupMessage("Signal ahead has been cleared.");
+        setTimeout(() => setPopupMessage(null), 3000); // Hide after 3 seconds
+      })
+      .catch((err: unknown) => {
+        console.error('ESP32 notification failed:', err);
+      });
 
     setLastNotifiedGreenSignalId(greenSignalId); // Update after notifying/logging
 
@@ -596,7 +602,6 @@ const MapComponent: React.FC<MapProps> = ({
 
     notifyEsp32SetNormal(
       lastGreenCluster.name,
-      esp32Ip
     ).catch((err: unknown) => {
       console.error('ESP32 setNormal notification failed:', err);
     });
@@ -673,7 +678,7 @@ const MapComponent: React.FC<MapProps> = ({
   }, [selectedRoute]);
 
   // Add this helper for /setNormal (place near other helpers)
-  async function notifyEsp32SetNormal(jn_name: string, esp32_ip: string) {
+  async function notifyEsp32SetNormal(jn_name: string) {
     await fetch(`http://${esp32_ip}/setNormal`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -694,14 +699,14 @@ const MapComponent: React.FC<MapProps> = ({
     // Enter proximity zone → turn green if not already green
     if (distance <= PROXIMITY_THRESHOLD && !isSignalGreen) {
       console.log('Ambulance entered zone → setGreen');
-      notifyEsp32Proximity(signal.name, esp32Ip, TEST_DIRECTION);
+      notifyEsp32Proximity(signal.name,  TEST_DIRECTION);
       setIsSignalGreen(true);
     }
 
     // Exit proximity zone → reset normal if it was green
     if (distance > EXIT_THRESHOLD && isSignalGreen) {
       console.log('Ambulance exited zone → setNormal');
-      notifyEsp32SetNormal(signal.name, esp32Ip);
+      notifyEsp32SetNormal(signal.name);
       setIsSignalGreen(false);
     }
   }, [ambulancePosition, trafficSignals, isSignalGreen]);
@@ -720,14 +725,14 @@ const MapComponent: React.FC<MapProps> = ({
     // Enter proximity zone → turn green if not already green
     if (distance <= PROXIMITY_THRESHOLD && !isSignalGreen) {
       console.log('Ambulance entered zone → setGreen');
-      notifyEsp32Proximity(signal.name, esp32Ip, TEST_DIRECTION);
+      notifyEsp32Proximity(signal.name,TEST_DIRECTION);
       setIsSignalGreen(true);
     }
 
     // Exit proximity zone → reset normal if it was green
     if (distance > EXIT_THRESHOLD && isSignalGreen) {
       console.log('Ambulance exited zone → setNormal');
-      notifyEsp32SetNormal(signal.name, esp32Ip);
+      notifyEsp32SetNormal(signal.name);
       setIsSignalGreen(false);
     }
   }, [ambulancePosition, trafficSignals, isSignalGreen]);
@@ -736,6 +741,27 @@ const MapComponent: React.FC<MapProps> = ({
   // Render
   return (
     <div className="flex-1 w-full relative">
+      {/* Popup message */}
+      {popupMessage && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 20,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: '#22c55e',
+            color: 'white',
+            padding: '12px 24px',
+            borderRadius: 8,
+            zIndex: 1000,
+            fontWeight: 600,
+            fontSize: 18,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+          }}
+        >
+          {popupMessage}
+        </div>
+      )}
       <MapContainer
         center={center}
         zoom={zoom}

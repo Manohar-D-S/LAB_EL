@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+const esp32_ip = "192.168.43.53";
+
 interface RouteResponse {
   path: [number, number][];
   distance: number;  // in kilometers
@@ -89,7 +91,6 @@ export function bearingToDirection(bearing: number): 'N' | 'E' | 'S' | 'W' {
  */
 export async function notifyEsp32Proximity(
   jn_name: string,
-  esp32_ip: string,
   direction: string
 ): Promise<void> {
   const payload = { direction, jn_name };

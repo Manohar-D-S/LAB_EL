@@ -9,7 +9,7 @@ const char* password = "Baka_Baka";
 // === Traffic light pins ===
 const int northRed = 13, northYellow = 12, northGreen = 14;
 const int eastRed  = 27, eastYellow  = 26, eastGreen  = 25;
-const int southRed = 33, southYellow = 32, southGreen = 35;
+const int southRed = 33, southYellow = 32, southGreen = 16;
 const int westRed  = 19, westYellow  = 18, westGreen  = 5;
 
 // === Web server ===
@@ -185,7 +185,7 @@ void handleProximity() {
       overrideActive = true;
       overrideStart = millis();
       server.send(200, "application/json", "{\"status\":\"green set\"}");
-      Serial.println("Proximity → Override GREEN");
+      Serial.println("Proximity → Override GREEN ()");
     } else {
       server.send(400, "application/json", "{\"status\":\"bad direction\"}");
     }
