@@ -1,0 +1,43 @@
+# YOLOv8 Ambulance Detection Configuration
+# Dataset configuration for trained model
+
+# Dataset paths
+path: ../datasets/merged_dataset  # Path to dataset root
+train: train/images  # Path to training images (relative to 'path')
+val: valid/images    # Path to validation images (relative to 'path')
+test: test/images    # Path to test images (relative to 'path')
+
+# Classes
+names:
+  0: ambulance
+
+# Number of classes
+nc: 1
+
+# Model settings
+model_name: 'ambulance_model'
+input_size: 640
+confidence_threshold: 0.25
+nms_threshold: 0.45
+
+# Training settings (for reference)
+epochs: 100
+batch_size: 16
+learning_rate: 0.01
+patience: 50
+
+# Detection colors (BGR format for OpenCV)
+colors:
+  ambulance: [0, 255, 0]  # Green
+
+# API settings
+api_host: '0.0.0.0'
+api_port: 8000
+cors_origins: ['*']
+
+# Emergency signal override settings
+emergency_detection_threshold: 1  # Minimum ambulances to trigger override
+priority_signal_duration: 60      # Seconds to give priority direction
+normal_signal_duration: 45        # Normal signal timing
+yellow_duration: 4                # Yellow light duration
+all_red_duration: 2               # All-red phase duration

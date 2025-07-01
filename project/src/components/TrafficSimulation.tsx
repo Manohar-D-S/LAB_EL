@@ -576,4 +576,7 @@ const TrafficSimulation: React.FC<TrafficSimulationProps> = ({
   );
 };
 
+fetch('http://<backend-ip>:8000/api/analyze/intersection', { ... })
 export default TrafficSimulation;
+
+// Example: POST video for analysis
