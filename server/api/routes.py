@@ -1,4 +1,5 @@
 import os
+import json
 import logging
 import requests
 from fastapi import APIRouter, HTTPException, Depends, Request, FastAPI
@@ -32,10 +33,37 @@ logging.basicConfig(
 # In-memory cache for routes
 route_cache: Dict[str, Any] = {}
 
+# Persistent cache directory
+CACHE_DIR = os.path.join(os.path.dirname(__file__), "..", "route_cache")
+os.makedirs(CACHE_DIR, exist_ok=True)
+
 def generate_cache_key(source: Tuple[float, float], destination: Tuple[float, float]) -> str:
     """Generate a unique cache key based on source and destination coordinates."""
     key = f"{source[0]}-{source[1]}-{destination[0]}-{destination[1]}"
     return sha256(key.encode()).hexdigest()
+
+def load_route_from_persistent_cache(cache_key: str):
+    """Load route data from persistent file cache"""
+    cache_file = os.path.join(CACHE_DIR, f"{cache_key}.json")
+    if os.path.exists(cache_file):
+        try:
+            with open(cache_file, 'r') as f:
+                data = json.load(f)
+                logger.info(f"Persistent cache hit for key: {cache_key}")
+                return data
+        except Exception as e:
+            logger.error(f"Failed to load persistent cache {cache_key}: {e}")
+    return None
+
+def save_route_to_persistent_cache(cache_key: str, route_data: dict):
+    """Save route data to persistent file cache"""
+    cache_file = os.path.join(CACHE_DIR, f"{cache_key}.json")
+    try:
+        with open(cache_file, 'w') as f:
+            json.dump(route_data, f, indent=2)
+        logger.info(f"Route saved to persistent cache: {cache_file}")
+    except Exception as e:
+        logger.error(f"Failed to save to persistent cache {cache_key}: {e}")
 
 @router.get("/router-test")
 def router_test():
@@ -65,12 +93,20 @@ async def calculate_route(request: Request, route_request: RouteRequest):
 
     cache_key = generate_cache_key(source, destination)
 
-    # Check if the route is already cached
+    # Check if the route is already cached in memory
     if cache_key in route_cache:
-        logger.info(f"Checking for cached route with key: {cache_key}")
+        logger.info(f"In-memory cache hit for route: {source} -> {destination}")
         sleep(1)  # Simulate a delay for cache hit
-        logger.info(f"Cache hit for route: {source} -> {destination}")
         return route_cache[cache_key]  # Always returns {"results": [...]}
+
+    # Check persistent file cache
+    persistent_cache_result = load_route_from_persistent_cache(cache_key)
+    if persistent_cache_result:
+        # Store in memory cache for faster future access
+        route_cache[cache_key] = persistent_cache_result
+        logger.info(f"Persistent cache hit for route: {source} -> {destination}")
+        sleep(1)  # Simulate a delay for cache hit
+        return persistent_cache_result
 
     try:
         graph_file = "./data/simplified_bengaluru.graphml"
@@ -90,25 +126,6 @@ async def calculate_route(request: Request, route_request: RouteRequest):
         astar_result = astar_router.find_route(start_node, end_node)
         dijkstra_result = dijkstra_router.find_route(start_node, end_node)
 
-        # Generate two images: Dijkstra only, and A* with route
-        # img_dijkstra = visualize_dijkstra_points(
-        #     subgraph,
-        #     dijkstra_result.get("visited_nodes", []),
-        #     dijkstra_result.get("route", []),
-        #     start_node,
-        #     end_node,
-        #     data_folder
-        # )
-        # img_astar = visualize_astar_points(
-        #     subgraph,
-        #     astar_result.get("visited_nodes", []),
-        #     astar_result.get("route", []),
-        #     start_node,
-        #     end_node,
-        #     data_folder
-        # )
-        # logger.info(f"Dijkstra image: {img_dijkstra}, A* image: {img_astar}")
-
         def filter_result(res):
             return {
                 "algorithm": res.get("algorithm"),
@@ -119,9 +136,10 @@ async def calculate_route(request: Request, route_request: RouteRequest):
             }
         response = {"results": [filter_result(astar_result), filter_result(dijkstra_result)]}
 
-        # Store the route in the cache
+        # Store the route in both memory and persistent cache
         route_cache[cache_key] = response
-        logger.info(f"Route calculated and cached with key: {cache_key}")
+        save_route_to_persistent_cache(cache_key, response)
+        logger.info(f"Route calculated and cached (memory + persistent) with key: {cache_key}")
 
         return response
     except Exception as e:
