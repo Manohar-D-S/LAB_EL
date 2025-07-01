@@ -137,31 +137,54 @@ const Dashboard = () => {
     // eslint-disable-next-line
   }, [uploadedVideos]);
 
-  // Simulate YOLOv8 backend call
+  // Replace runYoloAnalysis with real API call
   const runYoloAnalysis = async () => {
     setIsAnalysing(true);
     setAnalysisComplete(false);
     setYoloResult(null);
     try {
-      await new Promise(res => setTimeout(res, 2000));
-      const result = {
-        phases: ['NS', 'EW'],
-        phaseDirections: { NS: ['north', 'south'], EW: ['east', 'west'] },
-        trafficStats: [
-          { direction: 'north', vehicleCount: 12, waitTime: 65, priority: 4, congestionLevel: 0.7, avgSpeed: 25, queueLength: 8, ambulanceDetected: false },
-          { direction: 'south', vehicleCount: 8, waitTime: 45, priority: 3, congestionLevel: 0.5, avgSpeed: 35, queueLength: 5, ambulanceDetected: false },
-          { direction: 'east', vehicleCount: 6, waitTime: 25, priority: 2, congestionLevel: 0.3, avgSpeed: 45, queueLength: 3, ambulanceDetected: false },
-          { direction: 'west', vehicleCount: 4, waitTime: 20, priority: 1, congestionLevel: 0.2, avgSpeed: 50, queueLength: 2, ambulanceDetected: false }
-        ]
-      };
-      setYoloResult(result);
+      // Prepare form data
+      const formData = new FormData();
+      uploadedVideos.forEach((video) => {
+        if (video.file) {
+          formData.append(video.cameraAngle, video.file, video.name);
+        }
+      });
+
+      // Call backend API
+      const response = await fetch('http://<raspberry-pi-ip>:5001/api/analyze', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error('Analysis failed');
+      const data = await response.json();
+
+      // Transform backend response to match dashboard expectations
+      // (Assume: data.results is an array with direction, vehicleCount, waitTime, etc.)
+      const phases = ['NS', 'EW'];
+      const phaseDirections = { NS: ['north', 'south'], EW: ['east', 'west'] };
+      const trafficStats = data.results.map((stat: any) => ({
+        direction: stat.direction,
+        vehicleCount: stat.vehicleCount,
+        waitTime: stat.waitTime,
+        priority: stat.priority,
+        congestionLevel: stat.congestionLevel,
+        avgSpeed: stat.avgSpeed,
+        queueLength: stat.queueLength,
+        ambulanceDetected: stat.ambulanceDetected,
+        annotatedVideoUrl: stat.annotatedVideoUrl, // for download link
+      }));
+
+      setYoloResult({ phases, phaseDirections, trafficStats });
       setAnalysisComplete(true);
       setShouldCache(true);
-      localStorage.setItem('yoloResult', JSON.stringify(result));
+      localStorage.setItem('yoloResult', JSON.stringify({ phases, phaseDirections, trafficStats }));
     } catch (err) {
       setAnalysisComplete(false);
       setShouldCache(false);
       setYoloResult(null);
+      alert('Analysis failed. Please try again.');
     }
     setIsAnalysing(false);
   };
@@ -522,6 +545,18 @@ const Dashboard = () => {
                     <div className="text-gray-400 text-sm mb-1">Avg Speed: <span className="text-white">{stat.avgSpeed} km/h</span></div>
                     <div className="text-gray-400 text-sm mb-1">Priority: <span className="text-white">{stat.priority}</span></div>
                     <div className="text-gray-400 text-sm mb-1">Ambulance: <span className="text-white">{stat.ambulanceDetected ? 'Yes' : 'No'}</span></div>
+                    {stat.annotatedVideoUrl && (
+                      <div className="mt-2">
+                        <a
+                          href={`http://<raspberry-pi-ip>:5001${stat.annotatedVideoUrl}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-400 underline text-xs"
+                        >
+                          Download Annotated Video
+                        </a>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
