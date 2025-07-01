@@ -24,6 +24,13 @@ const Dashboard = () => {
   const [shouldCache, setShouldCache] = useState(false);
   const [mode, setMode] = useState<'none' | 'upload' | 'live'>('none');
 
+  // Add a state for model status
+  const [modelStatus, setModelStatus] = useState<'idle' | 'analyzing' | 'ready' | 'error'>('idle');
+
+  // Add state for live stats and live model status
+  const [liveStats, setLiveStats] = useState<any>(null);
+  const [liveModelStatus, setLiveModelStatus] = useState<'idle' | 'analyzing' | 'ready' | 'error'>('idle');
+
   // Only load cache when switching to upload mode
   const loadCache = () => {
     const cached = localStorage.getItem('uploadedVideos');
@@ -137,11 +144,12 @@ const Dashboard = () => {
     // eslint-disable-next-line
   }, [uploadedVideos]);
 
-  // Replace runYoloAnalysis with real API call
+  // Replace runYoloAnalysis with real API call and update model status
   const runYoloAnalysis = async () => {
     setIsAnalysing(true);
     setAnalysisComplete(false);
     setYoloResult(null);
+    setModelStatus('analyzing');
     try {
       // Prepare form data
       const formData = new FormData();
@@ -173,21 +181,47 @@ const Dashboard = () => {
         avgSpeed: stat.avgSpeed,
         queueLength: stat.queueLength,
         ambulanceDetected: stat.ambulanceDetected,
-        annotatedVideoUrl: stat.annotatedVideoUrl, // for download link
+        annotatedVideoUrl: stat.annotatedVideoUrl,
       }));
 
       setYoloResult({ phases, phaseDirections, trafficStats });
       setAnalysisComplete(true);
       setShouldCache(true);
+      setModelStatus('ready');
       localStorage.setItem('yoloResult', JSON.stringify({ phases, phaseDirections, trafficStats }));
     } catch (err) {
       setAnalysisComplete(false);
       setShouldCache(false);
       setYoloResult(null);
+      setModelStatus('error');
       alert('Analysis failed. Please try again.');
     }
     setIsAnalysing(false);
   };
+
+  // Poll live stats in live mode
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval>;
+    if (mode === 'live') {
+      setLiveModelStatus('analyzing');
+      interval = setInterval(async () => {
+        try {
+          const res = await fetch('http://<raspberry-pi-ip>:5001/live_stats');
+          if (!res.ok) throw new Error('Failed to fetch live stats');
+          const stats = await res.json();
+          setLiveStats(stats);
+          setLiveModelStatus('ready');
+        } catch (e) {
+          setLiveModelStatus('error');
+        }
+      }, 1000);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+      setLiveStats(null);
+      setLiveModelStatus('idle');
+    };
+  }, [mode]);
 
   // View simulation (only enabled if YOLO analysis is complete)
   const viewSimulation = () => {
@@ -320,10 +354,52 @@ const Dashboard = () => {
               style={{ background: "#000" }}
             />
           </div>
-          <div className="bg-gray-700/60 rounded-lg p-4 w-full text-center mb-4">
-            <span className="text-gray-300">
-              YOLOv8n detection overlays are shown in real-time. Annotated video is saved on the server.
-            </span>
+          {/* Live model status and stats */}
+          <div className="w-full flex flex-col md:flex-row gap-4 mb-4">
+            <div className={`flex-1 bg-gray-700/60 rounded-lg p-4 text-center flex flex-col items-center justify-center`}>
+              <span className="text-gray-400 text-sm mb-2">Model Status</span>
+              <span className={`text-lg font-bold ${
+                liveModelStatus === 'ready'
+                  ? 'text-green-500'
+                  : liveModelStatus === 'analyzing'
+                    ? 'text-yellow-500'
+                    : liveModelStatus === 'error'
+                      ? 'text-red-500'
+                      : 'text-purple-500'
+              }`}>
+                {liveModelStatus === 'ready'
+                  ? 'YOLOv8 Ready'
+                  : liveModelStatus === 'analyzing'
+                    ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <svg className="animate-spin h-5 w-5 text-yellow-500" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                        </svg>
+                        Analyzing...
+                      </span>
+                    )
+                    : liveModelStatus === 'error'
+                      ? 'Error'
+                      : 'Idle'}
+              </span>
+            </div>
+            <div className="flex-1 bg-gray-700/60 rounded-lg p-4 text-center flex flex-col items-center justify-center">
+              <span className="text-gray-400 text-sm mb-2">Live Detection Stats</span>
+              {liveStats && liveModelStatus === 'ready' ? (
+                <div className="space-y-1 text-white text-sm">
+                  <div>Vehicles: <span className="font-bold">{liveStats.vehicleCount}</span></div>
+                  <div>Ambulance: <span className="font-bold">{liveStats.ambulanceDetected ? 'Yes' : 'No'}</span></div>
+                  <div>Congestion: <span className="font-bold">{(liveStats.congestionLevel * 100).toFixed(0)}%</span></div>
+                  <div>Avg Speed: <span className="font-bold">{liveStats.avgSpeed} km/h</span></div>
+                  <div>Queue: <span className="font-bold">{liveStats.queueLength}</span></div>
+                  <div>Priority: <span className="font-bold">{liveStats.priority}</span></div>
+                  <div className="text-xs text-gray-400 mt-1">Last updated: {liveStats.timestamp ? new Date(liveStats.timestamp).toLocaleTimeString() : '-'}</div>
+                </div>
+              ) : (
+                <span className="text-gray-400">Waiting for detection...</span>
+              )}
+            </div>
           </div>
           <button
             onClick={() => setMode('none')}
@@ -407,7 +483,13 @@ const Dashboard = () => {
               <div>
                 <p className="text-gray-400">Analysis Ready</p>
                 <p className="text-2xl font-bold text-white">
-                  {analysisComplete && yoloResult ? 'Yes' : 'No'}
+                  {modelStatus === 'analyzing'
+                    ? 'Running'
+                    : analysisComplete && yoloResult
+                      ? 'Yes'
+                      : modelStatus === 'error'
+                        ? 'Error'
+                        : 'No'}
                 </p>
               </div>
             </div>
@@ -415,12 +497,44 @@ const Dashboard = () => {
           
           <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6">
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                <Settings className="w-6 h-6 text-purple-500" />
+              <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
+                modelStatus === 'ready'
+                  ? 'bg-green-500/20'
+                  : modelStatus === 'analyzing'
+                    ? 'bg-yellow-500/20'
+                    : modelStatus === 'error'
+                      ? 'bg-red-500/20'
+                      : 'bg-purple-500/20'
+              }`}>
+                <Settings className={`w-6 h-6 ${
+                  modelStatus === 'ready'
+                    ? 'text-green-500'
+                    : modelStatus === 'analyzing'
+                      ? 'text-yellow-500'
+                      : modelStatus === 'error'
+                        ? 'text-red-500'
+                        : 'text-purple-500'
+                }`} />
               </div>
               <div>
                 <p className="text-gray-400">Model Status</p>
-                <p className="text-2xl font-bold text-green-500">YOLOv8 Ready</p>
+                <p className={`text-2xl font-bold ${
+                  modelStatus === 'ready'
+                    ? 'text-green-500'
+                    : modelStatus === 'analyzing'
+                      ? 'text-yellow-500'
+                      : modelStatus === 'error'
+                        ? 'text-red-500'
+                        : 'text-purple-500'
+                }`}>
+                  {modelStatus === 'ready'
+                    ? 'YOLOv8 Ready'
+                    : modelStatus === 'analyzing'
+                      ? 'Analyzing...'
+                      : modelStatus === 'error'
+                        ? 'Error'
+                        : 'Idle'}
+                </p>
               </div>
             </div>
           </div>
