@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Upload, Play, Settings, BarChart3, Camera, ArrowRight, CheckCircle, X } from 'lucide-react';
+import { Upload, Play, Settings, BarChart3, Camera, ArrowRight, CheckCircle, X, Video } from 'lucide-react';
 
 interface UploadedVideo {
   id: string;
@@ -17,12 +17,12 @@ const maxVideos = cameraAngles.length;
 const Dashboard = () => {
   const navigate = useNavigate();
   const [uploadedVideos, setUploadedVideos] = useState<UploadedVideo[]>([]);
-  const [isDragging, setIsDragging] = useState(false);
   const [isUploadComplete, setIsUploadComplete] = useState(false);
   const [isAnalysing, setIsAnalysing] = useState(false);
   const [analysisComplete, setAnalysisComplete] = useState(false);
   const [yoloResult, setYoloResult] = useState<any>(null);
   const [shouldCache, setShouldCache] = useState(false);
+  const [mode, setMode] = useState<'none' | 'upload' | 'live'>('none');
 
   // Load cached videos and analysis state from localStorage on mount
   useEffect(() => {
@@ -190,6 +190,61 @@ const Dashboard = () => {
   const missingAngles = cameraAngles.filter(
     angle => !uploadedVideos.some(v => v.cameraAngle === angle)
   );
+
+  // UI for landing selection
+  if (mode === 'none') {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900">
+        <div className="bg-gray-800/70 rounded-xl shadow-lg p-10 flex flex-col items-center space-y-8">
+          <h1 className="text-3xl font-bold text-white mb-2">Choose Mode</h1>
+          <div className="flex space-x-8">
+            <button
+              onClick={() => setMode('live')}
+              className="flex flex-col items-center px-8 py-6 bg-blue-700 hover:bg-blue-800 rounded-xl transition-colors shadow-lg"
+            >
+              <Video className="w-12 h-12 text-white mb-2" />
+              <span className="text-white font-semibold text-lg">Live Feed</span>
+            </button>
+            <button
+              onClick={() => setMode('upload')}
+              className="flex flex-col items-center px-8 py-6 bg-green-700 hover:bg-green-800 rounded-xl transition-colors shadow-lg"
+            >
+              <Upload className="w-12 h-12 text-white mb-2" />
+              <span className="text-white font-semibold text-lg">Upload Videos</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Live Feed UI (placeholder for now)
+  if (mode === 'live') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 flex flex-col items-center justify-center">
+        <div className="bg-gray-800/70 rounded-xl shadow-lg p-8 flex flex-col items-center">
+          <div className="flex items-center mb-6">
+            <Video className="w-10 h-10 text-blue-400 mr-3" />
+            <h2 className="text-2xl font-bold text-white">Live Feed & Detection</h2>
+          </div>
+          {/* Placeholder for live video stream */}
+          <div className="w-[480px] h-[270px] bg-black rounded-lg flex items-center justify-center mb-4 border-4 border-blue-700">
+            <span className="text-gray-400">Live video stream will appear here</span>
+          </div>
+          {/* Placeholder for detection results */}
+          <div className="bg-gray-700/60 rounded-lg p-4 w-full text-center mb-4">
+            <span className="text-gray-300">Detection results (YOLOv8n) will be shown here in real-time.</span>
+          </div>
+          <button
+            onClick={() => setMode('none')}
+            className="mt-2 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
+          >
+            Back
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 overflow-x-hidden overflow-y-auto">
