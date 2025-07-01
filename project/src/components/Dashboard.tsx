@@ -306,7 +306,7 @@ const Dashboard = () => {
             onClick={() => setMode('none')}
             className="mt-2 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
           >
-            Back
+            Back to Main
           </button>
         </div>
       </div>
@@ -329,6 +329,12 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="flex items-center space-x-4">
+              <button
+                onClick={() => setMode('none')}
+                className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
+              >
+                Back to Main
+              </button>
               {uploadedVideos.length > 0 && (
                 <button
                   onClick={resetUpload}

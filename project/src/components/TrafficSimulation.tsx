@@ -57,7 +57,7 @@ const TrafficSimulation: React.FC<TrafficSimulationProps> = ({
           <span className="text-2xl text-white font-bold mb-2">No Videos Uploaded</span>
           <span className="text-gray-300 mb-4">Please upload videos for all directions to enable simulation.</span>
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate(0)}
             className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
           >
             Go Back to Dashboard
@@ -81,7 +81,7 @@ const TrafficSimulation: React.FC<TrafficSimulationProps> = ({
           <span className="text-2xl text-white font-bold mb-2">Simulation Not Ready</span>
           <span className="text-gray-300 mb-4">YOLO detection or phase data missing. Please run analysis first.</span>
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate(0)}
             className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
           >
             Go Back to Dashboard
