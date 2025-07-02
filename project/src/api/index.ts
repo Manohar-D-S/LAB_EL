@@ -1,11 +1,8 @@
-// Remove any unrelated or old API code and replace with only the APIs from integration_summary.md
+// API utilities for YOLO backend integration
 
-// ...remove all unrelated/old code...
+const API_BASE = 'http://localhost:5001'; // Change if backend runs on a different port
 
-// Add only the APIs from integration_summary.md
-
-const API_BASE = 'http://localhost:5001'; // Or 8000 if that's your backend port
-
+// POST /api/detect/image
 export const detectImage = async (file: File) => {
   const formData = new FormData();
   formData.append('file', file);
@@ -18,6 +15,7 @@ export const detectImage = async (file: File) => {
   return res.json();
 };
 
+// POST /api/detect/video
 export const detectVideo = async (file: File) => {
   const formData = new FormData();
   formData.append('file', file);
@@ -30,6 +28,7 @@ export const detectVideo = async (file: File) => {
   return res.json();
 };
 
+// POST /api/analyze/intersection
 export const analyzeIntersection = async (
   videos: { north: File; south: File; east: File; west: File },
   intersectionId: string
@@ -49,6 +48,7 @@ export const analyzeIntersection = async (
   return res.json();
 };
 
+// POST /api/signal-control
 export const signalControl = async (data: { analysis_id: string; priority_direction: string; emergency_override: boolean }) => {
   const res = await fetch(`${API_BASE}/api/signal-control`, {
     method: 'POST',
@@ -60,18 +60,21 @@ export const signalControl = async (data: { analysis_id: string; priority_direct
   return res.json();
 };
 
+// GET /api/detector/stats
 export const getDetectorStats = async () => {
   const res = await fetch(`${API_BASE}/api/detector/stats`);
   if (!res.ok) throw new Error('Detector stats fetch failed');
   return res.json();
 };
 
+// GET /api/health
 export const getApiHealth = async () => {
   const res = await fetch(`${API_BASE}/api/health`);
   if (!res.ok) throw new Error('API health check failed');
   return res.json();
 };
 
+// POST /api/detector/settings
 export const updateDetectorSettings = async (settings: { confidence?: number; nms?: number }) => {
   const res = await fetch(`${API_BASE}/api/detector/settings`, {
     method: 'POST',
@@ -82,5 +85,3 @@ export const updateDetectorSettings = async (settings: { confidence?: number; nm
   if (!res.ok) throw new Error('Update settings failed');
   return res.json();
 };
-
-// ...no other APIs should be present...

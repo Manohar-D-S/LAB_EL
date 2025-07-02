@@ -1,6 +1,15 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Play, Pause, RotateCcw, Settings, Activity, Clock, Zap, TrendingUp, Siren, AlertTriangle, Download } from 'lucide-react';
+import {
+  detectImage,
+  detectVideo,
+  analyzeIntersection,
+  signalControl,
+  getDetectorStats,
+  getApiHealth,
+  updateDetectorSettings
+} from '../api/index';
 
 // Dynamic direction type
 type Direction = string; // e.g., 'north', 'south', 'east', 'west', etc.
@@ -60,6 +69,14 @@ const TrafficSimulation: React.FC<TrafficSimulationProps> = ({
   // --- System status from backend ---
   const [detectorStats, setDetectorStats] = useState<any>(null);
   const [statsLoading, setStatsLoading] = useState(false);
+
+  useEffect(() => {
+    setStatsLoading(true);
+    getDetectorStats()
+      .then(data => setDetectorStats(data))
+      .catch(() => setDetectorStats(null))
+      .finally(() => setStatsLoading(false));
+  }, []);
 
   // Fallback: show message for missing videos
   if (
@@ -246,212 +263,90 @@ const TrafficSimulation: React.FC<TrafficSimulationProps> = ({
     setVideoFiles(prev => ({ ...prev, [direction]: file }));
   };
 
-  // Use the API base from integration summary
-  const API_BASE = 'http://localhost:5001'; // Update if backend runs elsewhere
-
   // --- API: GET /api/health ---
-  const getApiHealth = async (): Promise<any> => {
-    const res = await fetch(`${API_BASE}/api/health`);
-    if (!res.ok) throw new Error('API health check failed');
-    return res.json();
-  };
-
-  // --- API: GET /api/detector/stats ---
-  const getDetectorStats = async (): Promise<any> => {
-    const res = await fetch(`${API_BASE}/api/detector/stats`);
-    if (!res.ok) throw new Error('Detector stats fetch failed');
-    return res.json();
-  };
-
-  // --- API: POST /api/detect/image ---
-  const detectImage = async (
-    file: File,
-    onResult: (result: any) => void,
-    onError: (err: string) => void
-  ) => {
-    const formData = new FormData();
-    formData.append('file', file);
+  const checkApiHealth = async () => {
     try {
-      const res = await fetch(`${API_BASE}/api/detect/image`, {
-        method: 'POST',
-        body: formData,
-        credentials: 'omit'
-      });
-      if (!res.ok) throw new Error('Image detection failed');
-      const result = await res.json();
-      onResult(result);
-    } catch (err: any) {
-      onError(err.message || 'Image detection error');
+      const health = await getApiHealth();
+      console.log('API Health:', health);
+    } catch (error) {
+      console.error('Error checking API health:', error);
     }
   };
 
-  // --- API: POST /api/detect/video ---
-  const detectVideo = async (
-    file: File,
-    onResult: (result: any) => void,
-    onError: (err: string) => void
-  ) => {
-    const formData = new FormData();
-    formData.append('file', file);
+  // Handler for intersection analysis
+  const handleAnalyze = async () => {
+    setLoading(true);
+    setError(null);
+    setAnalysisResult(null);
     try {
-      const res = await fetch(`${API_BASE}/api/detect/video`, {
-        method: 'POST',
-        body: formData,
-        credentials: 'omit'
-      });
-      if (!res.ok) throw new Error('Video detection failed');
-      const result = await res.json();
-      onResult(result);
+      if (
+        !videoFiles.north ||
+        !videoFiles.south ||
+        !videoFiles.east ||
+        !videoFiles.west
+      ) {
+        setError('Please upload all videos for analysis');
+        setLoading(false);
+        return;
+      }
+      const result = await analyzeIntersection(
+        {
+          north: videoFiles.north,
+          south: videoFiles.south,
+          east: videoFiles.east,
+          west: videoFiles.west
+        },
+        'main_intersection'
+      );
+      setAnalysisResult(result);
     } catch (err: any) {
-      onError(err.message || 'Video detection error');
-    }
-  };
-
-  // --- API: POST /api/analyze/intersection ---
-  const analyzeIntersection = async (
-    videos: { north: File; south: File; east: File; west: File },
-    intersectionId: string,
-    onResult: (result: any) => void,
-    onError: (err: string) => void
-  ) => {
-    const formData = new FormData();
-    formData.append('video_north', videos.north);
-    formData.append('video_south', videos.south);
-    formData.append('video_east', videos.east);
-    formData.append('video_west', videos.west);
-    formData.append('intersection_id', intersectionId);
-    try {
-      const res = await fetch(`${API_BASE}/api/analyze/intersection`, {
-        method: 'POST',
-        body: formData,
-        credentials: 'omit'
-      });
-      if (!res.ok) throw new Error('Intersection analysis failed');
-      const result = await res.json();
-      onResult(result);
-    } catch (err: any) {
-      onError(err.message || 'Intersection analysis error');
-    }
-  };
-
-  // --- API: POST /api/signal-control ---
-  const signalControl = async (
-    data: { analysis_id: string; priority_direction: string; emergency_override: boolean },
-    onResult: (result: any) => void,
-    onError: (err: string) => void
-  ) => {
-    try {
-      const res = await fetch(`${API_BASE}/api/signal-control`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-        credentials: 'omit'
-      });
-      if (!res.ok) throw new Error('Signal control failed');
-      const result = await res.json();
-      onResult(result);
-    } catch (err: any) {
-      onError(err.message || 'Signal control error');
-    }
-  };
-
-  // --- API: POST /api/detector/settings ---
-  const updateDetectorSettings = async (
-    settings: { confidence?: number; nms?: number },
-    onResult: (result: any) => void,
-    onError: (err: string) => void
-  ) => {
-    try {
-      const res = await fetch(`${API_BASE}/api/detector/settings`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(settings),
-        credentials: 'omit'
-      });
-      if (!res.ok) throw new Error('Update settings failed');
-      const result = await res.json();
-      onResult(result);
-    } catch (err: any) {
-      onError(err.message || 'Update settings error');
+      setError(err.message || 'Error analyzing intersection');
+    } finally {
+      setLoading(false);
     }
   };
 
   // Example: image detection integration
   const detectImageIntegration = (file: File) => {
-    detectImage(
-      file,
-      (result) => {
-        console.log('Image detection result:', result);
+    detectImage(file)
+      .then(result => {
         // Handle result (e.g., update UI, show alerts)
-      },
-      (err) => {
-        console.error('Image detection error:', err);
+        console.log('Image detection result:', result);
+      })
+      .catch(err => {
         // Handle error (e.g., show notification)
-      }
-    );
+        console.error('Image detection error:', err);
+      });
   };
 
   // Example: video detection integration
   const detectVideoIntegration = (file: File) => {
-    detectVideo(
-      file,
-      (result) => {
-        console.log('Video detection result:', result);
+    detectVideo(file)
+      .then(result => {
         // Handle result (e.g., update UI, show alerts)
-      },
-      (err) => {
-        console.error('Video detection error:', err);
+        console.log('Video detection result:', result);
+      })
+      .catch(err => {
         // Handle error (e.g., show notification)
-      }
-    );
-  };
-
-  // Example: intersection analysis integration
-  const analyzeIntersectionIntegration = () => {
-    if (Object.values(videoFiles).some(f => !f)) {
-      setError('Please upload all videos for analysis');
-      return;
-    }
-    setError(null);
-    setLoading(true);
-    analyzeIntersection(
-      {
-        north: videoFiles.north as File,
-        south: videoFiles.south as File,
-        east: videoFiles.east as File,
-        west: videoFiles.west as File,
-      },
-      'main_intersection',
-      (result) => {
-        setAnalysisResult(result);
-        setLoading(false);
-        // Example: auto-start simulation with new data
-        // startSimulationWithNewData(result.traffic_data, result.phases, result.phase_directions);
-      },
-      (err) => {
-        setError(err);
-        setLoading(false);
-      }
-    );
+        console.error('Video detection error:', err);
+      });
   };
 
   // Example: signal control integration (emergency mode)
   const triggerEmergencyMode = (direction: string) => {
-    signalControl(
-      {
-        analysis_id: 'main_intersection',
-        priority_direction: direction,
-        emergency_override: true,
-      },
-      (result) => {
-        console.log('Signal control result:', result);
+    signalControl({
+      analysis_id: 'main_intersection',
+      priority_direction: direction,
+      emergency_override: true
+    })
+      .then(result => {
         // Handle result (e.g., update UI, show alerts)
-      },
-      (err) => {
-        console.error('Signal control error:', err);
+        console.log('Signal control result:', result);
+      })
+      .catch(err => {
         // Handle error (e.g., show notification)
-      }
-    );
+        console.error('Signal control error:', err);
+      });
   };
 
   // Helper for signal color

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Upload, Play, Settings, BarChart3, Camera, ArrowRight, CheckCircle, X, Video } from 'lucide-react';
 import { notifyEsp32Proximity } from './simulationUtils'; // adjust path as needed
+import { detectImage, detectVideo, analyzeIntersection, signalControl, getDetectorStats, getApiHealth, updateDetectorSettings } from '../api/index';
 
 const ESP32_IP = '192.168.x.x'; // set your ESP32 IP here
 const LIVE_FEED_DIRECTION = 'north'; // or whichever direction is constant for live feed
@@ -35,6 +36,9 @@ const Dashboard = () => {
   // Add state for live stats and live model status
   const [liveStats, setLiveStats] = useState<any>(null);
   const [liveModelStatus, setLiveModelStatus] = useState<'idle' | 'analyzing' | 'ready' | 'error'>('idle');
+
+  // Add a new state for detection outcomes
+  const [detectionOutcomes, setDetectionOutcomes] = useState<any[]>([]);
 
   // Only load cache when switching to upload mode
   const loadCache = () => {
@@ -149,23 +153,25 @@ const Dashboard = () => {
     // eslint-disable-next-line
   }, [uploadedVideos]);
 
-  // Replace runYoloAnalysis with real API call and update model status
+  // Replace runYoloAnalysis with correct endpoint and form keys
   const runYoloAnalysis = async () => {
     setIsAnalysing(true);
     setAnalysisComplete(false);
     setYoloResult(null);
     setModelStatus('analyzing');
     try {
-      // Prepare form data
+      // Prepare form data with correct keys for backend
       const formData = new FormData();
       uploadedVideos.forEach((video) => {
         if (video.file) {
-          formData.append(video.cameraAngle, video.file, video.name);
+          // The backend expects: video_north, video_south, video_east, video_west
+          formData.append(`video_${video.cameraAngle}`, video.file, video.name);
         }
       });
+      formData.append('intersection_id', 'main_intersection');
 
-      // Call backend API
-      const response = await fetch('http://localhost:5001/api/analyze', {
+      // Correct API endpoint:
+      const response = await fetch('http://localhost:5001/api/analyze/intersection', {
         method: 'POST',
         body: formData,
       });
@@ -194,10 +200,19 @@ const Dashboard = () => {
       setModelStatus('ready');
       localStorage.setItem('yoloResult', JSON.stringify({ phases, phaseDirections, trafficStats }));
 
+      // --- NEW: Update detection outcomes for dashboard display ---
+      setDetectionOutcomes(
+        Object.entries(data.results).map(([dir, res]: any) => ({
+          direction: dir,
+          ambulanceDetected: res.ambulance_detected,
+          ambulanceCount: res.ambulance_count,
+          framesAnalyzed: res.frames_analyzed,
+          detectionFrames: res.detection_frames,
+          annotatedVideoUrl: res.annotatedVideoUrl,
+        }))
+      );
+
       // Notify ESP32 for each direction
-      // You must provide a value for 'junction' for each upload.
-      // For example, prompt the user, or use a variable.
-      // Here, we use a placeholder 'junction' variable.
       const junction = window.prompt('Enter junction name for this upload:', 'A') || 'A';
       for (const stat of trafficStats) {
         await notifyEsp32Proximity(junction, stat.direction, ESP32_IP);
@@ -691,47 +706,61 @@ const Dashboard = () => {
           </div>
         )}
 
-        {/* API Integration Info */}
-        <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6 mb-8">
-          <h2 className="text-xl font-bold text-white mb-4">YOLOv8 Model Integration</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="text-lg font-semibold text-white mb-3">API Endpoints</h3>
-              <div className="space-y-2 text-sm">
-                <div className="bg-gray-700/50 rounded p-3">
-                  <span className="text-green-500 font-mono">POST /api/analyze</span>
-                  <p className="text-gray-400 mt-1">Upload videos for analysis</p>
+        {/* --- Detection Outcomes Section --- */}
+        {detectionOutcomes.length > 0 && (
+          <div className="bg-gray-900/80 rounded-xl p-6 shadow-lg mb-8 mt-8">
+            <h2 className="text-xl font-bold text-white mb-4">🚑 Detection Outcomes</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {detectionOutcomes.map((outcome, idx) => (
+                <div key={outcome.direction} className="bg-gray-800 rounded-lg p-4 border border-gray-700 flex flex-col items-center">
+                  <div className="text-white font-bold capitalize mb-2">{outcome.direction}</div>
+                  {/* Annotated video preview */}
+                  {outcome.annotatedVideoUrl && (
+                    <video
+                      src={`http://localhost:5001${outcome.annotatedVideoUrl}`}
+                      controls
+                      className="w-full h-32 object-cover rounded mb-2"
+                      style={{ background: "#000" }}
+                    />
+                  )}
+                  <div className="text-gray-300 text-sm">
+                    Ambulance Detected: <span className={outcome.ambulanceDetected ? 'text-blue-400 font-bold' : 'text-gray-400'}>{outcome.ambulanceDetected ? 'Yes' : 'No'}</span>
+                  </div>
+                  <div className="text-gray-300 text-sm">
+                    Ambulance Count: <span className="font-bold">{outcome.ambulanceCount}</span>
+                  </div>
+                  <div className="text-gray-300 text-sm">
+                    Frames Analyzed: <span className="font-bold">{outcome.framesAnalyzed}</span>
+                  </div>
+                  {outcome.detectionFrames && outcome.detectionFrames.length > 0 && (
+                    <div className="text-gray-300 text-xs mt-2">
+                      <span className="font-semibold">Detection Frames:</span>
+                      <ul className="list-disc ml-6">
+                        {outcome.detectionFrames.map((f: any) => (
+                          <li key={f.frame_number}>
+                            Frame {f.frame_number}: {f.ambulance_count} ambulance(s)
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {outcome.annotatedVideoUrl && (
+                    <div className="mt-2">
+                      <a
+                        href={`http://localhost:5001${outcome.annotatedVideoUrl}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-400 underline text-xs"
+                      >
+                        Download Annotated Video
+                      </a>
+                    </div>
+                  )}
                 </div>
-                <div className="bg-gray-700/50 rounded p-3">
-                  <span className="text-blue-500 font-mono">GET /api/detection/:id</span>
-                  <p className="text-gray-400 mt-1">Get real-time detection data</p>
-                </div>
-                <div className="bg-gray-700/50 rounded p-3">
-                  <span className="text-purple-500 font-mono">POST /api/signal-control</span>
-                  <p className="text-gray-400 mt-1">Send signal timing commands</p>
-                </div>
-              </div>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-white mb-3">Expected Data Format</h3>
-              <div className="bg-gray-900/50 rounded p-4 text-sm">
-                <pre className="text-gray-300">
-{`{
-  "camera_id": "north|south|east|west",
-  "timestamp": "2024-01-01T12:00:00Z",
-  "detections": {
-    "vehicles": 12,
-    "pedestrians": 3,
-    "congestion_level": 0.75,
-    "avg_speed": 25.5,
-    "queue_length": 8
-  }
-}`}
-                </pre>
-              </div>
+              ))}
             </div>
           </div>
-        </div>
+        )}
 
         {/* Instructions */}
         <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6">

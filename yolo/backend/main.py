@@ -216,40 +216,26 @@ async def analyze_intersection(
             with open(temp_path, "wb") as buffer:
                 shutil.copyfileobj(video_file.file, buffer)
             
-            # Analyze first few frames for quick response
-            import cv2
-            cap = cv2.VideoCapture(str(temp_path))
-            
-            frame_results = []
-            total_ambulances = 0
-            
-            # Analyze first 30 frames (1 second at 30fps)
-            frame_num = 0
-            for frame_num in range(30):
-                ret, frame = cap.read()
-                if not ret:
-                    break
-                
-                result = detector.detect_frame(frame)
-                total_ambulances += result['ambulance_count']
-                
-                if result['ambulance_count'] > 0:
-                    frame_results.append({
-                        'frame_number': frame_num,
-                        'ambulance_count': result['ambulance_count'],
-                        'detections': result['detections']
-                    })
-            
-            cap.release()
+            # --- FIX: Use the full video for detection, not just first 30 frames ---
+            # Run full video detection
+            video_result = detector.detect_video(str(temp_path), save_output=True)
             temp_path.unlink()  # Cleanup
-            
+
             # Store results for this direction
             results[direction] = {
                 'camera_id': direction,
-                'ambulance_count': total_ambulances,
-                'ambulance_detected': total_ambulances > 0,
-                'frames_analyzed': frame_num + 1,
-                'detection_frames': frame_results
+                'ambulance_count': video_result['total_ambulances'],
+                'ambulance_detected': video_result['total_ambulances'] > 0,
+                'frames_analyzed': video_result['frames_processed'],
+                'detection_frames': [
+                    {
+                        'frame_number': r['frame_number'],
+                        'ambulance_count': r['ambulance_count'],
+                        'detections': r['detections']
+                    }
+                    for r in video_result['frame_results'] if r['ambulance_count'] > 0
+                ],
+                'annotatedVideoUrl': f"/static/{file_id}_detected{file_extension}"
             }
         
         # Determine if emergency signal override is needed
@@ -357,6 +343,20 @@ async def health_check():
         "cuda_available": detector.device == 'cuda' if detector else False,
         "uptime": detector.get_statistics()['uptime_seconds'] if detector else 0
     }
+
+# if __name__ == "__main__":
+#     # For development
+#     uvicorn.run(
+#         "main:app",
+#         host="0.0.0.0",
+#         port=5001,  # CHANGE THIS TO 5001 to match your frontend requests
+#         reload=True,
+#         log_level="info"
+#     )
+#     #     "detector_status": "initialized" if detector else "error",
+#     #     "cuda_available": detector.device == 'cuda' if detector else False,
+#     #     "uptime": detector.get_statistics()['uptime_seconds'] if detector else 0
+#     # }
 
 if __name__ == "__main__":
     # For development
